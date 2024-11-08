@@ -62,8 +62,8 @@ const Home = () => {
           {/* Middle Content Area */}
           <Col
             md={7}
-            className=" mx-auto px-0 px-md-3"
-            style={{ overflowY: "scroll" }}
+            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
+            style={{ overflowY: "auto",  }}
           >
             <div className="p-3">
               <h3>Feed</h3>

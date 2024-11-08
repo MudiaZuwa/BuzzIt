@@ -73,10 +73,10 @@ const BallFall = () => {
           <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />
 
           {/* Middle Content Area */}
-      <Col
+          <Col
             md={7}
-            className=" mx-auto px-0 px-md-3"
-            style={{ overflowY: "scroll", paddingBottom: "50px" }}
+            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
+            style={{ overflowY: "scroll" }}
           >
             <Container fluid className="p-0">
               <div id="game-body" style={styles.gameBody}>

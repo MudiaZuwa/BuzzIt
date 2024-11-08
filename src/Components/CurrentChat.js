@@ -144,7 +144,9 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
           </div>
 
           {/* Chat Body Section */}
-          <div className="chat-body d-flex flex-column h-100">
+          <div
+            className="chat-body d-flex flex-column h-100 "
+          >
             <div className="recipient-info">
               <img
                 src={chatProfilePhoto}
@@ -245,7 +247,10 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
 
             <div ref={messagesEndRef} />
           </div>
-          <Form onSubmit={handleSendMessage} className="message-form">
+          <Form
+            onSubmit={handleSendMessage}
+            className="message-form pb-md-2"
+          >
             <Form.Group className="message-input-group">
               <div className="input-wrapper">
                 <Form.Control

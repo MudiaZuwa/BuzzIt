@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./GameCanvas.module.css";
 import GameManager from "./Game";
 import StartOptions from "./StartOptions";
 import { handleResize } from "./Functions/gameUtils";
@@ -116,22 +115,15 @@ const Whot = () => {
           <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />
 
           {/* Middle Content Area */}
-      <Col
+          <Col
             md={7}
-            className=" mx-auto px-0 px-md-3"
-            style={{ overflowY: "scroll", paddingBottom: "50px" }}
+            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
+            style={{ overflowY: "scroll" }}
           >
             <Container fluid className="p-0" ref={gameBodyRef}>
               <div
                 id="game-body"
-                style={{
-                  position: "relative",
-                  height: "100vh",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignContent: "center",
-                }}
+                className="position-relative d-flex flex-column vh-100 justify-content-center align-content-center "
               >
                 <StartOptions gameRef={gameRef} />
 

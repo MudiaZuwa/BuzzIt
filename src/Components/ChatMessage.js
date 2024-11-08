@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Modal, Button } from "react-bootstrap";
 import HandleGameRequest from "../Functions/HandleGameRequest";
+import { Link } from "react-router-dom";
 
 const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
   const [showImage, setShowImage] = useState(false);
@@ -52,19 +53,21 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
   return (
     <div className={`chat-message ${isSender ? "sent" : "received"}`}>
       {!isSender && isGroupChat && (
-        <div className="profile-photo-container">
+        <Link to={`/${message.sender}`} className="profile-photo-container">
           <img
             src={message.senderProfilePhoto || "/images/defaultProfile.png"}
             alt="sender profile"
             className="sender-profile-photo"
           />
-        </div>
+        </Link>
       )}
 
       <Card className={`message-bubble ${isSender ? "sender" : "receiver"}`}>
         <Card.Body>
           {!isSender && isGroupChat && (
-            <div className="sender-name">{message.senderName}</div>
+            <Link to={`/${message.sender}`} className="sender-name">
+              {message.senderName}
+            </Link>
           )}
 
           {isGameRequest ? (

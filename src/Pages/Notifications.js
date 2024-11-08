@@ -279,10 +279,10 @@ const Notifications = ({}) => {
         <Row>
           {/* Left Sidebar */}
           <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />
-      <Col
+          <Col
             md={7}
-            className=" mx-auto px-0 px-md-3"
-            style={{ overflowY: "scroll", paddingBottom: "50px" }}
+            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
+            style={{ overflowY: "auto"}}
           >
             <Tabs
               id="notifications-tabs"

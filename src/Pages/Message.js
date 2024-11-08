@@ -190,7 +190,10 @@ const Message = () => {
           <Col
             md={10}
             lg={4}
-            className={`d-flex flex-column ${userId ? "d-none d-md-flex" : ""}`}
+            className={`d-flex flex-column vh-100 pb-5 pb-lg-0 ${
+              userId ? "d-none d-lg-flex" : ""
+            } `}
+    
           >
             <Navbar bg="light" className="justify-content-between">
               <Navbar.Brand>Messages</Navbar.Brand>

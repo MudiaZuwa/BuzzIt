@@ -1,7 +1,7 @@
 {
-  "name": "client",
+  "homepage": "./",
+  "name": "BuzzIt",
   "version": "0.1.0",
-  "homepage": "/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -10,6 +10,7 @@
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.11.3",
     "firebase": "^9.23.0",
+    "gh-pages": "^6.2.0",
     "phaser": "^3.86.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",

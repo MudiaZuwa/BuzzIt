@@ -27,33 +27,6 @@ const HandleLogin = ({ e, setStates, inputRefs }) => {
       });
   };
 
-  // const getUserData = (userId) => {
-  //   const dbRef = ref(getDatabase());
-  //   get(child(dbRef, `UsersDetails/${userId}`))
-  //     .then((snapshot) => {
-  //       if (snapshot.exists()) {
-  //         const userDetails = snapshot.val();
-
-  //         const AccountDetails = {
-  //           email: userDetails["email"],
-  //           fullName: userDetails["name"],
-  //         };
-  //         localStorage.setItem("details", JSON.stringify(AccountDetails));
-  //         setStates.setSuccess(true);
-  //         setStates.setIsPending(false);
-  //       } else {
-  //         setStates.setError("No data available");
-  //         setStates.setIsPending(false);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       console.log(errorMessage);
-  //       setStates.setError(errorMessage);
-  //       setStates.setIsPending(false);
-  //     });
-  // };
   setStates.setValidated(true);
   LoginAccount();
 };

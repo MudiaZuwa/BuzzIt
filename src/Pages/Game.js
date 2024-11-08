@@ -88,8 +88,8 @@ const Game = () => {
           {/* Middle Content Area */}
           <Col
             md={7}
-            className="vh-100 mx-auto px-0 px-md-3"
-            style={{ overflowY: "scroll" }}
+            className="vh-100 mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
+            style={{ overflowY: "auto" }}
           >
             <Tabs id="games-tabs" className="mb-3 w-100">
               <Tab eventKey="Single-Player" title="Single-Player">

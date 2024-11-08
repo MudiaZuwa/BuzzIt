@@ -132,14 +132,8 @@ const TicTacToe = () => {
           {/* Middle Content Area */}
           <Col
             md={7}
-            className=" mx-auto px-0 px-md-3"
-            style={{
-              overflowY: "scroll",
-              display: "flex",
-              alignContent: "center",
-              justifyContent: "center",
-              paddingBottom: "50px",
-            }}
+            className="d-flex mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0 
+             justify-content-center align-content-center overflow-auto"
           >
             <Card
               style={{

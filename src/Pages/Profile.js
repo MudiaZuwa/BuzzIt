@@ -174,7 +174,11 @@ const ProfilePage = () => {
       <Container fluid>
         <Row>
           <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />
-          <Col md={7}  style={{ overflowY: "scroll", paddingBottom: "50px" }}>
+          <Col
+            md={7}
+            className="vh-100 pb-5 pb-md-0"
+            style={{ overflowY: "auto" }}
+          >
             {userDetails && (
               <div>
                 <Row>

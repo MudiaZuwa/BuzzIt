@@ -65,8 +65,8 @@ const PostDetails = () => {
           <HomeLeftSideBar loggedIn={loggedIn} uid={currentUserID} />
           <Col
             md={7}
-            className=" mx-auto px-0 px-md-3"
-            style={{ overflowY: "auto", paddingBottom: "50px" }}
+            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
+            style={{ overflowY: "auto" }}
           >
             <Container className="mt-4">
               <Row className="mb-4">
