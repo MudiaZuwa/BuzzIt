@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/MudiaZuwa/BuzzIt.git/static/css/main.6d35aa82.css",
-    "main.js": "/MudiaZuwa/BuzzIt.git/static/js/main.672dec9f.js",
-    "static/media/bootstrap-icons.woff?": "/MudiaZuwa/BuzzIt.git/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
-    "static/media/bootstrap-icons.woff2?": "/MudiaZuwa/BuzzIt.git/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
-    "static/media/PressStart2P-Regular.ttf": "/MudiaZuwa/BuzzIt.git/static/media/PressStart2P-Regular.21503c6a5385ab41dde9.ttf",
-    "index.html": "/MudiaZuwa/BuzzIt.git/index.html",
-    "main.6d35aa82.css.map": "/MudiaZuwa/BuzzIt.git/static/css/main.6d35aa82.css.map",
-    "main.672dec9f.js.map": "/MudiaZuwa/BuzzIt.git/static/js/main.672dec9f.js.map"
+    "main.css": "./static/css/main.4f32301c.css",
+    "main.js": "./static/js/main.eae4a63f.js",
+    "static/media/bootstrap-icons.woff?": "./static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
+    "static/media/bootstrap-icons.woff2?": "./static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
+    "index.html": "./index.html",
+    "main.4f32301c.css.map": "./static/css/main.4f32301c.css.map",
+    "main.eae4a63f.js.map": "./static/js/main.eae4a63f.js.map"
   },
   "entrypoints": [
-    "static/css/main.6d35aa82.css",
-    "static/js/main.672dec9f.js"
+    "static/css/main.4f32301c.css",
+    "static/js/main.eae4a63f.js"
   ]
 }
