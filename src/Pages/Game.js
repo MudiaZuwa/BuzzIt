@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HomeLeftSideBar from "../Components/HomeLeftSideBar";
 import MobileBottomNavbar from "../Components/MobileBottomNavbar";
-import { Container, Row, Col, Tab, Tabs, Card } from "react-bootstrap";
+import { Container, Row, Col, Tab, Tabs, Card, Nav } from "react-bootstrap";
 import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
 import HomeRightSideBar from "../Components/HomeRightSideBar";
 import { Link } from "react-router-dom";
@@ -23,9 +23,7 @@ const Game = () => {
   const handleProfileEditModalClose = () => setShowProfileEditModal(false);
 
   const handleAuthModalOpen = () => setShowAuthModal(true);
-  const handleAuthModalClose = () => {
-    setShowAuthModal(false);
-  };
+  const handleAuthModalClose = () => setShowAuthModal(false);
 
   const handleSelectFriendModalOpen = () => setSelectFriendModalShow(true);
   const handleSelectFriendModalClose = () => setSelectFriendModalShow(false);
@@ -91,50 +89,62 @@ const Game = () => {
             className="vh-100 mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
             style={{ overflowY: "auto" }}
           >
-            <Tabs id="games-tabs" className="mb-3 w-100">
-              <Tab eventKey="Single-Player" title="Single-Player">
-                <div className="d-flex flex-column w-100">
-                  {gameData.SinglePlayer.map((game) => (
-                    <Link
-                      key={game.name}
-                      to={`/Games/${game.path}/Single`}
-                      className="game-card w-100 mb-3"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Card className=" bg-light w-100">
-                        <Card.Body>
-                          <Card.Title>{game.name}</Card.Title>
-                        </Card.Body>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              </Tab>
+            <div className="pt-3">
+              <Tab.Container defaultActiveKey="Single-Player">
+                <Nav variant="tabs" className="d-flex justify-content-between">
+                  <Nav.Item className="flex-fill text-center">
+                    <Nav.Link eventKey="Single-Player">Single-Player</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item className="flex-fill text-center">
+                    <Nav.Link eventKey="Multi-Player">Multi-Player</Nav.Link>
+                  </Nav.Item>
+                </Nav>
 
-              <Tab eventKey="Multi-Player" title="Multi-Player">
-                <div className="d-flex flex-column w-100">
-                  {gameData.MultiPlayer.map((game) => (
-                    <div
-                      key={game.name}
-                      onClick={() => setGame(game)}
-                      className="game-card w-100 mb-3"
-                      style={{ cursor: "pointer" }}
-                    >
-                      <Card className=" bg-light w-100">
-                        {/* <Card.Img
+                <Tab.Content>
+                  <Tab.Pane eventKey="Single-Player">
+                    <div className="d-flex flex-column w-100">
+                      {gameData.SinglePlayer.map((game) => (
+                        <Link
+                          key={game.name}
+                          to={`/Games/${game.path}/Single`}
+                          className="game-card w-100 mb-3"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Card className=" bg-light w-100">
+                            <Card.Body>
+                              <Card.Title>{game.name}</Card.Title>
+                            </Card.Body>
+                          </Card>
+                        </Link>
+                      ))}
+                    </div>
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="Multi-Player">
+                    <div className="d-flex flex-column w-100">
+                      {gameData.MultiPlayer.map((game) => (
+                        <div
+                          key={game.name}
+                          onClick={() => setGame(game)}
+                          className="game-card w-100 mb-3"
+                          style={{ cursor: "pointer" }}
+                        >
+                          <Card className=" bg-light w-100">
+                            {/* <Card.Img
                           src={game.imgSrc}
                           alt={game.name}
                           style={{ width: "100%" }}
                         /> */}
-                        <Card.Body>
-                          <Card.Title>{game.name}</Card.Title>
-                        </Card.Body>
-                      </Card>
+                            <Card.Body>
+                              <Card.Title>{game.name}</Card.Title>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </Tab>
-            </Tabs>
+                  </Tab.Pane>
+                </Tab.Content>
+              </Tab.Container>
+            </div>
           </Col>
 
           {/* Right Sidebar */}

@@ -8,6 +8,7 @@ import {
   Image,
   Row,
   Container,
+  Nav,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import FetchDataFromNode from "../Functions/FetchDataFromNode";
@@ -17,13 +18,23 @@ import HomeLeftSideBar from "../Components/HomeLeftSideBar";
 import MobileBottomNavbar from "../Components/MobileBottomNavbar";
 import HomeRightSideBar from "../Components/HomeRightSideBar";
 import FriendRequestCard from "../Components/FriendRequestCard";
+import AuthModal from "../Auth/AuthModal";
+import ProfileEditModal from "../Components/ProfileEditModal";
 
 const Notifications = ({}) => {
   const [key, setKey] = useState("Activities");
   const [activities, setActivities] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
   const [notifications, setNotifications] = useState({});
-  const { uid, loggedIn } = UseVerifyUser();
+  const { uid, loggedIn, isPending } = UseVerifyUser();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showProfileEditModal, setShowProfileEditModal] = useState(false);
+
+  const handleProfileEditModalOpen = () => setShowProfileEditModal(true);
+  const handleProfileEditModalClose = () => setShowProfileEditModal(false);
+
+  const handleAuthModalOpen = () => setShowAuthModal(true);
+  const handleAuthModalClose = () => setShowAuthModal(false);
 
   const fetchNotifications = async (uid) => {
     try {
@@ -39,6 +50,11 @@ const Notifications = ({}) => {
       fetchNotifications(uid);
     }
   }, [uid]);
+
+  useEffect(() => {
+    if (isPending) return;
+    if (!loggedIn) handleAuthModalOpen();
+  }, [isPending]);
 
   useEffect(() => {
     const fetchUserDetails = async (uid) => {
@@ -282,26 +298,38 @@ const Notifications = ({}) => {
           <Col
             md={7}
             className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
-            style={{ overflowY: "auto"}}
+            style={{ overflowY: "auto" }}
           >
-            <Tabs
-              id="notifications-tabs"
-              activeKey={key}
-              onSelect={(k) => setKey(k)}
-              className="mb-3"
-            >
-              <Tab eventKey="Activities" title="Activities">
-                {renderActivities()}
-              </Tab>
-              <Tab eventKey="FriendRequests" title="Friend Requests">
-                {renderFriendRequests()}
-              </Tab>
-              {/* <Tab eventKey="GameRequests" title="Game Requests">
-                {renderGameRequests()}
-              </Tab> */}
-            </Tabs>
+            <Tab.Container defaultActiveKey="Activities">
+              <Nav variant="tabs" className="d-flex justify-content-between">
+                <Nav.Item className="flex-fill text-center">
+                  <Nav.Link eventKey="Activities">Activities</Nav.Link>
+                </Nav.Item>
+                <Nav.Item className="flex-fill text-center">
+                  <Nav.Link eventKey="FriendRequests">FriendRequests</Nav.Link>
+                </Nav.Item>
+              </Nav>
+
+              <Tab.Content className="mt-4">
+                <Tab.Pane eventKey="Activities">{renderActivities()}</Tab.Pane>
+                <Tab.Pane eventKey="FriendRequests">
+                  {renderFriendRequests()}
+                </Tab.Pane>
+              </Tab.Content>
+            </Tab.Container>
           </Col>
           <HomeRightSideBar />
+
+          <AuthModal
+            show={showAuthModal}
+            handleClose={handleAuthModalClose}
+            handleProfileEdit={handleProfileEditModalOpen}
+            returnOnClose={true}
+          />
+          <ProfileEditModal
+            show={showProfileEditModal}
+            handleClose={handleProfileEditModalClose}
+          />
         </Row>
       </Container>
       <MobileBottomNavbar uid={uid} />

@@ -13,6 +13,15 @@ const styles = {
     width: "100%",
     height: "100%",
   },
+  fullscreen: {
+    position: "absolute",
+    bottom: "10px",
+    right: "10px",
+    fontSize: "24px",
+    cursor: "pointer",
+    zIndex: 1000,
+    color: "grey",
+  },
   touchArea: {
     flexGrow: 1,
     height: "100%",

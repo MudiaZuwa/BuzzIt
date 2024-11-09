@@ -47,8 +47,9 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = ListenDataFromNode(`Posts/`, updatePosts);
-    return () => unsubscribe(); // Clean up the listener on component unmount
+    const postUnsubscribe = ListenDataFromNode(`Posts/`, updatePosts);
+  
+    return () => postUnsubscribe();
   }, []);
 
   return (
@@ -63,7 +64,7 @@ const Home = () => {
           <Col
             md={7}
             className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
-            style={{ overflowY: "auto",  }}
+            style={{ overflowY: "auto" }}
           >
             <div className="p-3">
               <h3>Feed</h3>

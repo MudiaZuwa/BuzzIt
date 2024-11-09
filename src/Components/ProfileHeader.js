@@ -30,28 +30,13 @@ const ProfileHeader = ({
     const urlRegex =
       /((https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-z]{2,}(\.[a-z]{2,})?(\/\S*)?)/gi;
 
-    const parts = aboutText.split(urlRegex);
+    const processedText = aboutText.replace(urlRegex, (match) => {
+      const url = match.startsWith("http") ? match : `https://${match}`;
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${match}</a>`;
+    });
 
     return (
-      <p className="mt-3">
-        {parts.map((part, index) => {
-          if (urlRegex.test(part)) {
-            const url = part.startsWith("http") ? part : `https://${part}`;
-            return (
-              <a
-                key={index}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {part}
-              </a>
-            );
-          } else {
-            return part;
-          }
-        })}
-      </p>
+      <p className="mt-3" dangerouslySetInnerHTML={{ __html: processedText }} />
     );
   };
 

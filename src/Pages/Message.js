@@ -18,6 +18,8 @@ import MessageList from "../Components/MessageList";
 import MobileBottomNavbar from "../Components/MobileBottomNavbar";
 import GroupChatModal from "../Components/GroupChatModal";
 import NewChatModal from "../Components/NewChatModal";
+import ProfileEditModal from "../Components/ProfileEditModal";
+import AuthModal from "../Auth/AuthModal";
 
 const Message = () => {
   const { userId } = useParams();
@@ -25,11 +27,19 @@ const Message = () => {
   const [previousChats, setPreviousChats] = useState([]);
   const [currentChatId, setCurrentChatId] = useState(null);
   const [currentMessages, setCurrentMessages] = useState([]);
-  const { uid, loggedIn } = UseVerifyUser();
+  const { uid, loggedIn, isPending } = UseVerifyUser();
   const [recipientDetails, setRecipientDetails] = useState(null);
   const [friendsList, setFriendsList] = useState([]);
   const [showGroupModal, setShowGroupModal] = useState(false);
   const [friendListModalShow, setFriendListModalShow] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showProfileEditModal, setShowProfileEditModal] = useState(false);
+
+  const handleProfileEditModalOpen = () => setShowProfileEditModal(true);
+  const handleProfileEditModalClose = () => setShowProfileEditModal(false);
+
+  const handleAuthModalOpen = () => setShowAuthModal(true);
+  const handleAuthModalClose = () => setShowAuthModal(false);
 
   const handleGroupModalOpen = () => setShowGroupModal(true);
   const handleGroupModalClose = () => setShowGroupModal(false);
@@ -81,6 +91,7 @@ const Message = () => {
   };
 
   useEffect(() => {
+    if (!uid) return;
     const userChatsPath = `UserChats/${uid}`;
     const unsubscribe = ListenDataFromNode(userChatsPath, async (chatsData) => {
       if (chatsData) {
@@ -108,8 +119,14 @@ const Message = () => {
           (a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp
         );
         setPreviousChats(sortedChats);
-        if (userId && chatsData[userId]) {
-          setCurrentChatId(chatsData[userId].id);
+
+        if (userId) {
+          const currentChatId = Object.keys(chatsData).find(
+            (chat) =>
+              chatsData[chat].id === userId ||
+              chatsData[chat].chatWith === userId
+          );
+          if (currentChatId) setCurrentChatId(currentChatId);
         }
       }
     });
@@ -165,8 +182,12 @@ const Message = () => {
   useEffect(() => {
     if (!userId || !currentChatId) return;
 
-    const chatDataPath = `UserChats/${uid}/${userId}`;
-    const unsubscribe = ListenDataFromNode(chatDataPath, async (chatData) => {
+    const chatDataPath = `UserChats/${uid}`;
+    const unsubscribe = ListenDataFromNode(chatDataPath, async (userChats) => {
+      if (!userChats) return;
+      const chatData = Object.values(userChats).find(
+        (chat) => chat.id === userId || chat.chatWith === userId
+      );
       if (chatData) {
         const details = await fetchChatDetails(
           chatData.isGroupChat,
@@ -179,6 +200,11 @@ const Message = () => {
 
     return () => unsubscribe();
   }, [userId, currentChatId]);
+
+  useEffect(() => {
+    if (isPending) return;
+    if (!loggedIn) handleAuthModalOpen();
+  }, [isPending]);
 
   return (
     <div>
@@ -193,7 +219,6 @@ const Message = () => {
             className={`d-flex flex-column vh-100 pb-5 pb-lg-0 ${
               userId ? "d-none d-lg-flex" : ""
             } `}
-    
           >
             <Navbar bg="light" className="justify-content-between">
               <Navbar.Brand>Messages</Navbar.Brand>
@@ -249,6 +274,7 @@ const Message = () => {
                 uid={uid}
                 messages={currentMessages}
                 recipientDetails={recipientDetails}
+                handleGroupModalOpen={handleGroupModalOpen}
               />
             ) : (
               <div className="text-center">
@@ -267,6 +293,7 @@ const Message = () => {
                 uid={uid}
                 messages={currentMessages}
                 recipientDetails={recipientDetails}
+                handleGroupModalOpen={handleGroupModalOpen}
               />
             </Col>
           )}
@@ -284,6 +311,16 @@ const Message = () => {
             show={friendListModalShow}
             handleClose={handleFriendListModalClose}
             purpose={"NewChat"}
+          />
+          <AuthModal
+            show={showAuthModal}
+            handleClose={handleAuthModalClose}
+            handleProfileEdit={handleProfileEditModalOpen}
+            returnOnClose={true}
+          />
+          <ProfileEditModal
+            show={showProfileEditModal}
+            handleClose={handleProfileEditModalClose}
           />
         </Row>
       </Container>

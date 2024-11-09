@@ -4,8 +4,15 @@ import HandleFileUpload from "../Functions/HandleFileUpload";
 import sendMessage from "../Functions/SendMessage";
 import ChatMessage from "./ChatMessage";
 import GameListModal from "./GameListModal";
+import { Link } from "react-router-dom";
 
-const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
+const CurrentChat = ({
+  chatId,
+  uid,
+  messages,
+  recipientDetails,
+  handleGroupModalOpen,
+}) => {
   const [newMessage, setNewMessage] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -14,6 +21,7 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
   let chatProfilePhoto = "/images/defaultProfile.png";
   let isGroupChat = false;
   const [showGameListModal, setShowGameListModal] = useState(false);
+  const [sendingMessage, setSendingMessage] = useState(false);
 
   const handleGameListModalOpen = () => setShowGameListModal(true);
   const handleGameListModalClose = () => setShowGameListModal(false);
@@ -50,10 +58,11 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
     e.preventDefault();
 
     if (!newMessage.trim() && selectedFiles.length === 0) return;
-
+    setSendingMessage(true);
     try {
       let messageContent = newMessage.trim();
       let messageType = "text";
+      let mediaUrl = null;
 
       if (selectedFiles.length > 0) {
         setUploading(true);
@@ -66,7 +75,7 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
           }
         );
 
-        messageContent = uploadedFiles[0];
+        mediaUrl = uploadedFiles[0];
         messageType = "media";
 
         setUploading(false);
@@ -80,10 +89,12 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
         chatId,
         messageContent,
         messageType,
+        mediaUrl,
         isGroupChat: isGroupChat,
         groupParticipants: recipientDetails.members,
       });
       setNewMessage("");
+      setSendingMessage(false);
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -126,27 +137,52 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
             <button className="back-button me-2">
               <i className="bi bi-arrow-left"></i>
             </button>
-            <img
-              src={chatProfilePhoto}
-              alt="Recipient Profile"
-              className="recipient-photo me-2"
-            />
-            <span className="recipient-username">{recipientDetails.name}</span>
-
-            {!isGroupChat && (
-              <button className="btn ms-auto" onClick={handleGameListModalOpen}>
-                <i
-                  className="bi bi-controller"
-                  style={{ fontSize: "1.5rem" }}
-                ></i>
-              </button>
+            {!isGroupChat ? (
+              <Link
+                to={`/${recipientDetails.id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <img
+                  src={chatProfilePhoto}
+                  alt="Recipient Profile"
+                  className="recipient-photo me-2"
+                />
+                <span className="recipient-username">
+                  {recipientDetails.name}
+                </span>
+              </Link>
+            ) : (
+              <div>
+                <img
+                  src={chatProfilePhoto}
+                  alt="Recipient Profile"
+                  className="recipient-photo me-2"
+                />
+                <span className="recipient-username">
+                  {recipientDetails.name}
+                </span>
+              </div>
             )}
+
+            <button
+              className="btn ms-auto"
+              onClick={() =>
+                !isGroupChat
+                  ? handleGameListModalOpen()
+                  : handleGroupModalOpen()
+              }
+            >
+              <i
+                className={
+                  !isGroupChat ? "bi bi-controller" : "bi bi-info-circle"
+                }
+                style={{ fontSize: "1.5rem" }}
+              ></i>
+            </button>
           </div>
 
           {/* Chat Body Section */}
-          <div
-            className="chat-body d-flex flex-column h-100 "
-          >
+          <div className="chat-body d-flex flex-column h-100 ">
             <div className="recipient-info">
               <img
                 src={chatProfilePhoto}
@@ -250,6 +286,7 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
           <Form
             onSubmit={handleSendMessage}
             className="message-form pb-md-2"
+            disabled={sendingMessage}
           >
             <Form.Group className="message-input-group">
               <div className="input-wrapper">
@@ -259,6 +296,7 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   className="message-input"
+                  disabled={sendingMessage}
                 />
 
                 {/* Image/Video Previews */}
@@ -298,13 +336,19 @@ const CurrentChat = ({ chatId, uid, messages, recipientDetails }) => {
                   className="file-input"
                   style={{ display: "none" }}
                   id="file-upload"
+                  disabled={sendingMessage}
                 />
                 <label htmlFor="file-upload" className="file-upload-label">
                   <i className="bi bi-paperclip"></i>
                 </label>
               </div>
 
-              <Button variant="primary" type="submit" className="send-button">
+              <Button
+                variant="primary"
+                type="submit"
+                className="send-button"
+                disabled={sendingMessage}
+              >
                 <i className="bi bi-send"></i>
               </Button>
             </Form.Group>

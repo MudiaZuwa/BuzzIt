@@ -15,6 +15,11 @@ const BallFall = () => {
   const lastTimeRef = useRef(0);
   const [gameWidth, setGameWidth] = useState(window.innerWidth);
   const [gameHeight, setGameHeight] = useState(window.innerHeight);
+  const [fullscreen, setFullscrren] = useState(false);
+
+  const handleFullscreenToggle = () => {
+    setFullscrren((fullscreen) => !fullscreen);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,13 +75,15 @@ const BallFall = () => {
       <Container fluid>
         <Row>
           {/* Left Sidebar */}
-          <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />
+          {!fullscreen && <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />}
 
           {/* Middle Content Area */}
           <Col
-            md={7}
-            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
-            style={{ overflowY: "scroll" }}
+            md={!fullscreen ? 7 : 12}
+            className={` mx-auto px-0 vh-100 ${
+              !fullscreen ? "pb-md-0 px-md-3 pb-5" : ""
+            }`}
+            style={{ overflowY: "auto" }}
           >
             <Container fluid className="p-0">
               <div id="game-body" style={styles.gameBody}>
@@ -121,15 +128,22 @@ const BallFall = () => {
                   ref={canvasRef}
                   style={styles.gameScreen}
                 />
+                <i
+                  className={`bi ${
+                    !fullscreen ? "bi-fullscreen" : "bi-fullscreen-exit"
+                  } `}
+                  style={styles.fullscreen}
+                  onClick={() => handleFullscreenToggle()}
+                ></i>
               </div>
             </Container>
           </Col>
 
           {/* Right Sidebar */}
-          <HomeRightSideBar />
+          {!fullscreen && <HomeRightSideBar />}
         </Row>
       </Container>
-      <MobileBottomNavbar uid={uid} />
+      {!fullscreen && <MobileBottomNavbar uid={uid} />}
     </div>
   );
 };

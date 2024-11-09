@@ -19,11 +19,16 @@ const Whot = () => {
   const [gameWidth, setGameWidth] = useState(window.innerWidth);
   const [gameHeight, setGameHeight] = useState(window.innerHeight);
   const [isMobile, setIsMobile] = useState(null);
-  const [isFullScreen, setIsFullScreen] = useState(false);
   const { uid, loggedIn } = UseVerifyUser();
   const { roomKey } = useParams();
   const [players, setPlayers] = useState(false);
   const [playersJoined, setPlayersJoined] = useState(false);
+  const [fullscreen, setFullscrren] = useState(false);
+  const [isWinner, setIWinner] = useState(false);
+
+  const handleFullscreenToggle = () => {
+    setFullscrren((fullscreen) => !fullscreen);
+  };
 
   useEffect(() => {
     setIsMobile(/Mobi|Android/i.test(navigator.userAgent));
@@ -88,6 +93,7 @@ const Whot = () => {
           isMobile
         );
         gameRef.current.Start(players, roomKey, uid);
+        gameRef.current.Cards.setIWinner = setIWinner;
 
         const animate = (timestamp) => {
           const deltaTime = timestamp - lastTimeRef.current;
@@ -112,13 +118,15 @@ const Whot = () => {
       <Container fluid>
         <Row>
           {/* Left Sidebar */}
-          <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />
+          {!fullscreen && <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />}
 
           {/* Middle Content Area */}
           <Col
-            md={7}
-            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
-            style={{ overflowY: "scroll" }}
+            md={!fullscreen ? 7 : 12}
+            className={` mx-auto px-0 vh-100 ${
+              !fullscreen ? "pb-md-0 px-md-3 pb-5" : ""
+            }`}
+            style={{ overflowY: "auto" }}
           >
             <Container fluid className="p-0" ref={gameBodyRef}>
               <div
@@ -128,17 +136,36 @@ const Whot = () => {
                 <StartOptions gameRef={gameRef} />
 
                 <canvas id="gameScreen" ref={canvasRef} />
+                <i
+                  className={`bi ${
+                    !fullscreen ? "bi-fullscreen" : "bi-fullscreen-exit"
+                  } `}
+                  style={styles.fullscreen}
+                  onClick={() => handleFullscreenToggle()}
+                ></i>
               </div>
             </Container>
           </Col>
 
           {/* Right Sidebar */}
-          <HomeRightSideBar />
+          {!fullscreen && <HomeRightSideBar />}
         </Row>
       </Container>
-      <MobileBottomNavbar uid={uid} />
+      {!fullscreen && <MobileBottomNavbar uid={uid} />}
     </div>
   );
 };
 
 export default Whot;
+
+const styles = {
+  fullscreen: {
+    position: "absolute",
+    bottom: "10px",
+    right: "10px",
+    fontSize: "24px",
+    cursor: "pointer",
+    zIndex: 1000,
+    color: "grey",
+  },
+};

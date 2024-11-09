@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const StartOptions = ({ gameRef }) => {
-  const [isWinner, setIWinner] = useState(false);
-
+const StartOptions = ({ gameRef, isWinner }) => {
   const renderWinAndCardsInfo = () => {
     if (!gameRef.current) return null;
     if (isWinner) {
@@ -24,8 +22,6 @@ const StartOptions = ({ gameRef }) => {
           </Button>
         </div>
       );
-    } else {
-      gameRef.current.Cards.setIWinner = setIWinner;
     }
     return null;
   };

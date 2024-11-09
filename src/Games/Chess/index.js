@@ -8,6 +8,7 @@ import HomeRightSideBar from "../../Components/HomeRightSideBar";
 import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
 import JoinGameRoom from "./JoinGameRoom";
 import updateDataInNode from "../../Functions/UpdateDataInNode";
+import styles from "./Styles";
 
 const ChessGame = () => {
   const canvasRef = useRef(null);
@@ -17,6 +18,11 @@ const ChessGame = () => {
   const { uid, loggedIn } = UseVerifyUser();
   const { roomKey } = useParams();
   const [playersJoined, setPlayersJoined] = useState(false);
+  const [fullscreen, setFullscrren] = useState(false);
+
+  const handleFullscreenToggle = () => {
+    setFullscrren((fullscreen) => !fullscreen);
+  };
 
   useEffect(() => {
     if (playersJoined) gameManagerRef.current.gameControl.restart();
@@ -38,6 +44,8 @@ const ChessGame = () => {
       if (divHeight - 30 < newDimensions) {
         newDimensions = divHeight - 40;
       }
+      if (gameManagerRef.current)
+        gameManagerRef.current.gameDimensions = newDimensions;
       setGameDimensions(newDimensions);
     };
 
@@ -104,13 +112,15 @@ const ChessGame = () => {
       <Container fluid>
         <Row>
           {/* Left Sidebar */}
-          <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />
+          {!fullscreen && <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />}
 
           {/* Middle Content Area */}
           <Col
-            md={7}
-            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
-            style={{ overflowY: "scroll" }}
+            md={!fullscreen ? 7 : 12}
+            className={` mx-auto px-0 vh-100 ${
+              !fullscreen ? "pb-md-0 px-md-3 pb-5" : ""
+            }`}
+            style={{ overflowY: "auto" }}
           >
             <div style={styles.body} ref={bodyRef}>
               <div style={styles.parent}>
@@ -119,63 +129,23 @@ const ChessGame = () => {
                 </div>
                 <canvas ref={canvasRef} id="gameScreen" />
               </div>
+              <i
+                className={`bi ${
+                  !fullscreen ? "bi-fullscreen" : "bi-fullscreen-exit"
+                } `}
+                style={styles.fullscreen}
+                onClick={() => handleFullscreenToggle()}
+              ></i>
             </div>
           </Col>
 
           {/* Right Sidebar */}
-          <HomeRightSideBar />
+          {!fullscreen && <HomeRightSideBar />}
         </Row>
       </Container>
-      <MobileBottomNavbar uid={uid} />
+      {!fullscreen && <MobileBottomNavbar uid={uid} />}
     </div>
   );
-};
-
-// Inline styles
-const styles = {
-  body: {
-    width: "100%",
-    height: "100vh",
-    backgroundColor: "#7c4c3e",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
-    fontFamily: "CustomFont, sans-serif",
-  },
-  menu: {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-  },
-  optionsBody: {
-    display: "flex",
-  },
-  roomName: {
-    fontSize: "2vmax",
-    marginBottom: "0.5vmax",
-    display: "block",
-    fontStyle: "inherit",
-  },
-  options: {
-    fontSize: "1.2vmax",
-    fontFamily: "CustomFont, sans-serif",
-  },
-  displayText: {
-    position: "absolute",
-    color: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    display: "flex",
-  },
-  parent: {
-    position: "relative",
-    display: "inline-block",
-  },
 };
 
 export default ChessGame;

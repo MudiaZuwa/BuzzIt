@@ -6,6 +6,7 @@ const sendMessage = async ({
   recipientUserId,
   chatId,
   messageContent,
+  mediaUrl,
   messageType,
   isGroupChat = false,
   groupParticipants = [],
@@ -28,7 +29,7 @@ const sendMessage = async ({
   const readBy = {};
   if (isGroupChat) {
     groupMembers.forEach((participantId) => {
-      readBy[participantId] = participantId === currentUserId; 
+      readBy[participantId] = participantId === currentUserId;
     });
   } else {
     readBy[currentUserId] = true;
@@ -41,8 +42,10 @@ const sendMessage = async ({
     timestamp,
     readBy,
     messageType,
-    room,
   };
+
+  if (room) messageData.room = room;
+  if (mediaUrl) messageData.media = mediaUrl;
 
   const messagesPath = `Messages/${chatID}/${messageId}`;
   await updateDataInNode(messagesPath, messageData);
@@ -70,9 +73,7 @@ const sendMessage = async ({
 
   for (const participantId of participants) {
     const chatWith = chatWithValue(participantId);
-    const userChatPath = `UserChats/${participantId}/${
-      isGroupChat ? chatID : chatWith
-    }`;
+    const userChatPath = `UserChats/${participantId}/${chatID}`;
 
     const chatDataUpdateForUser = {
       lastMessage: messageContent,

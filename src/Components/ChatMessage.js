@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
   const [showImage, setShowImage] = useState(false);
   const isSender = message.sender === currentUser;
-  const isMedia = message.messageType === "media";
   const isGameRequest = message.messageType === "GameRequest";
 
   const handleClose = () => setShowImage(false);
@@ -34,6 +33,19 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
     const extensionMatch = url.match(/\.([a-zA-Z0-9]+)(\?.*)?$/);
     const extension = extensionMatch ? extensionMatch[1].toLowerCase() : "";
     return videoExtensions.includes(extension);
+  };
+
+  const MessageText = ({ messageText }) => {
+    if (!messageText) return null;
+    const urlRegex =
+      /((https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-z]{2,}(\.[a-z]{2,})?(\/\S*)?)/gi;
+
+    const processedText = messageText.replace(urlRegex, (match) => {
+      const url = match.startsWith("http") ? match : `https://${match}`;
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${match}</a>`;
+    });
+
+    return <Card.Text dangerouslySetInnerHTML={{ __html: processedText }} />;
   };
 
   const getVideoType = (url) => {
@@ -94,40 +106,43 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
                 </div>
               )}
             </div>
-          ) : isMedia ? (
-            <div onClick={handleShow} className="image-message">
-              {isVideo(message.message) ? (
-                <div className="position-relative">
-                  <video
-                    src={message.message}
-                    className="w-100"
-                    style={{
-                      objectFit: "cover",
-                      height: "auto",
-                    }}
-                    controls={false}
-                    muted
-                    preload="metadata"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                  <div
-                    className="position-absolute bottom-0 start-0 p-2 text-light bg-dark bg-opacity-50 rounded-circle d-flex align-items-center justify-content-center"
-                    style={{ width: "30px", height: "30px" }}
-                  >
-                    <i className="bi bi-play-fill"></i>
-                  </div>
-                </div>
-              ) : (
-                <img
-                  src={message.message}
-                  alt="sent image"
-                  className="message-image-thumbnail"
-                />
-              )}
-            </div>
           ) : (
-            <Card.Text>{message.message}</Card.Text>
+            <div>
+              {message.media && (
+                <div onClick={handleShow} className="image-message">
+                  {isVideo(message.media) ? (
+                    <div className="position-relative">
+                      <video
+                        src={message.media}
+                        className="w-100"
+                        style={{
+                          objectFit: "cover",
+                          height: "auto",
+                        }}
+                        controls={false}
+                        muted
+                        preload="metadata"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                      <div
+                        className="position-absolute bottom-0 start-0 p-2 text-light bg-dark bg-opacity-50 rounded-circle d-flex align-items-center justify-content-center"
+                        style={{ width: "30px", height: "30px" }}
+                      >
+                        <i className="bi bi-play-fill"></i>
+                      </div>
+                    </div>
+                  ) : (
+                    <img
+                      src={message.media}
+                      alt="sent image"
+                      className="message-image-thumbnail"
+                    />
+                  )}
+                </div>
+              )}
+              <MessageText messageText={message.message} />
+            </div>
           )}
 
           <Card.Footer className="message-timestamp">
@@ -142,31 +157,33 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
         </Card.Body>
       </Card>
 
-      <Modal show={showImage} onHide={handleClose} centered>
-        <Modal.Body className="image-modal-body">
-          {isVideo(message.message) ? (
-            <video
-              controls
-              width="100%"
-              height="100%"
-              className="d-block w-100"
-              style={{ objectFit: "contain", margin: "auto" }}
-            >
-              <source
-                src={message.message}
-                type={getVideoType(message.message)}
+      {message.media && (
+        <Modal show={showImage} onHide={handleClose} centered>
+          <Modal.Body className="image-modal-body">
+            {isVideo(message.media) ? (
+              <video
+                controls
+                width="100%"
+                height="100%"
+                className="d-block w-100"
+                style={{ objectFit: "contain", margin: "auto" }}
+              >
+                <source
+                  src={message.media}
+                  type={getVideoType(message.media)}
+                />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <img
+                src={message.media}
+                alt="full image"
+                className="full-image"
               />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <img
-              src={message.message}
-              alt="full image"
-              className="full-image"
-            />
-          )}
-        </Modal.Body>
-      </Modal>
+            )}
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   );
 };

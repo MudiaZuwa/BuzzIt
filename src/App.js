@@ -12,6 +12,7 @@ import SuperTicTacToe from "./Games/SuperTicTacToe";
 import TicTacToe from "./Games/TicTacToe";
 import Game from "./Pages/Game";
 import Whot from "./Games/Whot";
+import Search from "./Pages/Search";
 
 const App = () => {
   return (
@@ -20,12 +21,12 @@ const App = () => {
         {/* Pages */}
         <Route path="/" element={<Home />} />
         <Route path="/:userId" element={<ProfilePage />} />
-
         <Route path="/:userId/:postId" element={<PostDetails />} />
+        <Route path="/search" element={<Search />} />
         <Route path="/messages" element={<Message />} />
         <Route path="/messages/:userId" element={<Message />} />
         <Route path="/notifications" element={<Notifications />} />
-        <Route path="/Games" element={<Game />} />
+        <Route path="/games" element={<Game />} />
 
         {/* Games */}
         <Route path="/Games/Chess/:roomKey" element={<ChessGame />} />

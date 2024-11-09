@@ -3,6 +3,10 @@ import Game from "./game";
 import { Container, Row, Col } from "react-bootstrap";
 import "./GameCanvas.module.css";
 import styles from "./Style";
+import HomeLeftSideBar from "../../Components/HomeLeftSideBar";
+import HomeRightSideBar from "../../Components/HomeRightSideBar";
+import MobileBottomNavbar from "../../Components/MobileBottomNavbar";
+import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
 
 const BrickBreak = () => {
   const canvasRef = useRef(null);
@@ -11,6 +15,12 @@ const BrickBreak = () => {
   const [gameWidth, setGameWidth] = useState(window.innerWidth);
   const [gameHeight, setGameHeight] = useState(window.innerHeight);
   const [isMobile, setIsMobile] = useState(false);
+  const { uid, loggedIn } = UseVerifyUser();
+  const [fullscreen, setFullscrren] = useState(false);
+
+  const handleFullscreenToggle = () => {
+    setFullscrren((fullscreen) => !fullscreen);
+  };
 
   useEffect(() => {
     setIsMobile(/Mobi|Android/i.test(navigator.userAgent));
@@ -53,7 +63,7 @@ const BrickBreak = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); 
+    handleResize();
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -86,40 +96,75 @@ const BrickBreak = () => {
   }, [gameWidth, gameHeight]);
 
   return (
-    <Container fluid className="p-0">
-      <div id="game-body" style={styles.gameBody}>
-        {/* Header for game info */}
-        <div id="head" style={styles.header}>
-          <div className="d-flex align-items-center">
-            <img
-              src="/assets/BrickBreak/pngwing.com.png"
-              alt="Lives"
-              id="lives_img"
-              style={styles.livesImage}
-            />
-            <p id="lives" className="m-0">
-              3
-            </p>
-          </div>
-          <img
-            src="/assets/BrickBreak/windows-media-player-pause-button.png"
-            alt="Pause"
-            id="pause_img"
-            style={styles.pauseImage}
-          />
-        </div>
+    <div>
+      <Container fluid>
+        <Row>
+          {/* Left Sidebar */}
+          {!fullscreen && <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />}
 
-        {/* Touch areas */}
-        <div className="d-flex h-100" style={{ overflowY: "hidden" }}>
-          <div id="left_touch" style={styles.touchArea}></div>
-          <div id="center_touch" style={styles.touchArea}></div>
-          <div id="right_touch" style={styles.touchArea}></div>
-        </div>
+          {/* Middle Content Area */}
+          <Col
+            md={!fullscreen ? 7 : 12}
+            className={` mx-auto px-0 vh-100 ${
+              !fullscreen ? "pb-md-0 px-md-3 pb-5" : ""
+            }`}
+            style={{ overflowY: "auto" }}
+          >
+            <Container fluid className="p-0">
+              <div id="game-body" style={styles.gameBody}>
+                {/* Header for game info */}
+                <div id="head" style={styles.header}>
+                  <div className="d-flex align-items-center">
+                    <img
+                      src="/assets/BrickBreak/pngwing.com.png"
+                      alt="Lives"
+                      id="lives_img"
+                      style={styles.livesImage}
+                    />
+                    <p id="lives" className="m-0">
+                      3
+                    </p>
+                  </div>
+                  <img
+                    src="/assets/BrickBreak/windows-media-player-pause-button.png"
+                    alt="Pause"
+                    id="pause_img"
+                    style={styles.pauseImage}
+                  />
+                </div>
 
-        {/* Game canvas */}
-        <canvas id="gameScreen" ref={canvasRef} style={styles.gameScreen} />
-      </div>
-    </Container>
+                {/* Touch areas */}
+                <div className="d-flex h-100" style={{ overflowY: "hidden" }}>
+                  <div id="left_touch" style={styles.touchArea}></div>
+                  <div id="center_touch" style={styles.touchArea}></div>
+                  <div id="right_touch" style={styles.touchArea}></div>
+                </div>
+
+                {/* Game canvas */}
+                <canvas
+                  id="gameScreen"
+                  ref={canvasRef}
+                  style={styles.gameScreen}
+                />
+
+                {/* Fullscreen Icon */}
+                <i
+                  className={`bi ${
+                    !fullscreen ? "bi-fullscreen" : "bi-fullscreen-exit"
+                  } `}
+                  style={styles.fullscreen}
+                  onClick={() => handleFullscreenToggle()}
+                ></i>
+              </div>
+            </Container>
+          </Col>
+
+          {/* Right Sidebar */}
+          {!fullscreen && <HomeRightSideBar />}
+        </Row>
+      </Container>
+      {!fullscreen && <MobileBottomNavbar uid={uid} />}
+    </div>
   );
 };
 

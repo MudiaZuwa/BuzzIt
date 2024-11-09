@@ -17,6 +17,6 @@ Object.keys(cardsShape).forEach((shape) => {
       shape: shape,
       number: num,
     };
-    cardImages[`${shape}${num}`].src = `./assets/Whot/${shape}${num}.png`;
+    cardImages[`${shape}${num}`].src = `/assets/Whot/${shape}${num}.png`;
   });
 });

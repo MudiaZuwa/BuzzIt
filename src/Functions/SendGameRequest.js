@@ -2,11 +2,13 @@ import FetchDataFromNode from "./FetchDataFromNode";
 import sendMessage from "./SendMessage";
 
 const sendGameRequest = async (userId, recipientId, game, room) => {
-  const chatIdPath = `UserChats/${userId}/${recipientId}/id`;
+  const userChatPath = `UserChats/${userId}`;
 
   try {
-    const chatId = await FetchDataFromNode(chatIdPath);
-
+    const userChats = await FetchDataFromNode(userChatPath);
+    const chatId = Object.keys(userChats).find(
+      (chat) => userChats[chat].chatWith === recipientId
+    );
     await sendMessage({
       currentUserId: userId,
       recipientUserId: recipientId,

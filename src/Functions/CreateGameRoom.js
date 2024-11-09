@@ -22,6 +22,7 @@ const CreateGameRoom = async (game, playersIDs, uid) => {
   await set(gameRef, {
     id: roomKey,
     players: players,
+    timeStamp: Date.now(),
   });
 
   return roomKey;
