@@ -101,7 +101,7 @@ const BallFall = () => {
                   </div>
                   <div className="d-flex align-items-center">
                     <img
-                      src="/assets/Ballfall/windows-media-player-pause-button.png"
+                      src="/assets/BallFall/windows-media-player-pause-button.png"
                       alt="Pause"
                       id="pause_img"
                       style={styles.pauseImage}

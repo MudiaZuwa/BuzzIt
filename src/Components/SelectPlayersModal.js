@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, Image, Form, InputGroup } from "react-bootstrap";
 import CreateGameRoom from "../Functions/CreateGameRoom";
 import sendGameRequest from "../Functions/SendGameRequest";
+import { useNavigate } from "react-router-dom";
 
 const SelectPlayersModal = ({ friendsList, show, handleClose, Game, UID }) => {
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const navigate = useNavigate();
 
   const toggleFriendSelection = (friendId) => {
     setSelectedFriends((prevSelected) => {
@@ -24,7 +26,7 @@ const SelectPlayersModal = ({ friendsList, show, handleClose, Game, UID }) => {
       )
     );
 
-    window.location.href = `/Games/${Game.path}/${room}`;
+    navigate(`/Games/${Game.path}/${room}`);
     handleClose();
   };
 

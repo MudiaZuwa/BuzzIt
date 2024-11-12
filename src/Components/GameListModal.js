@@ -3,14 +3,16 @@ import { Modal, Card } from "react-bootstrap";
 import { gameData } from "../Games/GameData";
 import CreateGameRoom from "../Functions/CreateGameRoom";
 import sendGameRequest from "../Functions/SendGameRequest";
+import { useNavigate } from "react-router-dom";
 
 const GameListModal = ({ show, handleClose, uid, friendId }) => {
+  const navigate = useNavigate();
   const GameSelected = async (Game) => {
     const room = await CreateGameRoom(Game.name, [friendId], uid);
 
     await sendGameRequest(uid, friendId, Game.name, room);
 
-    window.location.href = `/Games/${Game.path}/${room}`;
+    navigate(`/Games/${Game.path}/${room}`);
     handleClose();
   };
 

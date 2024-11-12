@@ -5,7 +5,8 @@ const HandleGameRequest = async (
   Game,
   messageId,
   requestStatus,
-  room
+  room,
+  navigate // Pass navigate as an argument
 ) => {
   const messagePath = `Messages/${chatId}/${messageId}`;
   const nodeUpdate = { requestStatus };
@@ -13,7 +14,7 @@ const HandleGameRequest = async (
   await updateDataInNode(messagePath, nodeUpdate);
 
   if (requestStatus) {
-    window.location.href = `/Games/${Game}/${room}`;
+    navigate(`/Games/${Game}/${room}`);
   }
 };
 

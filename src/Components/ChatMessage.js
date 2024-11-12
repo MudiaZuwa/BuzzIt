@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { Card, Modal, Button } from "react-bootstrap";
 import HandleGameRequest from "../Functions/HandleGameRequest";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
   const [showImage, setShowImage] = useState(false);
   const isSender = message.sender === currentUser;
   const isGameRequest = message.messageType === "GameRequest";
+  const navigate = useNavigate();
 
   const handleClose = () => setShowImage(false);
   const handleShow = () => setShowImage(true);
 
   const handleGameRequestMessage = (status) => {
     const messageId = `-MSG${message.timestamp}`;
-    HandleGameRequest(chatId, message.message, messageId, status, message.room);
+    HandleGameRequest(
+      chatId,
+      message.message,
+      messageId,
+      status,
+      message.room,
+      navigate
+    );
   };
 
   useEffect(() => {
