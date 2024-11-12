@@ -11,6 +11,8 @@ import HomeRightSideBar from "../../Components/HomeRightSideBar";
 import JoinGameRoom from "./JoinGameRoom";
 import initGame from "./app";
 import updateDataInNode from "../../Functions/UpdateDataInNode";
+import PlayerWinModal from "../../Components/PlayerWinModal";
+import WaitingModal from "../../Components/WaitingModal";
 
 const TicTacToe = () => {
   const { uid, loggedIn } = UseVerifyUser();
@@ -20,6 +22,8 @@ const TicTacToe = () => {
   const [player, setPlayer] = useState(null);
   const [playersJoined, setPlayersJoined] = useState(false);
   const curPlayerRef = useRef(curPlayer);
+  const [winnerName, setWinnerName] = useState(null);
+  const [playerWins, setPlayerWins] = useState(null);
   const [dimensions, setDimensions] = useState({
     gameWidth: 0,
     gameHeight: 0,
@@ -33,6 +37,14 @@ const TicTacToe = () => {
     }
     return newTilesValue;
   });
+  const [showWaitingModal, setShowWaitingModal] = useState(false);
+  const [showPlayerWinModal, setShowPlayerWinModal] = useState(false);
+
+  const handleWaitingModalOpen = () => setShowWaitingModal(true);
+  const handleWaitingModalClose = () => setShowWaitingModal(false);
+
+  const handlePlayerWinModalOpen = () => setShowPlayerWinModal(true);
+  const handlePlayerWinModalClose = () => setShowPlayerWinModal(false);
 
   const tilesValueRef = useRef(tilesValue);
 
@@ -68,7 +80,9 @@ const TicTacToe = () => {
           setTileValue,
           computerNextMove,
           players[curPlayer],
-          setCurPlayer
+          setCurPlayer,
+          setWinnerName,
+          curPlayer
         );
       }, 1000);
     }
@@ -77,8 +91,10 @@ const TicTacToe = () => {
   useEffect(() => {
     let unsubscribeFromNode = null;
     if (!roomKey || !uid) return;
-    if (roomKey === "Single") setMode("COMPUTER");
-    else {
+    if (roomKey === "Single") {
+      setMode("COMPUTER");
+      setPlayer("Player");
+    } else {
       JoinGameRoom(
         uid,
         roomKey,
@@ -86,7 +102,10 @@ const TicTacToe = () => {
         "TicTacToe",
         setPlayersJoined,
         setPlayer
-      ).then((unsubscribe) => (unsubscribeFromNode = unsubscribe));
+      ).then((unsubscribe) => {
+        unsubscribeFromNode = unsubscribe;
+        handleWaitingModalOpen();
+      });
     }
     return () => {
       if (unsubscribeFromNode) {
@@ -94,7 +113,7 @@ const TicTacToe = () => {
       }
       if (uid && roomKey) {
         const playerPath = `Games/TicTacToe/${roomKey}/players/${uid}`;
-        updateDataInNode(playerPath, { option: false });
+        updateDataInNode(playerPath, { online: false });
       }
     };
   }, [uid, roomKey]);
@@ -106,7 +125,9 @@ const TicTacToe = () => {
       setTileValue,
       opponentMove,
       players[playerTurn],
-      setCurPlayer
+      setCurPlayer,
+      setWinnerName,
+      curPlayer
     );
   };
 
@@ -117,10 +138,55 @@ const TicTacToe = () => {
 
   useEffect(() => {
     if (playersJoined) {
-      setMode("PVP");
-      initGame(uid, roomKey, curPlayerRef, tilesValueRef, HandlePVPUpdate);
+      if (!mode) {
+        setMode("PVP");
+        initGame(uid, roomKey, curPlayerRef, tilesValueRef, HandlePVPUpdate);
+      }
+      handleWaitingModalClose();
+    } else if (
+      mode === "PVP" &&
+      !showWaitingModal &&
+      !showPlayerWinModal &&
+      !winnerName
+    ) {
+      handleWaitingModalOpen();
     }
   }, [playersJoined]);
+
+  const handlePlayAgain = async () => {
+    const newTilesValue = {};
+    for (let i = 1; i <= 9; i++) {
+      newTilesValue[`tile${i}`] = { value: "" };
+    }
+    handlePlayerWinModalClose();
+    if (mode === "PVP") {
+      const playerPath = `Games/TicTacToe/${roomKey}/players/${uid}`;
+      const playerData = { online: true, tiles: newTilesValue };
+      await updateDataInNode(playerPath, playerData);
+      handleWaitingModalOpen();
+    }
+    setTileValue(newTilesValue);
+    setWinnerName(null);
+    setPlayerWins(null);
+    setCurPlayer("Player1");
+  };
+
+  const setPlayerOffline = async () => {
+    const playerPath = `Games/TicTacToe/${roomKey}/players/${uid}`;
+    await updateDataInNode(playerPath, { online: false });
+    if (winnerName === player) setPlayerWins(true);
+    else handlePlayerWinModalOpen();
+  };
+
+  useEffect(() => {
+    if (winnerName) {
+      setPlayerOffline();
+    }
+  }, [winnerName]);
+
+  useEffect(() => {
+    if (playerWins) handlePlayerWinModalOpen();
+  }, [playerWins]);
 
   return (
     <div>
@@ -181,6 +247,8 @@ const TicTacToe = () => {
                             index,
                             players[curPlayer],
                             setCurPlayer,
+                            setWinnerName,
+                            curPlayer,
                             roomKey,
                             uid
                           );
@@ -200,6 +268,17 @@ const TicTacToe = () => {
         </Row>
       </Container>
       <MobileBottomNavbar uid={uid} />
+      <WaitingModal
+        show={showWaitingModal}
+        onClose={handleWaitingModalClose}
+        playerJoined={playersJoined}
+      />
+      <PlayerWinModal
+        show={showPlayerWinModal}
+        onPlayAgain={handlePlayAgain}
+        winnerName={winnerName}
+        playerWins={playerWins}
+      />
     </div>
   );
 };

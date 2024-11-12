@@ -130,7 +130,7 @@ const SuperTicTacToe = () => {
       }
       if (uid && roomKey) {
         const playerPath = `Games/SuperTicTacToe/${roomKey}/players/${uid}`;
-        updateDataInNode(playerPath, { option: false });
+        updateDataInNode(playerPath, { online: false });
       }
     };
   }, [uid, roomKey]);

@@ -9,6 +9,8 @@ import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
 import JoinGameRoom from "./JoinGameRoom";
 import updateDataInNode from "../../Functions/UpdateDataInNode";
 import styles from "./Styles";
+import WaitingModal from "../../Components/WaitingModal";
+import PlayerWinModal from "../../Components/PlayerWinModal";
 
 const ChessGame = () => {
   const canvasRef = useRef(null);
@@ -19,13 +21,24 @@ const ChessGame = () => {
   const { roomKey } = useParams();
   const [playersJoined, setPlayersJoined] = useState(false);
   const [fullscreen, setFullscrren] = useState(false);
+  const [showWaitingModal, setShowWaitingModal] = useState(false);
+  const [showPlayerWinModal, setShowPlayerWinModal] = useState(false);
+
+  const handleWaitingModalOpen = () => setShowWaitingModal(true);
+  const handleWaitingModalClose = () => setShowWaitingModal(false);
+
+  const handlePlayerWinModalOpen = () => setShowPlayerWinModal(true);
+  const handlePlayerWinModalClose = () => setShowPlayerWinModal(false);
 
   const handleFullscreenToggle = () => {
     setFullscrren((fullscreen) => !fullscreen);
   };
 
   useEffect(() => {
-    if (playersJoined) gameManagerRef.current.gameControl.restart();
+    if (playersJoined) {
+      gameManagerRef.current.gameControl.restart();
+      handleWaitingModalClose();
+    }
   }, [playersJoined]);
 
   useEffect(() => {
@@ -89,7 +102,10 @@ const ChessGame = () => {
           gameManagerRef,
           "Chess",
           setPlayersJoined
-        ).then((unsubscribe) => (unsubscribeFromNode = unsubscribe));
+        ).then((unsubscribe) => {
+          handleWaitingModalOpen();
+          unsubscribeFromNode = unsubscribe;
+        });
 
         return () => {
           if (unsubscribeFromNode) {
@@ -144,6 +160,12 @@ const ChessGame = () => {
         </Row>
       </Container>
       {!fullscreen && <MobileBottomNavbar uid={uid} />}
+      <WaitingModal
+        show={showWaitingModal}
+        onClose={handleWaitingModalClose}
+        playerJoined={playersJoined}
+      />
+      <PlayerWinModal show={showPlayerWinModal} Game={"Chess"} uid={uid} />
     </div>
   );
 };

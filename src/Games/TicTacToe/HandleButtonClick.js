@@ -4,8 +4,10 @@ import CheckWinCondition from "./CheckWinCondition";
 const HandleButtonClick = (
   setTileValue,
   index,
-  player,
+  played,
   setCurPlayer,
+  setWinnerName,
+  player,
   room,
   uid
 ) => {
@@ -16,10 +18,10 @@ const HandleButtonClick = (
 
     if (clickedTile !== "") return newTilesValue;
 
-    newTilesValue[`tile${tileIndex}`].value = player;
+    newTilesValue[`tile${tileIndex}`].value = played;
 
-    if (CheckWinCondition(tileIndex, newTilesValue, "tile", player)) {
-      console.log(`${player} wins!`);
+    if (CheckWinCondition(tileIndex, newTilesValue, "tile", played)) {
+      setWinnerName(player);
     }
 
     setCurPlayer((curPlayer) =>
