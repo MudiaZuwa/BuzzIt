@@ -3,25 +3,26 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "../Components/firebase";
+import FetchDataFromNode from "../Functions/FetchDataFromNode";
 
-const GoogleSignIn = (createNewProfile, setSuccess) => {
+const GoogleSignIn = async (createNewProfile, setSuccess) => {
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      const user = result.user;
-      if (typeof createNewProfile === "function")
-        createNewProfile(user.email, user.uid);
-      else setSuccess(true);
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.customData.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
-    });
+
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    const accountExists = await FetchDataFromNode(`UsersDetails/${user.uid}`);
+
+    if (typeof createNewProfile === "function" && !accountExists) {
+      createNewProfile(user.email, user.uid);
+    } else {
+      setSuccess(true);
+    }
+  } catch (error) {
+    console.error("Error during sign-in:", error);
+  }
 };
 
 export default GoogleSignIn;

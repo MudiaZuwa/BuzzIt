@@ -17,15 +17,6 @@ const ProfileEditModal = ({ show, handleClose, currentUserDetails }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const { uid } = UseVerifyUser();
-  if (!currentUserDetails) {
-    currentUserDetails = {
-      coverPhoto: null,
-      profilePhoto: null,
-      name: "",
-      about: "",
-      dob: "",
-    };
-  }
 
   const handleCoverPhotoChange = (e) => {
     const file = e.target.files[0];
@@ -65,6 +56,14 @@ const ProfileEditModal = ({ show, handleClose, currentUserDetails }) => {
       setError(null);
       setSuccess(false);
       setIsPending(false);
+    } else if (!currentUserDetails) {
+      currentUserDetails = {
+        coverPhoto: null,
+        profilePhoto: null,
+        name: "",
+        about: "",
+        dob: "",
+      };
     }
   }, [show, currentUserDetails]);
 

@@ -29,8 +29,7 @@ const RegisterForm = ({ setSuccess }) => {
   const setStates = { setValidated, setError, setIsPending, setSuccess };
 
   const handleGoogleSignIn = () => {
-    GoogleSignIn(createNewProfile);
-    
+    GoogleSignIn(createNewProfile, setSuccess);
   };
 
   const createNewProfile = (email, UID) => {
@@ -47,16 +46,16 @@ const RegisterForm = ({ setSuccess }) => {
           email: email,
         };
         localStorage.setItem("details", JSON.stringify(AccountDetails));
-        setStates.setSuccess(true);
-        setStates.setIsPending(false);
+        setSuccess(true);
+        setIsPending(false);
       })
       .catch((error) => {
         if (error.name === "AbortError") {
         } else {
           const errorCode = error.code;
           const errorMessage = error.message;
-          setStates.setError(errorMessage);
-          setStates.setIsPending(false);
+          setError(errorMessage);
+          setIsPending(false);
         }
       });
   };

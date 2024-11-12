@@ -13,7 +13,9 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
 
-  const handleProfileEditModalOpen = () => setShowProfileEditModal(true);
+  const handleProfileEditModalOpen = () => {
+    if (!showProfileEditModal) setShowProfileEditModal(true);
+  };
   const handleProfileEditModalClose = () => setShowProfileEditModal(false);
 
   const handlePostModalOpen = () => setShowPostModal(true);
