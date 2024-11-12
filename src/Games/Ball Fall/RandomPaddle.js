@@ -8,7 +8,8 @@ export function buildPaddle(gameWidth, game, paddles, extraHealths) {
     var min = 0,
       max = gameWidth - paddleWidth;
     var positionx = Math.floor(Math.random() * (max - min + 1) + min);
-    (min = 1), (max = 10);
+    min = 1;
+    max = 10;
     var spawnHealth = Math.floor(Math.random() * (max - min + 1) + min);
     if (spawnHealth === 3) extraHealths.push(new extraHealth(game, positionx));
     paddles.push(new Paddle(game, positionx));
