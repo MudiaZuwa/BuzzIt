@@ -36,7 +36,7 @@
 }
 
 /* Header back button visibility on smaller screens */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .back-button {
     display: inline-block;
   }

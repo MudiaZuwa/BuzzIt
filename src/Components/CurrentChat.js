@@ -285,7 +285,7 @@ const CurrentChat = ({
           </div>
           <Form
             onSubmit={handleSendMessage}
-            className="message-form pb-md-2"
+            className="message-form pb-4 pb-md-2 pb-lg-0"
             disabled={sendingMessage}
           >
             <Form.Group className="message-input-group">

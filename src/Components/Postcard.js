@@ -171,7 +171,7 @@ const PostCard = ({ post, currentUserID }) => {
                         variant="top"
                         src={mediaItem}
                         alt={`Media ${index + 1}`}
-                        style={{ height: "100%", objectFit: "contain" }} // Ensures the image covers the height
+                        style={{ height: "100%", objectFit: "contain" }} 
                       />
                     )}
                   </div>

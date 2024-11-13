@@ -287,7 +287,7 @@ const Message = () => {
           </Col>
 
           {userId && (
-            <Col xs={12} className="d-lg-none ">
+            <Col xs={12} md={10} className="d-lg-none vh-100 pb-5 pb-md-0">
               <CurrentChat
                 chatId={currentChatId}
                 uid={uid}
