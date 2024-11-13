@@ -18,11 +18,11 @@ const SelectPlayersModal = ({ friendsList, show, handleClose, Game, UID }) => {
   };
 
   const playersSelected = async () => {
-    const room = await CreateGameRoom(Game.name, selectedFriends, UID);
+    const room = await CreateGameRoom(Game.path, selectedFriends, UID);
 
     await Promise.all(
       selectedFriends.map((friendId) =>
-        sendGameRequest(UID, friendId, Game.name, room)
+        sendGameRequest(UID, friendId, Game.path, room)
       )
     );
 

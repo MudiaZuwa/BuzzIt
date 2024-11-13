@@ -10,11 +10,13 @@ const PlayerWinModal = ({ show, onPlayAgain, winnerName, playerWins }) => {
       show={show}
       onHide={() => {}}
       centered
-      backdrop="static" 
-      keyboard={false} 
+      backdrop="static"
+      keyboard={false}
     >
       <Modal.Header>
-        <Modal.Title>{winnerName} Wins!</Modal.Title>
+        <Modal.Title>
+          {playerWins ? "You Won!" : `${winnerName} Wins!`}
+        </Modal.Title>
       </Modal.Header>
       {playerWins && (
         <Modal.Body className="text-center">

@@ -20,17 +20,19 @@ const HandleButtonClick = (
 
     newTilesValue[`tile${tileIndex}`].value = played;
 
+    const newCurPlayer = player === "Player1" ? "Player2" : "Player1";
+
+    setCurPlayer(newCurPlayer);
+    if (room && uid) {
+      updateDataInNode(`Games/TicTacToe/${room}/players/${uid}`, {
+        tiles: newTilesValue,
+        curPlayer: newCurPlayer,
+      });
+    }
     if (CheckWinCondition(tileIndex, newTilesValue, "tile", played)) {
       setWinnerName(player);
     }
 
-    setCurPlayer((curPlayer) =>
-      curPlayer === "Player1" ? "Player2" : "Player1"
-    );
-    if (room)
-      updateDataInNode(`Games/TicTacToe/${room}/players/${uid}`, {
-        tiles: newTilesValue,
-      });
     return newTilesValue;
   });
 };

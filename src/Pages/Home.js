@@ -48,7 +48,7 @@ const Home = () => {
 
   useEffect(() => {
     const postUnsubscribe = ListenDataFromNode(`Posts/`, updatePosts);
-  
+
     return () => postUnsubscribe();
   }, []);
 

@@ -6,8 +6,10 @@ const HandleButtonClick = (
   index,
   curSuperTile,
   setCurSuperTile,
-  player,
+  played,
   setCurPlayer,
+  setWinnerName,
+  curPlayer,
   room,
   uid
 ) => {
@@ -20,30 +22,30 @@ const HandleButtonClick = (
     const clickedTile = curSuperTileTiles[`tile${tileIndex}`].value;
     if (clickedTile !== "") return newTilesValue;
     newTilesValue[`Stile${curSuperTile}`].tiles[`tile${tileIndex}`].value =
-      player;
+      played;
 
     if (Object.values(curSuperTileTiles).every((tile) => tile.value !== ""))
       newTilesValue[`Stile${curSuperTile}`].value = "-";
 
-    if (CheckWinCondition(tileIndex, curSuperTileTiles, "tile", player)) {
-      newTilesValue[`Stile${curSuperTile}`].value = player;
-      if (CheckWinCondition(tileIndex, newTilesValue, "Stile", player))
-        console.log("win");
-    }
-
     let newSuperTileValue =
       newTilesValue[`Stile${tileIndex}`].value === "" ? tileIndex : null;
+    let newCurPlayer = curPlayer === "Player1" ? "Player2" : "Player1";
 
     setCurSuperTile(newSuperTileValue);
 
-    setCurPlayer((curPlayer) => {
-      return curPlayer === "Player1" ? "Player2" : "Player1";
-    });
+    setCurPlayer(newCurPlayer);
     if (room)
       updateDataInNode(`Games/SuperTicTacToe/${room}/players/${uid}`, {
         tiles: newTilesValue,
         curSuperTile: newSuperTileValue,
+        curPlayer: newCurPlayer,
       });
+
+    if (CheckWinCondition(tileIndex, curSuperTileTiles, "tile", played)) {
+      newTilesValue[`Stile${curSuperTile}`].value = played;
+      if (CheckWinCondition(tileIndex, newTilesValue, "Stile", played))
+        setWinnerName(curPlayer);
+    }
 
     return newTilesValue;
   });

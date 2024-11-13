@@ -23,6 +23,8 @@ const ChessGame = () => {
   const [fullscreen, setFullscrren] = useState(false);
   const [showWaitingModal, setShowWaitingModal] = useState(false);
   const [showPlayerWinModal, setShowPlayerWinModal] = useState(false);
+  const [winnerName, setWinnerName] = useState(null);
+  const [playerWins, setPlayerWins] = useState(null);
 
   const handleWaitingModalOpen = () => setShowWaitingModal(true);
   const handleWaitingModalClose = () => setShowWaitingModal(false);
@@ -38,6 +40,8 @@ const ChessGame = () => {
     if (playersJoined) {
       gameManagerRef.current.gameControl.restart();
       handleWaitingModalClose();
+    } else if (!showPlayerWinModal) {
+      handleWaitingModalOpen();
     }
   }, [playersJoined]);
 
@@ -123,6 +127,48 @@ const ChessGame = () => {
     }
   }, [gameDimensions, roomKey, uid]);
 
+  const handlePlayAgain = async () => {
+    const newTilesValue = {};
+    for (let i = 1; i <= 9; i++) {
+      newTilesValue[`tile${i}`] = { value: "" };
+    }
+
+    handlePlayerWinModalClose();
+    const playerPath = `Games/Chess/${roomKey}/players/${uid}`;
+    gameManagerRef.current.Pieces.Restart();
+    const player = gameManagerRef.current.player;
+    let playerPieces = gameManagerRef.current.Pieces.playerPieces[player];
+    const playerData = {
+      online: true,
+      pieces: playerPieces,
+      playerTurn: "Player1",
+    };
+    await updateDataInNode(playerPath, playerData);
+    handleWaitingModalOpen();
+
+    setWinnerName(null);
+    setPlayerWins(null);
+    gameManagerRef.current.gameControl.restart();
+  };
+
+  const setPlayerOffline = async () => {
+    const playerPath = `Games/TicTacToe/${roomKey}/players/${uid}`;
+    await updateDataInNode(playerPath, { online: false });
+    const player = gameManagerRef.current.player;
+    if (winnerName === player) setPlayerWins(true);
+    else handlePlayerWinModalOpen();
+  };
+
+  useEffect(() => {
+    if (winnerName) {
+      setPlayerOffline();
+    }
+  }, [winnerName]);
+
+  useEffect(() => {
+    if (playerWins) handlePlayerWinModalOpen();
+  }, [playerWins]);
+
   return (
     <div>
       <Container fluid>
@@ -165,7 +211,12 @@ const ChessGame = () => {
         onClose={handleWaitingModalClose}
         playerJoined={playersJoined}
       />
-      <PlayerWinModal show={showPlayerWinModal} Game={"Chess"} uid={uid} />
+      <PlayerWinModal
+        show={showPlayerWinModal}
+        onPlayAgain={handlePlayAgain}
+        winnerName={winnerName}
+        playerWins={playerWins}
+      />
     </div>
   );
 };

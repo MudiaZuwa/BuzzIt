@@ -16,20 +16,29 @@ const JoinGameRoom = async (
   roomKey,
   Tiles,
   game,
+  setTilesValue,
   setPlayersJoined,
+  setCurPlayer,
   setPlayer
 ) => {
   const room = await FetchDataFromNode(`Games/${game}/${roomKey}`);
   let players = [];
+  let curPlayer = "Player1";
 
   if (room) players = Object.keys(room.players);
-
-  const playerData = { online: true, tiles: Tiles };
   if (players.includes(uid)) {
+    if (room.players[uid].tiles) Tiles = room.players[uid].tiles;
+    if (room.players[uid].curPlayer) curPlayer = room.players[uid].curPlayer;
+    const playerData = { online: true, tiles: Tiles, curPlayer };
+
     const gamePath = `Games/${game}/${roomKey}/players/${uid}`;
 
     await updateDataInNode(gamePath, playerData);
     setPlayer(room.players[uid].player);
+    if (room.players[uid].tiles) {
+      setTilesValue(Tiles);
+      setCurPlayer(curPlayer);
+    }
   }
 
   const playerRef = ref(database, `Games/${game}/${roomKey}/players/${uid}`);

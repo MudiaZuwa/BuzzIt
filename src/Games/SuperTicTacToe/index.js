@@ -13,6 +13,8 @@ import HomeRightSideBar from "../../Components/HomeRightSideBar";
 import JoinGameRoom from "./JoinGameRoom";
 import initGame from "./app";
 import updateDataInNode from "../../Functions/UpdateDataInNode";
+import WaitingModal from "../../Components/WaitingModal";
+import PlayerWinModal from "../../Components/PlayerWinModal";
 
 const SuperTicTacToe = () => {
   const { uid, loggedIn } = UseVerifyUser();
@@ -25,6 +27,8 @@ const SuperTicTacToe = () => {
   const [playersJoined, setPlayersJoined] = useState(false);
   const curSuperTileRef = useRef(curSuperTile);
   const curPlayerRef = useRef(curPlayer);
+  const [winnerName, setWinnerName] = useState(null);
+  const [playerWins, setPlayerWins] = useState(null);
 
   const [dimensions, setdimensions] = useState(() => {
     return {
@@ -51,6 +55,17 @@ const SuperTicTacToe = () => {
     }
     return newTilesValue;
   });
+
+  const [showWaitingModal, setShowWaitingModal] = useState(false);
+  const [showPlayerWinModal, setShowPlayerWinModal] = useState(false);
+
+  const handleWaitingModalOpen = () => {
+    if (!showWaitingModal) setShowWaitingModal(true);
+  };
+  const handleWaitingModalClose = () => setShowWaitingModal(false);
+
+  const handlePlayerWinModalOpen = () => setShowPlayerWinModal(true);
+  const handlePlayerWinModalClose = () => setShowPlayerWinModal(false);
 
   const tilesValueRef = useRef(tilesValue);
 
@@ -120,8 +135,14 @@ const SuperTicTacToe = () => {
         tilesValue,
         "SuperTicTacToe",
         setPlayersJoined,
-        setPlayer
-      ).then((unsubscribe) => (unsubscribeFromNode = unsubscribe));
+        setPlayer,
+        setCurPlayer,
+        setCurSuperTile,
+        setTileValue
+      ).then((unsubscribe) => {
+        unsubscribeFromNode = unsubscribe;
+        handleWaitingModalOpen();
+      });
     }
 
     return () => {
@@ -150,7 +171,11 @@ const SuperTicTacToe = () => {
         curSuperTile,
         setCurSuperTile,
         players[playerTurn],
-        setCurPlayer
+        setCurPlayer,
+        setWinnerName,
+        curPlayer,
+        roomKey,
+        uid
       );
   };
 
@@ -162,17 +187,75 @@ const SuperTicTacToe = () => {
 
   useEffect(() => {
     if (playersJoined) {
-      setMode("PVP");
-      initGame(
-        roomKey,
-        roomKey,
-        curPlayerRef,
-        tilesValueRef,
-        curSuperTileRef,
-        HandlePVPUpdate
-      );
+      if (!mode) {
+        setMode("PVP");
+        initGame(
+          uid,
+          roomKey,
+          curPlayerRef,
+          tilesValueRef,
+          curSuperTileRef,
+          HandlePVPUpdate
+        );
+      }
+      handleWaitingModalClose();
+    } else if (
+      mode === "PVP" &&
+      !showWaitingModal &&
+      !showPlayerWinModal &&
+      !winnerName
+    ) {
+      handleWaitingModalOpen();
     }
   }, [playersJoined]);
+
+  const handlePlayAgain = async () => {
+    const newTilesValue = {};
+    for (let i = 1; i <= 9; i++) {
+      newTilesValue[`Stile${i}`] = {
+        value: "",
+        tiles: {},
+      };
+      for (let j = 1; j <= 9; j++) {
+        newTilesValue[`Stile${i}`].tiles[`tile${j}`] = { value: "" };
+      }
+    }
+
+    handlePlayerWinModalClose();
+    if (mode === "PVP") {
+      const playerPath = `Games/SuperTicTacToe/${roomKey}/players/${uid}`;
+      const playerData = {
+        online: true,
+        tiles: newTilesValue,
+        curPlayer: "Player1",
+        curSuperTile: "",
+      };
+      await updateDataInNode(playerPath, playerData);
+      handleWaitingModalOpen();
+    }
+    setTileValue(newTilesValue);
+    setWinnerName(null);
+    setPlayerWins(null);
+    setCurPlayer("Player1");
+    setCurSuperTile(null);
+  };
+
+  const setPlayerOffline = async () => {
+    const playerPath = `Games/SuperTicTacToe/${roomKey}/players/${uid}`;
+    await updateDataInNode(playerPath, { online: false });
+    if (winnerName === player) setPlayerWins(true);
+    else handlePlayerWinModalOpen();
+  };
+
+  useEffect(() => {
+    if (winnerName) {
+      setPlayerOffline();
+    }
+  }, [winnerName]);
+
+  useEffect(() => {
+    if (playerWins) handlePlayerWinModalOpen();
+  }, [playerWins]);
 
   return (
     <div>
@@ -284,6 +367,8 @@ const SuperTicTacToe = () => {
                               setCurSuperTile,
                               players[curPlayer],
                               setCurPlayer,
+                              setWinnerName,
+                              curPlayer,
                               roomKey,
                               uid
                             );
@@ -310,6 +395,17 @@ const SuperTicTacToe = () => {
         </Row>
       </Container>
       <MobileBottomNavbar uid={uid} />
+      <WaitingModal
+        show={showWaitingModal}
+        onClose={handleWaitingModalClose}
+        playerJoined={playersJoined}
+      />
+      <PlayerWinModal
+        show={showPlayerWinModal}
+        onPlayAgain={handlePlayAgain}
+        winnerName={winnerName}
+        playerWins={playerWins}
+      />
     </div>
   );
 };

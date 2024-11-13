@@ -40,7 +40,9 @@ const TicTacToe = () => {
   const [showWaitingModal, setShowWaitingModal] = useState(false);
   const [showPlayerWinModal, setShowPlayerWinModal] = useState(false);
 
-  const handleWaitingModalOpen = () => setShowWaitingModal(true);
+  const handleWaitingModalOpen = () => {
+    if (!showWaitingModal) setShowWaitingModal(true);
+  };
   const handleWaitingModalClose = () => setShowWaitingModal(false);
 
   const handlePlayerWinModalOpen = () => setShowPlayerWinModal(true);
@@ -100,7 +102,9 @@ const TicTacToe = () => {
         roomKey,
         tilesValue,
         "TicTacToe",
+        setTileValue,
         setPlayersJoined,
+        setCurPlayer,
         setPlayer
       ).then((unsubscribe) => {
         unsubscribeFromNode = unsubscribe;
@@ -127,7 +131,9 @@ const TicTacToe = () => {
       players[playerTurn],
       setCurPlayer,
       setWinnerName,
-      curPlayer
+      curPlayerRef.current,
+      roomKey,
+      uid
     );
   };
 
@@ -158,10 +164,15 @@ const TicTacToe = () => {
     for (let i = 1; i <= 9; i++) {
       newTilesValue[`tile${i}`] = { value: "" };
     }
+
     handlePlayerWinModalClose();
     if (mode === "PVP") {
       const playerPath = `Games/TicTacToe/${roomKey}/players/${uid}`;
-      const playerData = { online: true, tiles: newTilesValue };
+      const playerData = {
+        online: true,
+        tiles: newTilesValue,
+        curPlayer: "Player1",
+      };
       await updateDataInNode(playerPath, playerData);
       handleWaitingModalOpen();
     }
@@ -194,7 +205,6 @@ const TicTacToe = () => {
         <Row>
           {/* Left Sidebar */}
           <HomeLeftSideBar loggedIn={loggedIn} uid={uid} />
-
           {/* Middle Content Area */}
           <Col
             md={7}

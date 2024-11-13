@@ -3,7 +3,7 @@ import { GAMESTATE } from "./gameControls";
 import { pieceImages } from "./piecesData";
 
 export default class Pieces {
-  constructor(gameManager) {
+  constructor(gameManager, setWinnerName) {
     this.gameManager = gameManager;
     this.ctx = gameManager.ctx;
     this.pieceImages = pieceImages;
@@ -112,6 +112,7 @@ export default class Pieces {
       const piecesPath = `Games/Chess/${room}/players/${playerId}/`;
       updateDataInNode(piecesPath, {
         pieces: this.playerPieces[playerTurn],
+        playerTurn: this.gameManager.playerTurn,
       });
     }
     const opponent = playerTurn === "Player1" ? "Player2" : "Player1";
@@ -123,9 +124,6 @@ export default class Pieces {
       this.playerPieces[opponent][opponentPieceIndex].visible = false;
       const targetPiece = opponentPieces[opponentPieceIndex];
       if (targetPiece.piece === "King") {
-        document.getElementById("displayText").innerText = playerTurn + "wins";
-        document.getElementById("displayText").style.display = "flex";
-
         setTimeout(() => {
           this.gameManager.gameControl.gamestate = GAMESTATE.GAMEOVER;
           this.gameManager.gameControl.restart();
