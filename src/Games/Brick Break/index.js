@@ -14,7 +14,7 @@ const BrickBreak = () => {
   const lastTimeRef = useRef(0);
   const [gameWidth, setGameWidth] = useState(window.innerWidth);
   const [gameHeight, setGameHeight] = useState(window.innerHeight);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(null);
   const { uid, loggedIn } = UseVerifyUser();
   const [fullscreen, setFullscrren] = useState(false);
 
@@ -70,10 +70,12 @@ const BrickBreak = () => {
   }, [isMobile]);
 
   useEffect(() => {
+    console.log(gameHeight);
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    if (!gameRef.current) {
+    if (!gameRef.current && isMobile !== null) {
       gameRef.current = new Game(gameWidth, gameHeight, isMobile);
+      console.log(isMobile);
 
       const animate = (timestamp) => {
         const deltaTime = timestamp - lastTimeRef.current;
@@ -93,7 +95,7 @@ const BrickBreak = () => {
         cancelAnimationFrame(animate);
       };
     }
-  }, [gameWidth, gameHeight]);
+  }, [isMobile]);
 
   return (
     <div>

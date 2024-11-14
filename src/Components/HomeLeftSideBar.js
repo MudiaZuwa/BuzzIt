@@ -57,39 +57,60 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
         </Button>
       </Link>
       <Link to="/notifications" className="d-flex align-items-center mb-3">
-        <Button variant="link" className="d-flex align-items-center ">
-          <i className="bi bi-bell-fill me-2"></i> Notification
+        <Button
+          variant="link"
+          className="d-flex align-items-center overflow-x-hidden"
+        >
+          <i className="bi bi-bell-fill me-2 "></i>{" "}
+          <span className="text-truncate">Notification</span>
         </Button>
       </Link>
       <Link to="/messages" className="d-flex align-items-center mb-3">
-        <Button variant="link" className="d-flex align-items-center ">
-          <i className="bi bi-envelope-fill me-2"></i> Messages
+        <Button
+          variant="link"
+          className="d-flex align-items-center overflow-x-hidden"
+        >
+          <i className="bi bi-envelope-fill me-2"></i>{" "}
+          <span className="text-truncate">Messages</span>
         </Button>
       </Link>
 
       {loggedIn && uid ? (
         <Link to={`/${uid}`} className="d-flex align-items-center mb-3">
-          <Button variant="link" className="d-flex align-items-center">
-            <i className="bi bi-person-fill me-2"></i> Profile
+          <Button
+            variant="link"
+            className="d-flex align-items-center overflow-x-hidden"
+          >
+            <i className="bi bi-person-fill me-2"></i>{" "}
+            <span className="text-truncate">Profile</span>
           </Button>
         </Link>
       ) : (
         <Button
           variant="link"
-          className="d-flex align-items-center mb-3"
+          className="d-flex align-items-center mb-3 overflow-x-hidden"
           onClick={handleLoginToggle}
         >
-          <i className="bi bi-person-fill me-2"></i> Profile
+          <i className="bi bi-person-fill me-2"></i>{" "}
+          <span className="text-truncate">Profile</span>
         </Button>
       )}
       <Link to="/Games" className="d-flex align-items-center mb-3">
-        <Button variant="link" className="d-flex align-items-center">
-          <i className="bi bi-controller me-2"></i> Games
+        <Button
+          variant="link"
+          className="d-flex align-items-center overflow-x-hidden"
+        >
+          <i className="bi bi-controller me-2"></i>{" "}
+          <span className="text-truncate">Games</span>
         </Button>
       </Link>
 
-      <Button variant="link" className="d-flex align-items-center mb-3">
-        <i className="bi bi-gear-fill me-2"></i> Settings
+      <Button
+        variant="link"
+        className="d-flex align-items-center mb-3 overflow-x-hidden"
+      >
+        <i className="bi bi-gear-fill me-2"></i>{" "}
+        <span className="text-truncate">Settings</span>
       </Button>
 
       <Button

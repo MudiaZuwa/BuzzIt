@@ -4,10 +4,11 @@ import Cards from "./Cards";
 import TouchListener from "./TouchListener";
 
 export default class GameManager {
-  constructor(ctx, gameCanvas, gameDimensions) {
+  constructor(ctx, gameCanvas, gameDimensions, isMobile) {
     this.ctx = ctx;
     this.canvas = gameCanvas;
     this.gameDimensions = gameDimensions;
+    this.isLandScape = isMobile;
     this.win = null;
     this.players = [];
     this.GameBody = new GameBody(this);
@@ -19,7 +20,7 @@ export default class GameManager {
   }
 
   Start(players, room, uid) {
-    this.players = players
+    this.players = players;
     this.room = room;
     this.player = uid;
     this.Cards.roundTurns = this.players;

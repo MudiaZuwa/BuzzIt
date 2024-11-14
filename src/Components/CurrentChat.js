@@ -4,7 +4,7 @@ import HandleFileUpload from "../Functions/HandleFileUpload";
 import sendMessage from "../Functions/SendMessage";
 import ChatMessage from "./ChatMessage";
 import GameListModal from "./GameListModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CurrentChat = ({
   chatId,
@@ -22,6 +22,7 @@ const CurrentChat = ({
   let isGroupChat = false;
   const [showGameListModal, setShowGameListModal] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const navigate = useNavigate();
 
   const handleGameListModalOpen = () => setShowGameListModal(true);
   const handleGameListModalClose = () => setShowGameListModal(false);
@@ -134,7 +135,10 @@ const CurrentChat = ({
       {recipientDetails && (
         <div className="chat-container">
           <div className="chat-header d-flex align-items-center">
-            <button className="back-button me-2">
+            <button
+              className="back-button me-2"
+              onClick={()=>navigate(`/messages`)}
+            >
               <i className="bi bi-arrow-left"></i>
             </button>
             {!isGroupChat ? (

@@ -31,9 +31,14 @@ const JoinGameRoom = async (
   const unsubscribe = await ListenDataFromNode(
     `Games/${game}/${roomKey}/players`,
     (players) => {
-      setPlayers(
-        Object.keys(players).filter((playerId) => players[playerId].online)
-      );
+      setPlayers(() => {
+        const onlinePlayers = Object.values(players).filter(
+          (player) => player.online
+        );
+        const playersName = [];
+        onlinePlayers.forEach((player) => playersName.push(player.player));
+        return playersName;
+      });
       setPlayersJoined(Object.values(players).every((player) => player.online));
     }
   );

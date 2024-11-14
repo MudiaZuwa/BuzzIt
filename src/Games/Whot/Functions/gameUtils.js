@@ -30,8 +30,10 @@ export const handleResize = (
       ctx.save();
       ctx.translate(width, 0);
       ctx.rotate(Math.PI / 2);
+      if (gameRef.current) gameRef.current.isLandScape = true;
     } else {
       ctx.restore();
+      if (gameRef.current) gameRef.current.isLandScape = false;
     }
   }
 };
