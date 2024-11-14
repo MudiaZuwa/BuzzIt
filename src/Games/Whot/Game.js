@@ -24,8 +24,8 @@ export default class GameManager {
     this.room = room;
     this.player = uid;
     this.Cards.roundTurns = this.players;
-    this.playerTurn = this.players[0];
     this.Cards.setupListeners();
+    this.started = true;
     this.Cards.Restart();
   }
 

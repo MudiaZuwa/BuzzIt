@@ -21,7 +21,7 @@ const Whot = () => {
   const [isMobile, setIsMobile] = useState(null);
   const { uid, loggedIn } = UseVerifyUser();
   const { roomKey } = useParams();
-  const [players, setPlayers] = useState(false);
+  const [players, setPlayers] = useState(null);
   const [playersJoined, setPlayersJoined] = useState(false);
   const [fullscreen, setFullscrren] = useState(false);
   const [isWinner, setIWinner] = useState(false);
@@ -35,11 +35,16 @@ const Whot = () => {
   }, []);
 
   useEffect(() => {
-    if (roomKey && uid) {
+    if (roomKey && uid && gameRef.current) {
       let unsubscribeFromNode = null;
-      JoinGameRoom(uid, roomKey, "Whot", setPlayers, setPlayersJoined).then(
-        (unsubscribe) => (unsubscribeFromNode = unsubscribe)
-      );
+      JoinGameRoom(
+        uid,
+        roomKey,
+        "Whot",
+        setPlayers,
+        setPlayersJoined,
+        gameRef
+      ).then((unsubscribe) => (unsubscribeFromNode = unsubscribe));
 
       return () => {
         if (unsubscribeFromNode) {
@@ -77,41 +82,33 @@ const Whot = () => {
   }, [gameBodyRef, isMobile]);
 
   useEffect(() => {
-    if (playersJoined) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      const gameDimensions = {
-        width: isMobile ? gameHeight : gameWidth,
-        height: isMobile ? gameWidth : gameHeight,
-      };
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const gameDimensions = {
+      width: isMobile ? gameHeight : gameWidth,
+      height: isMobile ? gameWidth : gameHeight,
+    };
 
-      if (!gameRef.current) {
-        gameRef.current = new GameManager(
-          ctx,
-          canvas,
-          gameDimensions,
-          isMobile
-        );
-        gameRef.current.Start(players, roomKey, uid);
-        gameRef.current.Cards.setIWinner = setIWinner;
+    if (!gameRef.current && isMobile !== null) {
+      gameRef.current = new GameManager(ctx, canvas, gameDimensions, isMobile);
+      gameRef.current.Cards.setIWinner = setIWinner;
 
-        const animate = (timestamp) => {
-          const deltaTime = timestamp - lastTimeRef.current;
-          lastTimeRef.current = timestamp;
-          if (!isMobile) ctx.clearRect(0, 0, gameWidth, gameHeight);
-          else ctx.clearRect(0, 0, gameHeight, gameWidth);
+      const animate = (timestamp) => {
+        const deltaTime = timestamp - lastTimeRef.current;
+        lastTimeRef.current = timestamp;
+        if (!isMobile) ctx.clearRect(0, 0, gameWidth, gameHeight);
+        else ctx.clearRect(0, 0, gameHeight, gameWidth);
 
-          gameRef.current.animate(deltaTime);
-
-          requestAnimationFrame(animate);
-        };
+        gameRef.current.animate(deltaTime);
 
         requestAnimationFrame(animate);
-
-        return () => cancelAnimationFrame(animate);
-      }
+      };
+      requestAnimationFrame(animate);
+      return () => cancelAnimationFrame(animate);
     }
-  }, [gameWidth, gameHeight, players, playersJoined]);
+    if (playersJoined && !gameRef.current.started && players)
+      gameRef.current.Start(players, roomKey, uid);
+  }, [gameWidth, gameHeight, players, playersJoined, isMobile]);
 
   return (
     <div>
