@@ -26,7 +26,8 @@ export default class InputHandler {
             game.gamestate !== 2 &&
             game.gamestate !== 3
           ) {
-            ball.speed = { x: 6, y: -6 };
+            if (!game.isMobile) ball.speed = { x: 6, y: -6 };
+            else ball.speed = { x: 2, y: -2 };
             game.gamestate = 1;
           }
           break;

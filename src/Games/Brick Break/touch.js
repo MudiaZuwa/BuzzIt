@@ -6,17 +6,17 @@ export default class TouchHandler {
     this.canvas.addEventListener("touchstart", (e) => {
       const touch = e.touches[0];
       const [clientX] = this.reverseCoordinates(touch.clientX, touch.clientY);
-      const canvasWidth = this.canvas.width;
-      
+      const canvasHeight = this.canvas.height;
+
       // Determine which section of the canvas was touched
-      if (clientX < canvasWidth / 3) {
+      if (clientX < canvasHeight / 3) {
         Paddle.moveLeft(); // Left third of the canvas
-      } else if (clientX > (2 * canvasWidth) / 3) {
+      } else if (clientX > (2 * canvasHeight) / 3) {
         Paddle.moveRight(); // Right third of the canvas
       } else {
-        // Center third of the canvas
         if (game.gamestate === 5) {
-          ball.speed = { x: 3, y: -3 };
+          if (!this.game.isMobile) ball.speed = { x: 3, y: -3 };
+          else ball.speed = { x: 2, y: -2 };
           game.gamestate = 1;
         } else if (game.gamestate === 2 || game.gamestate === 3) {
           game.start();

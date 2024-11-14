@@ -95,7 +95,7 @@ const Search = () => {
           (friendsData) => {
             const filteredUsers = Object.values(usersData)
               .filter((user) =>
-                user.name.toLowerCase().includes(searchValue.toLowerCase())
+                user.name?.toLowerCase().includes(searchValue.toLowerCase())
               )
               .map((user) => ({
                 ...user,
@@ -110,6 +110,7 @@ const Search = () => {
         );
       }
     });
+    
 
     const unsubscribePosts = ListenDataFromNode("Posts", async (postsData) => {
       if (postsData) {

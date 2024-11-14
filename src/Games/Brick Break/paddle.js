@@ -1,10 +1,10 @@
 export default class Paddle {
   constructor(game) {
-    this.gameWidth = game.gameWidth;
-    this.width = 150;
-    this.height = 20;
     this.game = game;
-    this.maxSpeed = 10;
+    this.width = this.game.gameWidth / 7;
+    this.height = this.game.gameHeight / 36;
+
+    this.maxSpeed = !game.isMobile ? 10 : 5;
     this.speed = 0;
     this.position = {
       x: game.gameWidth / 2 - this.width / 2,
@@ -29,13 +29,15 @@ export default class Paddle {
 
   update(deltaTime) {
     this.position.x += this.speed;
+    this.width = this.game.gameWidth / 7;
+    this.height = this.game.gameHeight / 36;
     if (this.game.gamestate === 5) {
       this.game.ball.position.x =
         this.position.x + this.width / 2 - this.game.ball.size / 2;
     }
     if (this.position.x < 0) this.position.x = 0;
 
-    if (this.position.x + this.width > this.gameWidth)
-      this.position.x = this.gameWidth - this.width;
+    if (this.position.x + this.width > this.game.gameWidth)
+      this.position.x = this.game.gameWidth - this.width;
   }
 }

@@ -1,19 +1,15 @@
-import Brick from './brick.js'
+import Brick from "./brick.js";
 
-export function buildLevel(game, level, gameWidth){
-    let bricks= [];
-    level.forEach((row, rowindex)=>{
-        row.forEach((brick, brickindex)=>{
-            if(brick===1){
-                let position={
-                x: gameWidth/12*brickindex,
-                y:75+24*rowindex
-                    };
-                bricks.push(new Brick(game, position, gameWidth/12))
-            }
-        })
-    })
-    return bricks
+export function buildLevel(game, level, gameWidth) {
+  let bricks = [];
+  level.forEach((row, rowindex) => {
+    row.forEach((brick, brickindex) => {
+      if (brick === 1) {
+        bricks.push(new Brick(game, brickindex, rowindex));
+      }
+    });
+  });
+  return bricks;
 }
 
 export const levels = {
