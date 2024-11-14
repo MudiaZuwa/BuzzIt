@@ -10,21 +10,32 @@ import MobileBottomNavbar from "../../Components/MobileBottomNavbar";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import HomeRightSideBar from "../../Components/HomeRightSideBar";
 import updateDataInNode from "../../Functions/UpdateDataInNode";
+import PlayerWinModal from "../../Components/PlayerWinModal";
+import WaitingModal from "../../Components/WaitingModal";
 
 const Whot = () => {
   const canvasRef = useRef(null);
   const gameBodyRef = useRef(null);
   const gameRef = useRef(null);
   const lastTimeRef = useRef(0);
-  const [gameWidth, setGameWidth] = useState(window.innerWidth);
-  const [gameHeight, setGameHeight] = useState(window.innerHeight);
+  const [gameWidth, setGameWidth] = useState(null);
+  const [gameHeight, setGameHeight] = useState(null);
   const [isMobile, setIsMobile] = useState(null);
   const { uid, loggedIn } = UseVerifyUser();
   const { roomKey } = useParams();
   const [players, setPlayers] = useState(null);
   const [playersJoined, setPlayersJoined] = useState(false);
   const [fullscreen, setFullscrren] = useState(false);
-  const [isWinner, setIWinner] = useState(false);
+  const [showWaitingModal, setShowWaitingModal] = useState(false);
+  const [showPlayerWinModal, setShowPlayerWinModal] = useState(false);
+  const [winnerName, setWinnerName] = useState(null);
+  const [playerWins, setPlayerWins] = useState(null);
+
+  const handleWaitingModalOpen = () => setShowWaitingModal(true);
+  const handleWaitingModalClose = () => setShowWaitingModal(false);
+
+  const handlePlayerWinModalOpen = () => setShowPlayerWinModal(true);
+  const handlePlayerWinModalClose = () => setShowPlayerWinModal(false);
 
   const handleFullscreenToggle = () => {
     setFullscrren((fullscreen) => !fullscreen);
@@ -44,7 +55,10 @@ const Whot = () => {
         setPlayers,
         setPlayersJoined,
         gameRef
-      ).then((unsubscribe) => (unsubscribeFromNode = unsubscribe));
+      ).then((unsubscribe) => {
+        handleWaitingModalOpen();
+        unsubscribeFromNode = unsubscribe;
+      });
 
       return () => {
         if (unsubscribeFromNode) {
@@ -82,6 +96,7 @@ const Whot = () => {
   }, [gameBodyRef, isMobile]);
 
   useEffect(() => {
+    if (!gameWidth || !gameHeight) return;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const gameDimensions = {
@@ -91,12 +106,13 @@ const Whot = () => {
 
     if (!gameRef.current && isMobile !== null) {
       gameRef.current = new GameManager(ctx, canvas, gameDimensions, isMobile);
-      gameRef.current.Cards.setIWinner = setIWinner;
+      gameRef.current.Cards.setWinnerName = setWinnerName;
 
       const animate = (timestamp) => {
         const deltaTime = timestamp - lastTimeRef.current;
         lastTimeRef.current = timestamp;
-        if (!isMobile) ctx.clearRect(0, 0, gameWidth, gameHeight);
+        if (!gameRef.current.isLandScape)
+          ctx.clearRect(0, 0, gameWidth, gameHeight);
         else ctx.clearRect(0, 0, gameHeight, gameWidth);
 
         gameRef.current.animate(deltaTime);
@@ -106,9 +122,50 @@ const Whot = () => {
       requestAnimationFrame(animate);
       return () => cancelAnimationFrame(animate);
     }
-    if (playersJoined && !gameRef.current.started && players)
-      gameRef.current.Start(players, roomKey, uid);
-  }, [gameWidth, gameHeight, players, playersJoined, isMobile]);
+  }, [gameWidth, gameHeight, isMobile]);
+
+  useEffect(() => {
+    if (playersJoined && players) {
+      if (!gameRef.current.started)
+        gameRef.current.Start(players, roomKey, uid);
+      handleWaitingModalClose();
+    } else if (!showPlayerWinModal) {
+      handleWaitingModalOpen();
+    }
+  }, [playersJoined, players]);
+
+  const handlePlayAgain = async () => {
+    const playerPath = `Games/Whot/${roomKey}/players/${uid}`;
+
+    await updateDataInNode(playerPath, { online: false });
+    await updateDataInNode(`Games/Whot/${roomKey}/data`, {
+      playerTurn: "Player1",
+    });
+    handlePlayerWinModalClose();
+    handleWaitingModalOpen();
+
+    setWinnerName(null);
+    setPlayerWins(null);
+    gameRef.current.started = false;
+  };
+
+  const setPlayerOffline = async () => {
+    const playerPath = `Games/Whot/${roomKey}/players/${uid}`;
+    await updateDataInNode(playerPath, { online: false });
+    const player = gameRef.current.player;
+    if (winnerName === player) setPlayerWins(true);
+    else handlePlayerWinModalOpen();
+  };
+
+  useEffect(() => {
+    if (winnerName) {
+      setPlayerOffline();
+    }
+  }, [winnerName]);
+
+  useEffect(() => {
+    if (playerWins) handlePlayerWinModalOpen();
+  }, [playerWins]);
 
   return (
     <div>
@@ -149,6 +206,17 @@ const Whot = () => {
         </Row>
       </Container>
       {!fullscreen && <MobileBottomNavbar uid={uid} />}
+      <WaitingModal
+        show={showWaitingModal}
+        onClose={handleWaitingModalClose}
+        playerJoined={playersJoined}
+      />
+      <PlayerWinModal
+        show={showPlayerWinModal}
+        onPlayAgain={handlePlayAgain}
+        winnerName={winnerName}
+        playerWins={playerWins}
+      />
     </div>
   );
 };

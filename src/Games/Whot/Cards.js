@@ -119,11 +119,11 @@ export default class Cards {
   }
 
   Restart() {
+    console.log(this.gameManager.player, this.roundTurns);
     const shuffledCards = shuffleArray(Object.values(this.cardData));
     this.roundTurns =
       this.roundTurns.length < 2 ? this.gameManager.players : this.roundTurns;
     const players = this.roundTurns;
-
     if (this.gameManager.player === players[0]) {
       this.stacks = {
         market: { cards: [] },
@@ -155,6 +155,7 @@ export default class Cards {
           this.gameManager
         );
       }, 3000);
+      console.log(this.stacks);
     }
   }
 
@@ -264,6 +265,6 @@ export default class Cards {
       this.roundTurns = filteredPlayers;
     } else this.roundTurns = this.gameManager.players;
 
-    this.setIsWinner(true);
+    this.setWinnerName(winPlayer);
   }
 }

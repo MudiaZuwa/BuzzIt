@@ -66,7 +66,6 @@ export default class TouchListener {
       const deltaY = clientY - this.touchY;
 
       const stack = this.getCardStack(card);
-      console.log(deltaX, deltaX, stack);
 
       if (stack === "market" && deltaX < 0) {
         Cards.getCards(this.gameManager.playerTurn, 1);

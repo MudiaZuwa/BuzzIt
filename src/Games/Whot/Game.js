@@ -16,17 +16,18 @@ export default class GameManager {
     this.touchListener = new TouchListener(this);
     this.mouseListener = new MouseListener(this);
     this.Cards.roundTurns = this.players;
+    this.started = false;
     this.playerTurn = null;
   }
 
   Start(players, room, uid) {
     this.players = players;
     this.room = room;
-    this.player = uid;
     this.Cards.roundTurns = this.players;
     this.Cards.setupListeners();
     this.started = true;
     this.Cards.Restart();
+    console.log(this.Cards);
   }
 
   animate() {

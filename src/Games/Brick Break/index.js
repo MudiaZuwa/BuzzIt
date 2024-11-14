@@ -70,12 +70,10 @@ const BrickBreak = () => {
   }, [isMobile]);
 
   useEffect(() => {
-    console.log(gameHeight);
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!gameRef.current && isMobile !== null) {
-      gameRef.current = new Game(gameWidth, gameHeight, isMobile);
-      console.log(isMobile);
+      gameRef.current = new Game(gameWidth, gameHeight, canvas, isMobile);
 
       const animate = (timestamp) => {
         const deltaTime = timestamp - lastTimeRef.current;
@@ -133,13 +131,6 @@ const BrickBreak = () => {
                     id="pause_img"
                     style={styles.pauseImage}
                   />
-                </div>
-
-                {/* Touch areas */}
-                <div className="d-flex h-100" style={{ overflowY: "hidden" }}>
-                  <div id="left_touch" style={styles.touchArea}></div>
-                  <div id="center_touch" style={styles.touchArea}></div>
-                  <div id="right_touch" style={styles.touchArea}></div>
                 </div>
 
                 {/* Game canvas */}

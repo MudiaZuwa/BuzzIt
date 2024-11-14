@@ -14,7 +14,7 @@ const JoinGameRoom = async (
 ) => {
   const room = await FetchDataFromNode(`Games/${game}/${roomKey}`);
   let players = [];
-  
+
   if (room) players = Object.keys(room.players);
 
   const playerData = {
@@ -25,8 +25,10 @@ const JoinGameRoom = async (
     const gamePath = `Games/${game}/${roomKey}/players/${uid}`;
     await updateDataInNode(gamePath, playerData);
 
-    if (room.data.playerTurn) gameRef.current.playerTurn = room.data.playerTurn;
+    if (room.data?.playerTurn)
+      gameRef.current.playerTurn = room.data.playerTurn;
     else gameRef.current.playerTurn = "Player1";
+    gameRef.current.player = room.players[uid].player;
   }
 
   const playerRef = ref(database, `Games/${game}/${roomKey}/players/${uid}`);

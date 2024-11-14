@@ -16,7 +16,7 @@ const GAMESTATE = {
 };
 
 export default class Game {
-  constructor(gameWidth, gameHeight, isMobile) {
+  constructor(gameWidth, gameHeight, canvas, isMobile) {
     if (isMobile && gameHeight > gameWidth) {
       this.gameWidth = gameHeight;
       this.gameHeight = gameWidth;
@@ -25,6 +25,8 @@ export default class Game {
       this.gameHeight = gameHeight;
     }
     this.gamestate = GAMESTATE.MENU;
+    this.isMobile = isMobile;
+    this.canvas = canvas;
     this.paddle = new Paddle(this);
     this.ball = new Ball(this);
     this.gameObjects = [];

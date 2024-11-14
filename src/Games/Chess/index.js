@@ -148,11 +148,11 @@ const ChessGame = () => {
 
     setWinnerName(null);
     setPlayerWins(null);
-    gameManagerRef.current.gameControl.restart();
+    // gameManagerRef.current.gameControl.restart();
   };
 
   const setPlayerOffline = async () => {
-    const playerPath = `Games/TicTacToe/${roomKey}/players/${uid}`;
+    const playerPath = `Games/Chess/${roomKey}/players/${uid}`;
     await updateDataInNode(playerPath, { online: false });
     const player = gameManagerRef.current.player;
     if (winnerName === player) setPlayerWins(true);
