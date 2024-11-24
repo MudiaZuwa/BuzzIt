@@ -48,7 +48,10 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
   }, [loggedIn]);
 
   useEffect(() => {
-    if (!showVideoCallModal) setCallerId(null);
+    if (!showVideoCallModal) {
+      setCallerId(null);
+      setCallType(null);
+    }
   }, [showVideoCallModal]);
 
   useEffect(() => {

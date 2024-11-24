@@ -1,8 +1,82 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { off, getDatabase, ref, onChildAdded } from "../Components/firebase";
+import FetchDataFromNode from "../Functions/FetchDataFromNode";
+import AudioCallModal from "./AudioCallModal";
+import VideoCallModal from "./VideoCallModal";
 
 const MobileBottomNavbar = ({ uid }) => {
+  const [callerId, setCallerId] = useState(null);
+  const [callType, setCallType] = useState(null);
+  const [showVideoCallModal, setShowVideoCallModal] = useState(false);
+  const [showAudioCallModal, setShowAudioCallModal] = useState(false);
+  const [showProfileEditModal, setShowProfileEditModal] = useState(false);
+
+  const handleVideoCallModalOpen = () => setShowVideoCallModal(true);
+  const handleVideoCallModalClose = () => setShowVideoCallModal(false);
+
+  const handleAudioCallModalOpen = () => setShowAudioCallModal(true);
+  const handleAudioCallModalClose = () => setShowAudioCallModal(false);
+
+  const handleProfileEditModalOpen = () => {
+    if (!showProfileEditModal) setShowProfileEditModal(true);
+  };
+  const handleProfileEditModalClose = () => setShowProfileEditModal(false);
+
+  useEffect(() => {
+    if (uid) checkUserDetails();
+  }, [uid]);
+
+  useEffect(() => {
+    if (!showVideoCallModal) {
+      setCallerId(null);
+      setCallType(null);
+    }
+  }, [showVideoCallModal]);
+
+  useEffect(() => {
+    if (callerId) {
+      if (callType === "video") handleVideoCallModalOpen();
+      else if (callType === "audio") handleAudioCallModalOpen();
+    }
+  }, [callerId, callType]);
+
+  const checkUserDetails = () => {
+    const nodePath = `UsersDetails/${uid}`;
+    FetchDataFromNode(nodePath)
+      .then((data) => {
+        if (!data) return;
+        else if (!data.name) handleProfileEditModalOpen();
+        if (data) {
+          ListenForCalls();
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const ListenForCalls = () => {
+    const nodePath = `UsersCalls/${uid}`;
+    const database = getDatabase();
+    const nodeRef = ref(database, nodePath);
+    const unsubscribe = onChildAdded(nodeRef, (snapshot) => {
+      if (snapshot?.exists()) {
+        const call = snapshot.val();
+        if (call.caller === "incoming") {
+          setCallerId(call.friend);
+          setCallType(call.callType);
+        }
+      } else {
+        console.log("No data available at this node.");
+      }
+    });
+
+    // Return a function to stop listening
+    return () => off(nodeRef, "child_added", unsubscribe);
+  };
+
   return (
     <Navbar
       fixed="bottom"
@@ -43,6 +117,20 @@ const MobileBottomNavbar = ({ uid }) => {
           </Nav.Link>
         </Nav>
       </Container>
+      <VideoCallModal
+        show={showVideoCallModal}
+        handleClose={handleVideoCallModalClose}
+        uid={uid}
+        userId={callerId}
+        caller={"reciepient"}
+      />
+      <AudioCallModal
+        show={showAudioCallModal}
+        handleClose={handleAudioCallModalClose}
+        uid={uid}
+        userId={callerId}
+        caller={"reciepient"}
+      />
     </Navbar>
   );
 };
