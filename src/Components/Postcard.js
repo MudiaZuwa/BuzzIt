@@ -136,16 +136,22 @@ const PostCard = ({ post, currentUserID }) => {
       </Card.Header>
 
       {/* Post Body */}
-      <Link
-        to={`/${uid}/${post.id}`}
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
-        <Card.Body>
+
+      <Card.Body>
+        <Link
+          to={`/${uid}/${post.id}`}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           {text && <Card.Text>{text}</Card.Text>}
-          {media && media.length > 0 && (
-            <Carousel interval={null} indicators={false}>
-              {media.map((mediaItem, index) => (
-                <Carousel.Item key={index}>
+        </Link>
+        {media && media.length > 0 && (
+          <Carousel interval={null} indicators={false}>
+            {media.map((mediaItem, index) => (
+              <Carousel.Item key={index}>
+                <Link
+                  to={`/${uid}/${post.id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
                   <div
                     style={{
                       height: "250px",
@@ -171,16 +177,16 @@ const PostCard = ({ post, currentUserID }) => {
                         variant="top"
                         src={mediaItem}
                         alt={`Media ${index + 1}`}
-                        style={{ height: "100%", objectFit: "contain" }} 
+                        style={{ height: "100%", objectFit: "contain" }}
                       />
                     )}
                   </div>
-                </Carousel.Item>
-              ))}
-            </Carousel>
-          )}
-        </Card.Body>
-      </Link>
+                </Link>
+              </Carousel.Item>
+            ))}
+          </Carousel>
+        )}
+      </Card.Body>
 
       {/* Post Footer with action buttons */}
       <Card.Footer className="d-flex justify-content-between">

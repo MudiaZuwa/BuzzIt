@@ -5,6 +5,7 @@ import sendMessage from "../Functions/SendMessage";
 import ChatMessage from "./ChatMessage";
 import GameListModal from "./GameListModal";
 import { Link, useNavigate } from "react-router-dom";
+import VideoCallModal from "./VideoCallModal";
 
 const CurrentChat = ({
   chatId,
@@ -21,8 +22,12 @@ const CurrentChat = ({
   let chatProfilePhoto = "/images/defaultProfile.png";
   let isGroupChat = false;
   const [showGameListModal, setShowGameListModal] = useState(false);
+  const [showVideoCallModal, setShowVideoCallModal] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
   const navigate = useNavigate();
+
+  const handleVideoCallModalOpen = () => setShowVideoCallModal(true);
+  const handleVideoCallModalClose = () => setShowVideoCallModal(false);
 
   const handleGameListModalOpen = () => setShowGameListModal(true);
   const handleGameListModalClose = () => setShowGameListModal(false);
@@ -137,7 +142,7 @@ const CurrentChat = ({
           <div className="chat-header d-flex align-items-center">
             <button
               className="back-button me-2"
-              onClick={()=>navigate(`/messages`)}
+              onClick={() => navigate(`/messages`)}
             >
               <i className="bi bi-arrow-left"></i>
             </button>
@@ -167,7 +172,6 @@ const CurrentChat = ({
                 </span>
               </div>
             )}
-
             <button
               className="btn ms-auto"
               onClick={() =>
@@ -181,6 +185,20 @@ const CurrentChat = ({
                   !isGroupChat ? "bi bi-controller" : "bi bi-info-circle"
                 }
                 style={{ fontSize: "1.5rem" }}
+              ></i>
+            </button>
+            <button className="btn">
+              <i
+                className="bi bi-telephone"
+                style={{ fontSize: "1.2rem" }}
+                // onClick={() => handleVideoCallModalOpen()}
+              ></i>
+            </button>{" "}
+            <button className="btn">
+              <i
+                className="bi bi-camera-video"
+                style={{ fontSize: "1.2rem" }}
+                onClick={() => handleVideoCallModalOpen()}
               ></i>
             </button>
           </div>
@@ -362,6 +380,15 @@ const CurrentChat = ({
             handleClose={handleGameListModalClose}
             uid={uid}
             friendId={recipientDetails.id}
+          />
+
+          <VideoCallModal
+            show={showVideoCallModal}
+            handleClose={handleVideoCallModalClose}
+            uid={uid}
+            userId={recipientDetails.id}
+            caller={"user"}
+            reciepientDetails={recipientDetails}
           />
         </div>
       )}

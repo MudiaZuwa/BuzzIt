@@ -12,7 +12,8 @@ import {
   update,
   child,
   onDisconnect,
-  onChildAdded
+  onChildAdded,
+  off,
 } from "firebase/database";
 
 import {
@@ -57,6 +58,7 @@ export {
   onValue,
   get,
   push,
+  off,
   update,
   child,
   onChildAdded,

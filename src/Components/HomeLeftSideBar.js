@@ -7,11 +7,19 @@ import ProfileEditModal from "./ProfileEditModal";
 import FetchDataFromNode from "../Functions/FetchDataFromNode";
 import signOutUser from "../Functions/SignOutUser";
 import { GetUserNotifications } from "../Functions/GetUserNotifications";
+import { off, getDatabase, ref, onChildAdded } from "../Components/firebase";
+import VideoCallModal from "./VideoCallModal";
+import ListenDataFromNode from "../Functions/ListenDataFromNode";
 
 const HomeLeftSideBar = ({ loggedIn, uid }) => {
   const [showPostModal, setShowPostModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [callerId, setCallerId] = useState(null);
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
+  const [showVideoCallModal, setShowVideoCallModal] = useState(false);
+
+  const handleVideoCallModalOpen = () => setShowVideoCallModal(true);
+  const handleVideoCallModalClose = () => setShowVideoCallModal(false);
 
   const handleProfileEditModalOpen = () => {
     if (!showProfileEditModal) setShowProfileEditModal(true);
@@ -33,18 +41,48 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
     if (loggedIn) checkUserDetails();
   }, [loggedIn]);
 
+  useEffect(() => {
+    if (!showVideoCallModal) setCallerId(null);
+  }, [showVideoCallModal]);
+
+  useEffect(() => {
+    if (callerId) handleVideoCallModalOpen();
+  }, [callerId]);
+
   const checkUserDetails = () => {
     const nodePath = `UsersDetails/${uid}`;
     FetchDataFromNode(nodePath)
       .then((data) => {
         if (!data) return;
         else if (!data.name) handleProfileEditModalOpen();
+        if (data) {
+          GetUserNotifications(uid);
+          ListenForCalls();
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
+  };
 
-    GetUserNotifications(uid);
+  const ListenForCalls = () => {
+    const nodePath = `UsersCalls/${uid}`;
+    const database = getDatabase();
+    const nodeRef = ref(database, nodePath);
+    const unsubscribe = onChildAdded(nodeRef, (snapshot) => {
+      if (snapshot?.exists()) {
+        const call = snapshot.val();
+        console.log(call);
+        if (call.caller === "incoming") {
+          setCallerId(call.friend);
+        }
+      } else {
+        console.log("No data available at this node.");
+      }
+    });
+
+    // Return a function to stop listening
+    return () => off(nodeRef, "child_added", unsubscribe);
   };
 
   return (
@@ -147,6 +185,13 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
       <ProfileEditModal
         show={showProfileEditModal}
         handleClose={handleProfileEditModalClose}
+      />
+      <VideoCallModal
+        show={showVideoCallModal}
+        handleClose={handleVideoCallModalClose}
+        uid={uid}
+        userId={callerId}
+        caller={"reciepient"}
       />
     </Col>
   );
