@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { update, onValue, get, remove } from "firebase/database";
-import { getDatabase, ref, set, push } from "../Components/firebase";
+import { getDatabase, ref, set, push, update } from "../Components/firebase";
 import Draggable from "react-draggable";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../CSS/VideoCallModal.css";
@@ -25,6 +24,7 @@ const VideoCallModal = ({
   const RemoteRef = useRef();
   const callStateRef = useRef();
   const draggableRef = useRef(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const servers = {
     iceServers: [
       {
@@ -51,8 +51,15 @@ const VideoCallModal = ({
   }, [callState, LocalRef, show, userDetails]);
 
   useEffect(() => {
-    if (callState === "answered") joinRoom();
     callStateRef.current = callState;
+    if (callState === "answered") joinRoom();
+    else if (callState === "onCall" && elapsedTime === 0) {
+      const interval = setInterval(() => {
+        setElapsedTime((prevTime) => prevTime + 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
   }, [callState]);
 
   const fetchReciepientDetails = async () => {
@@ -80,10 +87,6 @@ const VideoCallModal = ({
       database,
       `Calls/${newRoomId}/offerCandidates`
     );
-    const answerCandidatesRef = ref(
-      database,
-      `Calls/${newRoomId}/answerCandidates`
-    );
 
     // Add ICE candidates to Firebase
     pc.onicecandidate = (event) => {
@@ -103,8 +106,18 @@ const VideoCallModal = ({
     // Update UsersCalls node for caller and recipient
     const callerRef = ref(database, `UsersCalls/${uid}/${newRoomId}`);
     const recipientRef = ref(database, `UsersCalls/${userId}/${newRoomId}`);
-    await set(callerRef, { id: newRoomId, caller: "outgoing", friend: userId });
-    await set(recipientRef, { id: newRoomId, caller: "incoming", friend: uid });
+    await set(callerRef, {
+      id: newRoomId,
+      caller: "outgoing",
+      friend: userId,
+      callType: "video",
+    });
+    await set(recipientRef, {
+      id: newRoomId,
+      caller: "incoming",
+      friend: uid,
+      callType: "video",
+    });
 
     // Listen for answer using ListenDataFromNode
     const unsubscribeAnswer = ListenDataFromNode(
@@ -139,10 +152,6 @@ const VideoCallModal = ({
     setRoomId(roomKey);
 
     const callRef = ref(database, `Calls/${roomKey}`);
-    const offerCandidatesRef = ref(
-      database,
-      `Calls/${roomKey}/offerCandidates`
-    );
     const answerCandidatesRef = ref(
       database,
       `Calls/${roomKey}/answerCandidates`
@@ -227,7 +236,13 @@ const VideoCallModal = ({
     handleClose();
   };
 
-  const handleMute = () => setIsMuted((prev) => !prev);
+  const handleMute = () => {
+    const localStream = LocalRef.current?.srcObject;
+    localStream
+      ?.getAudioTracks()
+      .forEach((track) => (track.enabled = !track.enabled));
+    setIsMuted((prev) => !prev);
+  };
 
   useEffect(() => {
     const handleDisconnect = async () => {
@@ -243,6 +258,15 @@ const VideoCallModal = ({
     };
   }, [hangUp]);
 
+  const formatTime = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hrs.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
   return (
     <Draggable nodeRef={draggableRef}>
       <div ref={draggableRef}>
@@ -256,16 +280,14 @@ const VideoCallModal = ({
             {userDetails && (
               <>
                 <div className="call-interface">
-                  {callState === "calling" && (
-                    <>
-                      <img
-                        src={userDetails.profilePhoto}
-                        alt="User"
-                        className="rounded-circle user-photo"
-                      />
-                      <h5 className="user-name">{userDetails.name}</h5>
-                    </>
-                  )}
+                  <img
+                    src={userDetails.profilePhoto}
+                    alt="User"
+                    className="rounded-circle user-photo"
+                  />
+                  <h5 className="user-name">{userDetails.name}</h5>
+                  <p>{formatTime(elapsedTime)}</p>
+
                   <video
                     autoPlay
                     className="other-user-video"

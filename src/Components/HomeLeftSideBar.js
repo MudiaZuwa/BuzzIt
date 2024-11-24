@@ -10,16 +10,22 @@ import { GetUserNotifications } from "../Functions/GetUserNotifications";
 import { off, getDatabase, ref, onChildAdded } from "../Components/firebase";
 import VideoCallModal from "./VideoCallModal";
 import ListenDataFromNode from "../Functions/ListenDataFromNode";
+import AudioCallModal from "./AudioCallModal";
 
 const HomeLeftSideBar = ({ loggedIn, uid }) => {
   const [showPostModal, setShowPostModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [callerId, setCallerId] = useState(null);
+  const [callType, setCallType] = useState(null);
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
   const [showVideoCallModal, setShowVideoCallModal] = useState(false);
+  const [showAudioCallModal, setShowAudioCallModal] = useState(false);
 
   const handleVideoCallModalOpen = () => setShowVideoCallModal(true);
   const handleVideoCallModalClose = () => setShowVideoCallModal(false);
+
+  const handleAudioCallModalOpen = () => setShowAudioCallModal(true);
+  const handleAudioCallModalClose = () => setShowAudioCallModal(false);
 
   const handleProfileEditModalOpen = () => {
     if (!showProfileEditModal) setShowProfileEditModal(true);
@@ -46,8 +52,11 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
   }, [showVideoCallModal]);
 
   useEffect(() => {
-    if (callerId) handleVideoCallModalOpen();
-  }, [callerId]);
+    if (callerId) {
+      if (callType === "video") handleVideoCallModalOpen();
+      else if (callType === "audio") handleAudioCallModalOpen();
+    }
+  }, [callerId, callType]);
 
   const checkUserDetails = () => {
     const nodePath = `UsersDetails/${uid}`;
@@ -72,9 +81,9 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
     const unsubscribe = onChildAdded(nodeRef, (snapshot) => {
       if (snapshot?.exists()) {
         const call = snapshot.val();
-        console.log(call);
         if (call.caller === "incoming") {
           setCallerId(call.friend);
+          setCallType(call.callType);
         }
       } else {
         console.log("No data available at this node.");
@@ -189,6 +198,13 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
       <VideoCallModal
         show={showVideoCallModal}
         handleClose={handleVideoCallModalClose}
+        uid={uid}
+        userId={callerId}
+        caller={"reciepient"}
+      />
+      <AudioCallModal
+        show={showAudioCallModal}
+        handleClose={handleAudioCallModalClose}
         uid={uid}
         userId={callerId}
         caller={"reciepient"}

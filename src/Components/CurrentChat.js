@@ -6,6 +6,7 @@ import ChatMessage from "./ChatMessage";
 import GameListModal from "./GameListModal";
 import { Link, useNavigate } from "react-router-dom";
 import VideoCallModal from "./VideoCallModal";
+import AudioCallModal from "./AudioCallModal";
 
 const CurrentChat = ({
   chatId,
@@ -23,11 +24,15 @@ const CurrentChat = ({
   let isGroupChat = false;
   const [showGameListModal, setShowGameListModal] = useState(false);
   const [showVideoCallModal, setShowVideoCallModal] = useState(false);
+  const [showAudioCallModal, setShowAudioCallModal] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
   const navigate = useNavigate();
 
   const handleVideoCallModalOpen = () => setShowVideoCallModal(true);
   const handleVideoCallModalClose = () => setShowVideoCallModal(false);
+
+  const handleAudioCallModalOpen = () => setShowAudioCallModal(true);
+  const handleAudioCallModalClose = () => setShowAudioCallModal(false);
 
   const handleGameListModalOpen = () => setShowGameListModal(true);
   const handleGameListModalClose = () => setShowGameListModal(false);
@@ -191,9 +196,9 @@ const CurrentChat = ({
               <i
                 className="bi bi-telephone"
                 style={{ fontSize: "1.2rem" }}
-                // onClick={() => handleVideoCallModalOpen()}
+                onClick={() => handleAudioCallModalOpen()}
               ></i>
-            </button>{" "}
+            </button>
             <button className="btn">
               <i
                 className="bi bi-camera-video"
@@ -385,6 +390,14 @@ const CurrentChat = ({
           <VideoCallModal
             show={showVideoCallModal}
             handleClose={handleVideoCallModalClose}
+            uid={uid}
+            userId={recipientDetails.id}
+            caller={"user"}
+            reciepientDetails={recipientDetails}
+          />
+          <AudioCallModal
+            show={showAudioCallModal}
+            handleClose={handleAudioCallModalClose}
             uid={uid}
             userId={recipientDetails.id}
             caller={"user"}

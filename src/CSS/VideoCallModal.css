@@ -25,6 +25,7 @@
   height: auto;
   border-radius: 10px;
   margin-bottom: 10px;
+  max-height: 300px;
 }
 
 .small-video {
@@ -37,7 +38,10 @@
 }
 
 .call-controls {
+  width: 100%;
   display: flex;
   justify-content: center;
   gap: 10px;
+  position: absolute;
+  bottom: 20px;
 }

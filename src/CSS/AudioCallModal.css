@@ -1,0 +1,28 @@
+.draggable-modal {
+  top: 10%;
+  max-width: 500px;
+}
+
+.audio-call-interface {
+  text-align: center;
+  min-height: 500px;
+}
+
+.user-photo {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+.user-name {
+  margin-bottom: 20px;
+}
+
+.call-controls {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  position: absolute;
+  bottom: 20px;
+}
