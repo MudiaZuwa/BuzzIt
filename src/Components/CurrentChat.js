@@ -144,7 +144,7 @@ const CurrentChat = ({
     <>
       {recipientDetails && (
         <div className="chat-container">
-          <div className="chat-header d-flex align-items-center">
+          <div className="chat-header d-flex align-items-center  p-sm-2">
             <button
               className="back-button me-2"
               onClick={() => navigate(`/messages`)}
@@ -155,22 +155,23 @@ const CurrentChat = ({
               <Link
                 to={`/${recipientDetails.id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
+                className="overflow-x-hidden d-flex"
               >
                 <img
                   src={chatProfilePhoto}
                   alt="Recipient Profile"
                   className="recipient-photo me-2"
                 />
-                <span className="recipient-username">
+                <span className="recipient-username text-truncate">
                   {recipientDetails.name}
                 </span>
               </Link>
             ) : (
-              <div>
+              <div className="overflow-x-hidden d-flex ">
                 <img
                   src={chatProfilePhoto}
                   alt="Recipient Profile"
-                  className="recipient-photo me-2"
+                  className="recipient-photo me-2 text-truncate"
                 />
                 <span className="recipient-username">
                   {recipientDetails.name}
