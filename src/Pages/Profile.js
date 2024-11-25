@@ -82,7 +82,7 @@ const ProfilePage = () => {
     const unsubscribeUserDetails = ListenDataFromNode(
       `UsersDetails/${userId}`,
       (data) => {
-        if (data) {
+        if (data && data.name) {
           setUserDetails({
             name: data.name,
             profilePhoto: data.profilePhoto,

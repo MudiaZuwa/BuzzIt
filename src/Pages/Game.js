@@ -89,7 +89,7 @@ const Game = () => {
             className="vh-100 mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
             style={{ overflowY: "auto" }}
           >
-            <div className="pt-3">
+            <div className="pt-3 px-3">
               <Tab.Container defaultActiveKey="Single-Player">
                 <Nav variant="tabs" className="d-flex justify-content-between">
                   <Nav.Item className="flex-fill text-center">

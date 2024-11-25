@@ -98,7 +98,7 @@ const ProfileHeader = ({
       {userID !== uid && (
         <Col xs={12} className="d-flex justify-content-end mt-3 mt-md-0">
           <div className="d-flex flex-md-row-reverse" style={{ gap: "10px" }}>
-            {renderFriendButton()}
+            {uid && renderFriendButton()}
             {isFriend && (
               <Link to={`/messages/${userID}`} className="">
                 <Button variant="secondary">Message</Button>

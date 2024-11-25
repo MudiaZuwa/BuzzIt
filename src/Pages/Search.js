@@ -154,20 +154,32 @@ const Search = () => {
             className=" mx-auto px-1 px-md-3 vh-100 pb-5 pb-md-0"
             style={{ overflowY: "auto" }}
           >
-            <div className="pt-3">
-              <Form className="d-flex" onSubmit={handleSearchSubmit}>
+            <div className="pt-3 px-3">
+              <Form
+                className="d-flex align-items-center border rounded"
+                onSubmit={handleSearchSubmit}
+                style={{ overflow: "hidden" }} // Ensure the border includes everything
+              >
                 <FormControl
                   type="search"
                   placeholder="Search"
                   aria-label="Search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  className="border-0 flex-grow-1"
+                  style={{ boxShadow: "none" }} 
                 />
-                <Button variant="outline-success" type="submit">
+                <Button
+                  variant="outline-success"
+                  type="submit"
+                  className="border-0"
+                  style={{
+                    borderLeft: "1px solid #ccc", 
+                  }}
+                >
                   <i className="bi bi-search"></i>
                 </Button>
               </Form>
-
               <Tab.Container
                 activeKey={activeTab}
                 onSelect={(selectedTab) => setActiveTab(selectedTab)}

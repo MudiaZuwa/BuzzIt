@@ -63,15 +63,28 @@ const HomeRightSideBar = () => {
 
   return (
     <Col md={3} className="d-none d-md-block bg-light vh-100 p-3">
-      <Form className="d-flex position-relative" onSubmit={handleSearchSubmit}>
+      <Form
+        className="d-flex position-relative border rounded"
+        onSubmit={handleSearchSubmit}
+        style={{ overflow: "hidden" }} // Keeps all elements within the border
+      >
         <FormControl
           type="search"
           placeholder="Search"
           aria-label="Search"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          className="border-0 flex-grow-1"
+          style={{ boxShadow: "none" }} 
         />
-        <Button variant="outline-success" type="submit">
+        <Button
+          variant="outline-success"
+          type="submit"
+          className="border-0"
+          style={{
+            borderLeft: "1px solid #ccc",
+          }}
+        >
           <i className="bi bi-search"></i>
         </Button>
 
@@ -79,7 +92,13 @@ const HomeRightSideBar = () => {
           <Dropdown.Menu
             show
             className="w-100 position-absolute"
-            style={{ maxHeight: "200px", overflowY: "auto", top: "100%" }}
+            style={{
+              maxHeight: "200px",
+              overflowY: "auto",
+              top: "100%",
+              left: 0, // Ensures dropdown aligns with the form
+              borderTop: "1px solid #ccc", // Separator for dropdown
+            }}
           >
             {searchResults.map((result, index) => (
               <PeopleCard user={result} key={index} />
