@@ -20,10 +20,16 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
   const [showVideoCallModal, setShowVideoCallModal] = useState(false);
   const [showAudioCallModal, setShowAudioCallModal] = useState(false);
 
-  const handleVideoCallModalOpen = () => setShowVideoCallModal(true);
+  const handleVideoCallModalOpen = () =>
+    setShowVideoCallModal(() => {
+      if (!showAudioCallModal && !showVideoCallModal) true;
+    });
   const handleVideoCallModalClose = () => setShowVideoCallModal(false);
 
-  const handleAudioCallModalOpen = () => setShowAudioCallModal(true);
+  const handleAudioCallModalOpen = () =>
+    setShowAudioCallModal(() => {
+      if (!showAudioCallModal && !showVideoCallModal) true;
+    });
   const handleAudioCallModalClose = () => setShowAudioCallModal(false);
 
   const handleProfileEditModalOpen = () => {
@@ -83,7 +89,7 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
     const unsubscribe = onChildAdded(nodeRef, (snapshot) => {
       if (snapshot?.exists()) {
         const call = snapshot.val();
-        if (call.caller === "incoming") {
+        if (call.caller === "incoming" &&!showAudioCallModal && !showVideoCallModal) {
           setCallerId(call.friend);
           setCallType(call.callType);
         }

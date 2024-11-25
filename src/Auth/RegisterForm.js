@@ -45,7 +45,7 @@ const RegisterForm = ({ setSuccess }) => {
         const AccountDetails = {
           email: email,
         };
-        localStorage.setItem("details", JSON.stringify(AccountDetails));
+        
         setSuccess(true);
         setIsPending(false);
       })

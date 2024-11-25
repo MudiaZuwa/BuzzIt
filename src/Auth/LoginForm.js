@@ -22,7 +22,35 @@ const LoginForm = ({ setSuccess }) => {
   };
 
   const handleGoogleSignIn = () => {
-    GoogleSignIn(null, setSuccess);
+    GoogleSignIn(createNewProfile, setSuccess);
+  };
+
+  const createNewProfile = (email, UID) => {
+    const AccountDetails = {
+      email: email,
+      id: UID,
+      date: Date.now(),
+    };
+
+    const db = getDatabase();
+    set(ref(db, `UsersDetails/${UID}`), AccountDetails)
+      .then(() => {
+        const AccountDetails = {
+          email: email,
+        };
+        
+        setSuccess(true);
+        setIsPending(false);
+      })
+      .catch((error) => {
+        if (error.name === "AbortError") {
+        } else {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError(errorMessage);
+          setIsPending(false);
+        }
+      });
   };
 
   const setStates = { setValidated, setError, setIsPending, setSuccess };
