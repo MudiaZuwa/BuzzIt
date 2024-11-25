@@ -35,16 +35,13 @@ const Search = () => {
     const query = params.get("query");
     if (query) {
       setSearchQuery(query);
-      if (uid) {
-        const listensUnsubscribe = getSearchResult(query);
-        return () => listensUnsubscribe;
-      }
+      const listensUnsubscribe = getSearchResult(query);
+      return () => listensUnsubscribe?.();
     }
   }, [location.search, uid]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-
     if (searchQuery) {
       navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }
@@ -63,7 +60,6 @@ const Search = () => {
         const postWithUser = await handleGetPostUser(postId, post);
         return postWithUser;
       });
-
       return await Promise.all(postDetailsPromises);
     } else {
       return [];
@@ -74,7 +70,6 @@ const Search = () => {
     try {
       const userPath = `UsersDetails/${post.uid}`;
       const userData = await FetchDataFromNode(userPath);
-
       return {
         postId,
         ...post,
@@ -88,30 +83,44 @@ const Search = () => {
   };
 
   const getSearchResult = async (searchValue) => {
+    // Fetch and listen to UsersDetails data
     const unsubscribeUsers = ListenDataFromNode("UsersDetails", (usersData) => {
       if (usersData) {
-        const unsubscribeFriends = ListenDataFromNode(
-          `friend/${uid}/Friends`,
-          (friendsData) => {
-            const filteredUsers = Object.values(usersData)
-              .filter((user) =>
-                user.name?.toLowerCase().includes(searchValue.toLowerCase())
-              )
-              .map((user) => ({
-                ...user,
-                isFriend: checkIfFriend(user.id, friendsData),
+        if (uid) {
+          // Fetch and listen to Friends data if user is logged in
+          const unsubscribeFriends = ListenDataFromNode(
+            `friend/${uid}/Friends`,
+            (friendsData) => {
+              const filteredUsers = Object.values(usersData)
+                .filter((user) =>
+                  user.name?.toLowerCase().includes(searchValue.toLowerCase())
+                )
+                .map((user) => ({
+                  ...user,
+                  isFriend: checkIfFriend(user.id, friendsData),
+                }));
+              setSearchResults((previousResults) => ({
+                ...previousResults,
+                People: filteredUsers,
               }));
+            }
+          );
 
-            setSearchResults((previousResults) => ({
-              ...previousResults,
-              People: filteredUsers,
-            }));
-          }
-        );
+          return unsubscribeFriends;
+        } else {
+          // Filter UsersDetails directly if no uid
+          const filteredUsers = Object.values(usersData).filter((user) =>
+            user.name?.toLowerCase().includes(searchValue.toLowerCase())
+          );
+          setSearchResults((previousResults) => ({
+            ...previousResults,
+            People: filteredUsers,
+          }));
+        }
       }
     });
-    
 
+    // Fetch and listen to Posts data
     const unsubscribePosts = ListenDataFromNode("Posts", async (postsData) => {
       if (postsData) {
         const validPosts = Object.entries(postsData).filter(([postId, post]) =>
@@ -143,7 +152,7 @@ const Search = () => {
           {/* Middle Content Area */}
           <Col
             md={7}
-            className=" mx-auto px-0 px-md-3 vh-100 pb-5 pb-md-0"
+            className=" mx-auto px-1 px-md-3 vh-100 pb-5 pb-md-0"
             style={{ overflowY: "auto" }}
           >
             <div className="pt-3">

@@ -29,7 +29,9 @@ const FriendsTab = ({
     const fetchRequestsData = async () => {
       const requestsData = await Promise.all(
         friendRequests.map(async (request) => {
-          return await FetchDataFromNode(`UsersDetails/${request.id}`);
+          const data = await FetchDataFromNode(`UsersDetails/${request.id}`);
+          if (data.name) return data;
+          else return null;
         })
       );
       setRequestsDetails(requestsData);
@@ -93,14 +95,16 @@ const FriendsTab = ({
             <Tab.Pane eventKey="friendRequests">
               <Row className="gx-4 gy-3">
                 {requestsDetails.length > 0 ? (
-                  requestsDetails.map((request, index) => (
-                    <Col key={index} xs={12} sm={6} lg={4}>
-                      <FriendRequestCard
-                        user={request}
-                        currentUser={currentUserID}
-                      />
-                    </Col>
-                  ))
+                  requestsDetails
+                    .filter((request) => request !== null)
+                    .map((request, index) => (
+                      <Col key={index} xs={12} sm={6} lg={4}>
+                        <FriendRequestCard
+                          user={request}
+                          currentUser={currentUserID}
+                        />
+                      </Col>
+                    ))
                 ) : (
                   <p>No friend requests found.</p>
                 )}
