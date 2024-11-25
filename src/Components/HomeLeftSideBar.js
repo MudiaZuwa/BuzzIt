@@ -9,7 +9,6 @@ import signOutUser from "../Functions/SignOutUser";
 import { GetUserNotifications } from "../Functions/GetUserNotifications";
 import { off, getDatabase, ref, onChildAdded } from "../Components/firebase";
 import VideoCallModal from "./VideoCallModal";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
 import AudioCallModal from "./AudioCallModal";
 
 const HomeLeftSideBar = ({ loggedIn, uid }) => {

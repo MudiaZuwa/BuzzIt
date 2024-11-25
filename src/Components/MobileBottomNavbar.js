@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { off, getDatabase, ref, onChildAdded } from "../Components/firebase";
 import FetchDataFromNode from "../Functions/FetchDataFromNode";
 import AudioCallModal from "./AudioCallModal";
 import VideoCallModal from "./VideoCallModal";
+import AuthModal from "../Auth/AuthModal";
+import signOutUser from "../Functions/SignOutUser";
 
 const MobileBottomNavbar = ({ uid }) => {
   const [callerId, setCallerId] = useState(null);
@@ -12,6 +14,15 @@ const MobileBottomNavbar = ({ uid }) => {
   const [showVideoCallModal, setShowVideoCallModal] = useState(false);
   const [showAudioCallModal, setShowAudioCallModal] = useState(false);
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const handleAuthModalOpen = () => setShowAuthModal(true);
+  const handleAuthModalClose = () => setShowAuthModal(false);
+
+  const handleLoginToggle = () => {
+    if (uid) signOutUser();
+    else handleAuthModalOpen();
+  };
 
   const handleVideoCallModalOpen = () => setShowVideoCallModal(true);
   const handleVideoCallModalClose = () => setShowVideoCallModal(false);
@@ -96,11 +107,21 @@ const MobileBottomNavbar = ({ uid }) => {
           <Nav.Link as={Link} to="/search">
             <i className="bi bi-search" style={{ fontSize: "1.5rem" }}></i>
           </Nav.Link>
-
-          <Nav.Link as={Link} to={`/${uid}`}>
-            <i className="bi bi-people-fill" style={{ fontSize: "1.5rem" }}></i>
-          </Nav.Link>
-
+          {uid ? (
+            <Nav.Link as={Link} to={`/${uid}`}>
+              <i
+                className="bi bi-people-fill"
+                style={{ fontSize: "1.5rem" }}
+              ></i>
+            </Nav.Link>
+          ) : (
+            <Nav.Link onClick={handleLoginToggle}>
+              <i
+                className="bi bi-people-fill"
+                style={{ fontSize: "1.5rem" }}
+              ></i>
+            </Nav.Link>
+          )}
           <Nav.Link as={Link} to={`/messages/`}>
             <i
               className="bi bi-envelope-fill"
@@ -130,6 +151,11 @@ const MobileBottomNavbar = ({ uid }) => {
         uid={uid}
         userId={callerId}
         caller={"reciepient"}
+      />
+      <AuthModal
+        show={showAuthModal}
+        handleClose={handleAuthModalClose}
+        handleProfileEdit={handleProfileEditModalOpen}
       />
     </Navbar>
   );
