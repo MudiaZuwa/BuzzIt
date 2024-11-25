@@ -20,6 +20,7 @@ import GroupChatModal from "../Components/GroupChatModal";
 import NewChatModal from "../Components/NewChatModal";
 import ProfileEditModal from "../Components/ProfileEditModal";
 import AuthModal from "../Auth/AuthModal";
+import { getDatabase, push, set, ref } from "../Components/firebase";
 
 const Message = () => {
   const { userId } = useParams();
@@ -92,6 +93,8 @@ const Message = () => {
 
   useEffect(() => {
     if (!uid) return;
+    const loadFriends = async () => setFriendsList(await fetchFriendsList(uid));
+    if (uid) loadFriends();
     const userChatsPath = `UserChats/${uid}`;
     const unsubscribe = ListenDataFromNode(userChatsPath, async (chatsData) => {
       if (chatsData) {
@@ -119,25 +122,47 @@ const Message = () => {
           (a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp
         );
         setPreviousChats(sortedChats);
-
         if (userId) {
           const currentChatId = Object.keys(chatsData).find(
             (chat) =>
               chatsData[chat].id === userId ||
               chatsData[chat].chatWith === userId
           );
-          if (currentChatId) setCurrentChatId(currentChatId);
+
+          if (currentChatId) {
+            setCurrentChatId(currentChatId);
+          } else {
+            const db = getDatabase();
+            const newChatRef = push(ref(db, `UserChats/${uid}`));
+            const newChatId = newChatRef.key;
+
+            const newChatData = {
+              id: newChatId,
+              chatWith: userId,
+              lastMessage: "",
+              lastMessageTimestamp: Date.now(),
+              isGroupChat: false,
+            };
+
+            await set(newChatRef, newChatData);
+
+            const friendChatRef = ref(db, `UserChats/${userId}/${newChatId}`);
+            const friendChatData = {
+              ...newChatData,
+              id: newChatId,
+              chatWith: uid,
+            };
+
+            await set(friendChatRef, friendChatData);
+
+            setCurrentChatId(newChatId);
+          }
         }
       }
     });
 
     return () => unsubscribe();
   }, [uid, userId]);
-
-  useEffect(() => {
-    const loadFriends = async () => setFriendsList(await fetchFriendsList(uid));
-    if (uid) loadFriends();
-  }, [uid]);
 
   useEffect(() => {
     if (!currentChatId) return;
@@ -212,7 +237,6 @@ const Message = () => {
       <Container fluid>
         <Row>
           <HomeLeftSideBar uid={uid} loggedIn={loggedIn} />
-
           <Col
             md={10}
             lg={4}
