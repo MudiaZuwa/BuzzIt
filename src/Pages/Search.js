@@ -33,10 +33,11 @@ const Search = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const query = params.get("query");
+
     if (query) {
       setSearchQuery(query);
-      const listensUnsubscribe = getSearchResult(query);
-      return () => listensUnsubscribe?.();
+      const cleanup = getSearchResult(query);
+      return cleanup;
     }
   }, [location.search, uid]);
 
@@ -82,12 +83,12 @@ const Search = () => {
     }
   };
 
-  const getSearchResult = async (searchValue) => {
-    // Fetch and listen to UsersDetails data
+  const getSearchResult = (searchValue) => {
+    const unsubscribes = [];
+
     const unsubscribeUsers = ListenDataFromNode("UsersDetails", (usersData) => {
       if (usersData) {
         if (uid) {
-          // Fetch and listen to Friends data if user is logged in
           const unsubscribeFriends = ListenDataFromNode(
             `friend/${uid}/Friends`,
             (friendsData) => {
@@ -105,10 +106,8 @@ const Search = () => {
               }));
             }
           );
-
-          return unsubscribeFriends;
+          unsubscribes.push(unsubscribeFriends);
         } else {
-          // Filter UsersDetails directly if no uid
           const filteredUsers = Object.values(usersData).filter((user) =>
             user.name?.toLowerCase().includes(searchValue.toLowerCase())
           );
@@ -119,8 +118,8 @@ const Search = () => {
         }
       }
     });
+    unsubscribes.push(unsubscribeUsers);
 
-    // Fetch and listen to Posts data
     const unsubscribePosts = ListenDataFromNode("Posts", async (postsData) => {
       if (postsData) {
         const validPosts = Object.entries(postsData).filter(([postId, post]) =>
@@ -134,10 +133,10 @@ const Search = () => {
         }));
       }
     });
+    unsubscribes.push(unsubscribePosts);
 
     return () => {
-      unsubscribeUsers();
-      unsubscribePosts();
+      unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
   };
 
