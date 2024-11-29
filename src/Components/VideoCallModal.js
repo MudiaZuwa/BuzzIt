@@ -33,6 +33,7 @@ const VideoCallModal = ({
   const ringtoneRef = useRef();
   const draggableRef = useRef(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [loaded, setLoaded] = useState(false);
   const servers = {
     iceServers: [
       {
@@ -65,6 +66,15 @@ const VideoCallModal = ({
   }, [callState, LocalRef, show, userDetails]);
 
   useEffect(() => {
+    if (loaded && ringtoneRef.current) {
+      if (callState !== "onCall" && show)
+        ringtoneRef.current
+          .play()
+          .catch((err) => console.error("Ringtone error:", err));
+      else {
+        ringtoneRef.current.pause();
+      }
+    }
     callStateRef.current = callState;
     if (callState === "answered") joinRoom();
     else if (callState === "onCall" && elapsedTime === 0) {
@@ -74,17 +84,7 @@ const VideoCallModal = ({
 
       return () => clearInterval(interval);
     }
-    if (ringtoneRef.current) {
-      if (callState !== "onCall" && show)
-        ringtoneRef.current
-          .play()
-          .catch((err) => console.error("Ringtone error:", err));
-      else {
-        ringtoneRef.current.pause();
-        console.log(callState);
-      }
-    }
-  }, [callState, show]);
+  }, [callState, show, loaded]);
 
   const fetchReciepientDetails = async () => {
     const reciepientDetails = await FetchDataFromNode(`UsersDetails/${userId}`);
@@ -155,7 +155,7 @@ const VideoCallModal = ({
 
     // Listen for answer candidates
     ListenDataFromNode(`Calls/${newRoomId}/answerCandidates`, (snapshot) => {
-      if (!snapshot && (roomId || callState === "onCall")) {
+      if (!snapshot && callStateRef.current === "onCall") {
         hangUp();
       } else if (snapshot) {
         Object.values(snapshot).forEach((childSnapshot) => {
@@ -203,7 +203,7 @@ const VideoCallModal = ({
 
     // Listen for offer candidates
     ListenDataFromNode(`Calls/${roomKey}/offerCandidates`, (snapshot) => {
-      if (!snapshot && (roomId || callState === "onCall")) {
+      if (!snapshot && callStateRef.current === "onCall") {
         hangUp();
       } else if (snapshot) {
         Object.values(snapshot).forEach((childSnapshot) => {
@@ -379,6 +379,7 @@ const VideoCallModal = ({
                 </div>
               </>
             )}
+            {!loaded && setLoaded(true)}
           </Modal.Body>
         </Modal>
       </div>

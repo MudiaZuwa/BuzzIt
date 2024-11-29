@@ -27,6 +27,7 @@ const AudioCallModal = ({
   const [userDetails, setUserDetails] = useState(reciepientDetails);
   const [roomId, setRoomId] = useState(null);
   const callStateRef = useRef();
+  const roomIdRef = useRef(null);
   const LocalRef = useRef();
   const RemoteRef = useRef();
   const ringtoneRef = useRef();
@@ -59,7 +60,6 @@ const AudioCallModal = ({
 
   useEffect(() => {
     if (loaded && ringtoneRef.current) {
-      console.log(callState);
       if (callState !== "onCall" && show)
         ringtoneRef.current
           .play()
@@ -130,7 +130,7 @@ const AudioCallModal = ({
     });
 
     ListenDataFromNode(`Calls/${newRoomId}/answerCandidates`, (snapshot) => {
-      if (!snapshot && (roomId || callState === "onCall")) {
+      if (!snapshot && callStateRef.current === "onCall") {
         hangUp();
       } else if (snapshot) {
         Object.values(snapshot).forEach((childSnapshot) => {
@@ -181,14 +181,13 @@ const AudioCallModal = ({
 
     // Listen for offer candidates
     ListenDataFromNode(`Calls/${roomKey}/offerCandidates`, (snapshot) => {
-      if (!snapshot && (roomId || callState === "onCall")) {
+      if (!snapshot && callStateRef.current === "onCall") {
         hangUp();
       } else if (snapshot) {
         Object.values(snapshot).forEach((childSnapshot) => {
           const candidate = childSnapshot;
           pc.addIceCandidate(new RTCIceCandidate(candidate));
         });
-        console.log("on")
         setCallState("onCall");
       }
     });
@@ -302,7 +301,11 @@ const AudioCallModal = ({
           <Modal.Body>
             <audio
               ref={ringtoneRef}
-              src={caller === "user" ? "" : "/audio/standardringtone.mp3"}
+              src={
+                caller === "user"
+                  ? "/audio/COMTelph_Tone ringback tone 1 (ID 1614)_BSB.mp3"
+                  : "/audio/standardringtone.mp3"
+              }
               loop
               style={{ display: "none" }}
             />
