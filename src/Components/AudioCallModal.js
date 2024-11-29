@@ -312,7 +312,7 @@ const AudioCallModal = ({
             {userDetails && (
               <div className="audio-call-interface">
                 <img
-                  src={userDetails.profilePhoto || "/images/defaultCover.png"}
+                  src={userDetails.profilePhoto || "/images/defaultProfile.png"}
                   alt="User"
                   className="rounded-circle user-photo"
                 />

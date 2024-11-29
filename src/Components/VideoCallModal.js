@@ -332,7 +332,9 @@ const VideoCallModal = ({
               <>
                 <div className="call-interface">
                   <img
-                    src={userDetails.profilePhoto || "/images/defaultCover.png"}
+                    src={
+                      userDetails.profilePhoto || "/images/defaultProfile.png"
+                    }
                     alt="User"
                     className="rounded-circle user-photo"
                   />

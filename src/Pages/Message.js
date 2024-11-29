@@ -92,6 +92,7 @@ const Message = () => {
   };
 
   useEffect(() => {
+    setCurrentChatId(null);
     if (!uid) return;
     const loadFriends = async () => setFriendsList(await fetchFriendsList(uid));
     if (uid) loadFriends();
@@ -206,7 +207,6 @@ const Message = () => {
 
   useEffect(() => {
     if (!userId || !currentChatId) return;
-
     const chatDataPath = `UserChats/${uid}`;
     const unsubscribe = ListenDataFromNode(chatDataPath, async (userChats) => {
       if (!userChats) return;
