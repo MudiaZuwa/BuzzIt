@@ -194,20 +194,24 @@ const CurrentChat = ({
                 style={{ fontSize: "1.5rem" }}
               ></i>
             </button>
-            <button className="btn">
-              <i
-                className="bi bi-telephone"
-                style={{ fontSize: "1.2rem" }}
-                onClick={() => handleAudioCallModalOpen()}
-              ></i>
-            </button>
-            <button className="btn">
-              <i
-                className="bi bi-camera-video"
-                style={{ fontSize: "1.2rem" }}
-                onClick={() => handleVideoCallModalOpen()}
-              ></i>
-            </button>
+            {!isGroupChat && (
+              <>
+                <button className="btn">
+                  <i
+                    className="bi bi-telephone"
+                    style={{ fontSize: "1.2rem" }}
+                    onClick={() => handleAudioCallModalOpen()}
+                  ></i>
+                </button>
+                <button className="btn">
+                  <i
+                    className="bi bi-camera-video"
+                    style={{ fontSize: "1.2rem" }}
+                    onClick={() => handleVideoCallModalOpen()}
+                  ></i>
+                </button>
+              </>
+            )}
           </div>
 
           {/* Chat Body Section */}
