@@ -233,10 +233,12 @@ const Message = () => {
 
   return (
     <div>
-      {/* Desktop View */}
       <Container fluid>
         <Row>
+          {/* Left Sidebar */}
           <HomeLeftSideBar uid={uid} loggedIn={loggedIn} />
+
+          {/* Message List Column */}
           <Col
             md={10}
             lg={4}
@@ -244,10 +246,9 @@ const Message = () => {
               userId ? "d-none d-lg-flex" : ""
             } `}
           >
+            {/* Navbar */}
             <Navbar bg="light" className="justify-content-between">
               <Navbar.Brand>Messages</Navbar.Brand>
-
-              {/* Add new group and start new chat icons */}
               <div>
                 <button
                   className="btn btn-outline-secondary me-2"
@@ -266,6 +267,7 @@ const Message = () => {
               </div>
             </Navbar>
 
+            {/* Search and Chats */}
             <InputGroup className="mb-3">
               <Form.Control
                 placeholder="Search friends or groups"
@@ -273,7 +275,6 @@ const Message = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </InputGroup>
-
             <div
               className="overflow-auto"
               style={{ maxHeight: "calc(100vh - 120px)" }}
@@ -288,9 +289,16 @@ const Message = () => {
             </div>
           </Col>
 
+          {/* Current Chat Column */}
           <Col
+            xs={12}
+            md={10}
             lg={6}
-            className="d-none d-lg-flex bg-light vh-100 justify-content-center align-items-center"
+            className={`bg-light vh-100 ${
+              userId
+                ? "d-flex pb-5 pb-md-0 px-0"
+                : "d-none d-lg-flex justify-content-center align-items-center "
+            }`}
           >
             {userId ? (
               <CurrentChat
@@ -309,45 +317,10 @@ const Message = () => {
               </div>
             )}
           </Col>
-
-          {userId && (
-            <Col xs={12} md={10} className="d-lg-none vh-100 pb-5 pb-md-0 px-0">
-              <CurrentChat
-                chatId={currentChatId}
-                uid={uid}
-                messages={currentMessages}
-                recipientDetails={recipientDetails}
-                handleGroupModalOpen={handleGroupModalOpen}
-              />
-            </Col>
-          )}
-          <GroupChatModal
-            uid={uid}
-            show={showGroupModal}
-            onClose={handleGroupModalClose}
-            friendsList={friendsList}
-            groupDetails={userId ? recipientDetails : null}
-            userId={userId}
-          />
-
-          <NewChatModal
-            friendsList={friendsList}
-            show={friendListModalShow}
-            handleClose={handleFriendListModalClose}
-            purpose={"NewChat"}
-          />
-          <AuthModal
-            show={showAuthModal}
-            handleClose={handleAuthModalClose}
-            handleProfileEdit={handleProfileEditModalOpen}
-            returnOnClose={true}
-          />
-          <ProfileEditModal
-            show={showProfileEditModal}
-            handleClose={handleProfileEditModalClose}
-          />
         </Row>
       </Container>
+
+      {/* Bottom Navbar */}
       <MobileBottomNavbar uid={uid} />
     </div>
   );

@@ -91,7 +91,10 @@ const Game = () => {
           >
             <div className="pt-3 px-3">
               <Tab.Container defaultActiveKey="Single-Player">
-                <Nav variant="tabs" className="d-flex justify-content-between">
+                <Nav
+                  variant="tabs"
+                  className="d-flex justify-content-between pb-4"
+                >
                   <Nav.Item className="flex-fill text-center">
                     <Nav.Link eventKey="Single-Player">Single-Player</Nav.Link>
                   </Nav.Item>

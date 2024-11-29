@@ -1,6 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { getDatabase, ref, set, push, update } from "../Components/firebase";
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+  update,
+  onDisconnect,
+} from "../Components/firebase";
 import Draggable from "react-draggable";
 import "../CSS/AudioCallModal.css";
 import ListenDataFromNode from "../Functions/ListenDataFromNode";
@@ -22,8 +29,10 @@ const AudioCallModal = ({
   const callStateRef = useRef();
   const LocalRef = useRef();
   const RemoteRef = useRef();
+  const ringtoneRef = useRef();
   const draggableRef = useRef(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
   const servers = {
     iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }],
@@ -32,16 +41,33 @@ const AudioCallModal = ({
 
   useEffect(() => {
     if (show && !reciepientDetails) fetchReciepientDetails();
+    else setUserDetails(reciepientDetails);
   }, [reciepientDetails, show]);
 
   useEffect(() => {
     if (show && userDetails && callState === "calling") {
       if (caller === "user") createRoom();
       // else getLocalAudio();
+    } else if (!show) {
+      setCallState("calling");
+      setRoomId(null);
+      setIsMuted(false);
+      setElapsedTime(0);
+      setUserDetails(null);
     }
   }, [userDetails, callState, show]);
 
   useEffect(() => {
+    if (loaded && ringtoneRef.current) {
+      console.log(callState);
+      if (callState !== "onCall" && show)
+        ringtoneRef.current
+          .play()
+          .catch((err) => console.error("Ringtone error:", err));
+      else {
+        ringtoneRef.current.pause();
+      }
+    }
     callStateRef.current = callState;
     if (callState === "answered") joinRoom();
     else if (callState === "onCall" && elapsedTime === 0) {
@@ -51,25 +77,16 @@ const AudioCallModal = ({
 
       return () => clearInterval(interval);
     }
-  }, [callState]);
+  }, [callState, show, loaded]);
 
   const fetchReciepientDetails = async () => {
     const details = await FetchDataFromNode(`UsersDetails/${userId}`);
     setUserDetails(details);
   };
 
-  const getLocalAudio = async () => {
-    const localStream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-    });
-    LocalRef.current = document.createElement("audio");
-    LocalRef.current.srcObject = localStream;
-  };
-
   const createRoom = async () => {
     const newCallRef = push(ref(getDatabase(), "Calls"));
     const newRoomId = newCallRef.key;
-    setRoomId(newRoomId);
 
     const localStream = await setupLocalAudio();
     const offerCandidatesRef = ref(
@@ -113,7 +130,7 @@ const AudioCallModal = ({
     });
 
     ListenDataFromNode(`Calls/${newRoomId}/answerCandidates`, (snapshot) => {
-      if (!snapshot && callStateRef.current === "onCall") {
+      if (!snapshot && (roomId || callState === "onCall")) {
         hangUp();
       } else if (snapshot) {
         Object.values(snapshot).forEach((childSnapshot) => {
@@ -123,6 +140,8 @@ const AudioCallModal = ({
         setCallState("onCall");
       }
     });
+    setupDisconnectHandlers();
+    setRoomId(newRoomId);
   };
 
   const joinRoom = async () => {
@@ -130,7 +149,6 @@ const AudioCallModal = ({
     const roomKey = Object.keys(
       await FetchDataFromNode(`UsersCalls/${uid}`)
     )[0];
-    setRoomId(roomKey);
 
     const callRef = ref(getDatabase(), `Calls/${roomKey}`);
     const answerCandidatesRef = ref(
@@ -163,16 +181,19 @@ const AudioCallModal = ({
 
     // Listen for offer candidates
     ListenDataFromNode(`Calls/${roomKey}/offerCandidates`, (snapshot) => {
-      if (!snapshot && callStateRef.current === "onCall") {
+      if (!snapshot && (roomId || callState === "onCall")) {
         hangUp();
       } else if (snapshot) {
         Object.values(snapshot).forEach((childSnapshot) => {
           const candidate = childSnapshot;
           pc.addIceCandidate(new RTCIceCandidate(candidate));
         });
+        console.log("on")
         setCallState("onCall");
       }
     });
+    setupDisconnectHandlers();
+    setRoomId(roomKey);
   };
 
   const setupLocalAudio = async () => {
@@ -196,6 +217,15 @@ const AudioCallModal = ({
   };
 
   const hangUp = async () => {
+    if (roomId) {
+      await Promise.all([
+        DeleteDateInNode(`UsersCalls/${userId}/${roomId}`),
+        DeleteDateInNode(`UsersCalls/${uid}/${roomId}`),
+        DeleteDateInNode(`Calls/${roomId}/answerCandidates`),
+        DeleteDateInNode(`Calls/${roomId}/offerCandidates`),
+        DeleteDateInNode(`Calls/${roomId}`),
+      ]);
+    }
     pc.close();
     [LocalRef, RemoteRef].forEach((ref) => {
       if (ref.current?.srcObject)
@@ -212,10 +242,6 @@ const AudioCallModal = ({
       ]);
     }
 
-    setCallState("calling");
-    setRoomId(null);
-    setIsMuted(false);
-    setElapsedTime(0);
     handleClose();
   };
 
@@ -226,6 +252,39 @@ const AudioCallModal = ({
       .forEach((track) => (track.enabled = !track.enabled));
     setIsMuted((prev) => !prev);
   };
+  const setupDisconnectHandlers = () => {
+    const userCallRef = ref(getDatabase(), `UsersCalls/${userId}/${roomId}`);
+    const ownCallRef = ref(getDatabase(), `UsersCalls/${uid}/${roomId}`);
+    const answerCandidatesRef = ref(
+      getDatabase(),
+      `Calls/${roomId}/answerCandidates`
+    );
+    const offerCandidatesRef = ref(
+      getDatabase(),
+      `Calls/${roomId}/offerCandidates`
+    );
+    const callRef = ref(getDatabase(), `Calls/${roomId}`);
+
+    onDisconnect(userCallRef).remove();
+    onDisconnect(ownCallRef).remove();
+    onDisconnect(answerCandidatesRef).remove();
+    onDisconnect(offerCandidatesRef).remove();
+    onDisconnect(callRef).remove();
+  };
+
+  useEffect(() => {
+    const handleDisconnect = async () => {
+      await hangUp();
+    };
+
+    window.addEventListener("beforeunload", handleDisconnect);
+    window.addEventListener("unload", handleDisconnect);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleDisconnect);
+      window.removeEventListener("unload", handleDisconnect);
+    };
+  }, [hangUp]);
 
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -241,16 +300,23 @@ const AudioCallModal = ({
       <div ref={draggableRef}>
         <Modal show={show} onHide={hangUp} backdrop="static">
           <Modal.Body>
+            <audio
+              ref={ringtoneRef}
+              src={caller === "user" ? "" : "/audio/standardringtone.mp3"}
+              loop
+              style={{ display: "none" }}
+            />
             {userDetails && (
               <div className="audio-call-interface">
                 <img
-                  src={userDetails.profilePhoto}
+                  src={userDetails.profilePhoto || "/images/defaultCover.png"}
                   alt="User"
                   className="rounded-circle user-photo"
                 />
                 <h5 className="user-name">{userDetails.name}</h5>
                 <p>{formatTime(elapsedTime)}</p>
                 <audio autoPlay ref={RemoteRef} style={{ display: "none" }} />
+
                 <div className="call-controls">
                   <Button variant="danger" onClick={hangUp}>
                     <i className="bi bi-telephone-x-fill"></i>
@@ -272,6 +338,7 @@ const AudioCallModal = ({
                     </Button>
                   )}
                 </div>
+                {!loaded && setLoaded(true)}
               </div>
             )}
           </Modal.Body>

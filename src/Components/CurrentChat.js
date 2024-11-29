@@ -55,7 +55,7 @@ const CurrentChat = ({
   };
 
   const handleRemoveFile = (index) => {
-    setSelectedFiles((selectedFiles) => selectedFiles.splice(index));
+    setSelectedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     setUploadProgress(0);
   };
 
@@ -124,16 +124,17 @@ const CurrentChat = ({
         "video/mov",
       ].includes(file.type)
     );
+
     setSelectedFiles(validFiles);
   };
 
   const groupMessagesByDate = (messages) => {
     return messages.reduce((acc, msg) => {
-      const date = new Date(msg.timestamp).toLocaleDateString(); // Format date
+      const date = new Date(msg.timestamp).toLocaleDateString();
       if (!acc[date]) {
-        acc[date] = []; // Initialize an array for a new date
+        acc[date] = [];
       }
-      acc[date].push(msg); // Add message to the corresponding date
+      acc[date].push(msg);
       return acc;
     }, {});
   };
@@ -312,7 +313,7 @@ const CurrentChat = ({
             <div ref={messagesEndRef} />
           </div>
           <Form
-            onSubmit={handleSendMessage}
+            onSubmit={(e) => handleSendMessage(e)}
             className="message-form pb-4 pb-md-2 pb-lg-0"
             disabled={sendingMessage}
           >

@@ -24,16 +24,14 @@ const MobileBottomNavbar = ({ uid }) => {
     else handleAuthModalOpen();
   };
 
-  const handleVideoCallModalOpen = () =>
-    setShowVideoCallModal(() => {
-      if (!showAudioCallModal && !showVideoCallModal) true;
-    });
+  const handleVideoCallModalOpen = () => {
+    if (!showAudioCallModal && !showVideoCallModal) setShowVideoCallModal(true);
+  };
   const handleVideoCallModalClose = () => setShowVideoCallModal(false);
 
-  const handleAudioCallModalOpen = () =>
-    setShowAudioCallModal(() => {
-      if (!showAudioCallModal && !showVideoCallModal) true;
-    });
+  const handleAudioCallModalOpen = () => {
+    if (!showAudioCallModal && !showVideoCallModal) setShowAudioCallModal(true);
+  };
   const handleAudioCallModalClose = () => setShowAudioCallModal(false);
 
   const handleProfileEditModalOpen = () => {
@@ -54,8 +52,8 @@ const MobileBottomNavbar = ({ uid }) => {
 
   useEffect(() => {
     if (callerId) {
-      if (callType === "video") handleVideoCallModalOpen();
-      else if (callType === "audio") handleAudioCallModalOpen();
+      // if (callType === "video") handleVideoCallModalOpen();
+      // else if (callType === "audio") handleAudioCallModalOpen();
     }
   }, [callerId, callType]);
 

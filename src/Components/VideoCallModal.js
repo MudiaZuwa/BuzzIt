@@ -1,6 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { getDatabase, ref, set, push, update } from "../Components/firebase";
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+  update,
+  onDisconnect,
+} from "../Components/firebase";
 import Draggable from "react-draggable";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../CSS/VideoCallModal.css";
@@ -23,6 +30,7 @@ const VideoCallModal = ({
   const LocalRef = useRef();
   const RemoteRef = useRef();
   const callStateRef = useRef();
+  const ringtoneRef = useRef();
   const draggableRef = useRef(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const servers = {
@@ -37,8 +45,14 @@ const VideoCallModal = ({
   const database = getDatabase();
 
   useEffect(() => {
-    if (show && !reciepientDetails) {
-      fetchReciepientDetails();
+    if (show && !reciepientDetails) fetchReciepientDetails();
+    else if (show) setUserDetails(reciepientDetails);
+    if (!show) {
+      setCallState("calling");
+      setRoomId(null);
+      setIsMuted(false);
+      setElapsedTime(0);
+      setUserDetails(null);
     }
   }, [userDetails, reciepientDetails, show]);
 
@@ -60,7 +74,17 @@ const VideoCallModal = ({
 
       return () => clearInterval(interval);
     }
-  }, [callState]);
+    if (ringtoneRef.current) {
+      if (callState !== "onCall" && show)
+        ringtoneRef.current
+          .play()
+          .catch((err) => console.error("Ringtone error:", err));
+      else {
+        ringtoneRef.current.pause();
+        console.log(callState);
+      }
+    }
+  }, [callState, show]);
 
   const fetchReciepientDetails = async () => {
     const reciepientDetails = await FetchDataFromNode(`UsersDetails/${userId}`);
@@ -80,7 +104,6 @@ const VideoCallModal = ({
     const callRef = ref(database, `Calls`);
     const newCallRef = push(callRef);
     const newRoomId = newCallRef.key;
-    setRoomId(newRoomId);
     const localStream = await setupLocalSource();
 
     const offerCandidatesRef = ref(
@@ -132,7 +155,7 @@ const VideoCallModal = ({
 
     // Listen for answer candidates
     ListenDataFromNode(`Calls/${newRoomId}/answerCandidates`, (snapshot) => {
-      if (!snapshot && callStateRef.current === "onCall") {
+      if (!snapshot && (roomId || callState === "onCall")) {
         hangUp();
       } else if (snapshot) {
         Object.values(snapshot).forEach((childSnapshot) => {
@@ -142,6 +165,8 @@ const VideoCallModal = ({
         setCallState("onCall");
       }
     });
+    setupDisconnectHandlers();
+    setRoomId(newRoomId);
   };
 
   const joinRoom = async () => {
@@ -149,7 +174,6 @@ const VideoCallModal = ({
     const userCalls = await FetchDataFromNode(`UsersCalls/${uid}`);
     if (!userCalls) return;
     const roomKey = Object.keys(userCalls)[0];
-    setRoomId(roomKey);
 
     const callRef = ref(database, `Calls/${roomKey}`);
     const answerCandidatesRef = ref(
@@ -179,7 +203,7 @@ const VideoCallModal = ({
 
     // Listen for offer candidates
     ListenDataFromNode(`Calls/${roomKey}/offerCandidates`, (snapshot) => {
-      if (!snapshot && callStateRef.current === "onCall") {
+      if (!snapshot && (roomId || callState === "onCall")) {
         hangUp();
       } else if (snapshot) {
         Object.values(snapshot).forEach((childSnapshot) => {
@@ -189,6 +213,8 @@ const VideoCallModal = ({
         setCallState("onCall");
       }
     });
+    setupDisconnectHandlers();
+    setRoomId(roomKey);
   };
 
   const setupLocalSource = async () => {
@@ -230,10 +256,25 @@ const VideoCallModal = ({
       await DeleteDateInNode(`Calls/${roomId}/offerCandidates`);
       await DeleteDateInNode(`Calls/${roomId}`);
     }
-    setCallState("calling");
-    setIsMuted(false);
-    setRoomId(null);
+
     handleClose();
+  };
+
+  const setupDisconnectHandlers = () => {
+    const userCallRef = ref(database, `UsersCalls/${userId}/${roomId}`);
+    const ownCallRef = ref(database, `UsersCalls/${uid}/${roomId}`);
+    const answerCandidatesRef = ref(
+      database,
+      `Calls/${roomId}/answerCandidates`
+    );
+    const offerCandidatesRef = ref(database, `Calls/${roomId}/offerCandidates`);
+    const callRef = ref(database, `Calls/${roomId}`);
+
+    onDisconnect(userCallRef).remove();
+    onDisconnect(ownCallRef).remove();
+    onDisconnect(answerCandidatesRef).remove();
+    onDisconnect(offerCandidatesRef).remove();
+    onDisconnect(callRef).remove();
   };
 
   const handleMute = () => {
@@ -277,11 +318,21 @@ const VideoCallModal = ({
           backdrop="static"
         >
           <Modal.Body>
+            <audio
+              ref={ringtoneRef}
+              src={
+                caller === "user"
+                  ? "/audio/COMTelph_Tone ringback tone 1 (ID 1614)_BSB.mp3"
+                  : "/audio/standardringtone.mp3"
+              }
+              loop
+              style={{ display: "none" }}
+            />
             {userDetails && (
               <>
                 <div className="call-interface">
                   <img
-                    src={userDetails.profilePhoto}
+                    src={userDetails.profilePhoto || "/images/defaultCover.png"}
                     alt="User"
                     className="rounded-circle user-photo"
                   />

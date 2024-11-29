@@ -20,16 +20,14 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
   const [showVideoCallModal, setShowVideoCallModal] = useState(false);
   const [showAudioCallModal, setShowAudioCallModal] = useState(false);
 
-  const handleVideoCallModalOpen = () =>
-    setShowVideoCallModal(() => {
-      if (!showAudioCallModal && !showVideoCallModal) true;
-    });
+  const handleVideoCallModalOpen = () => {
+    if (!showAudioCallModal && !showVideoCallModal) setShowVideoCallModal(true);
+  };
   const handleVideoCallModalClose = () => setShowVideoCallModal(false);
 
-  const handleAudioCallModalOpen = () =>
-    setShowAudioCallModal(() => {
-      if (!showAudioCallModal && !showVideoCallModal) true;
-    });
+  const handleAudioCallModalOpen = () => {
+    if (!showAudioCallModal && !showVideoCallModal) setShowAudioCallModal(true);
+  };
   const handleAudioCallModalClose = () => setShowAudioCallModal(false);
 
   const handleProfileEditModalOpen = () => {
@@ -49,7 +47,11 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
   };
 
   useEffect(() => {
-    if (loggedIn) checkUserDetails();
+    if (loggedIn) {
+      checkUserDetails();
+      const callsUnsuscribe = ListenForCalls();
+      return callsUnsuscribe();
+    }
   }, [loggedIn]);
 
   useEffect(() => {
@@ -74,7 +76,6 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
         else if (!data.name) handleProfileEditModalOpen();
         if (data) {
           GetUserNotifications(uid);
-          ListenForCalls();
         }
       })
       .catch((error) => {
@@ -89,7 +90,12 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
     const unsubscribe = onChildAdded(nodeRef, (snapshot) => {
       if (snapshot?.exists()) {
         const call = snapshot.val();
-        if (call.caller === "incoming" &&!showAudioCallModal && !showVideoCallModal) {
+        console.log(showAudioCallModal, showVideoCallModal);
+        if (
+          call.caller === "incoming" &&
+          !showAudioCallModal &&
+          !showVideoCallModal
+        ) {
           setCallerId(call.friend);
           setCallType(call.callType);
         }

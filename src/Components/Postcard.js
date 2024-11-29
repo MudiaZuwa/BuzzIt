@@ -211,7 +211,7 @@ const PostCard = ({ post, currentUserID }) => {
 
         <Button
           variant="outline-success"
-          className="ms-auto"
+          // className="ms-auto"
           onClick={handleShare}
         >
           <i className="bi bi-share"></i>{" "}

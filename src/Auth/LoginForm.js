@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import HandleLogin from "../Functions/HandleLogin";
 import GoogleSignIn from "./GoogleSignIn";
+import { getDatabase, ref, set } from "../Components/firebase";
 
 const LoginForm = ({ setSuccess }) => {
   const [validated, setValidated] = useState(false);
@@ -38,7 +39,7 @@ const LoginForm = ({ setSuccess }) => {
         const AccountDetails = {
           email: email,
         };
-        
+
         setSuccess(true);
         setIsPending(false);
       })
