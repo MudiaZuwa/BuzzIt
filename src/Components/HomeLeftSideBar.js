@@ -136,6 +136,16 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
         </Button>
       </Link>
 
+      <Link to="/Games" className="d-flex align-items-center mb-3">
+        <Button
+          variant="link"
+          className="d-flex align-items-center overflow-x-hidden"
+        >
+          <i className="bi bi-controller me-2"></i>{" "}
+          <span className="text-truncate">Games</span>
+        </Button>
+      </Link>
+
       {loggedIn && uid ? (
         <Link to={`/${uid}`} className="d-flex align-items-center mb-3">
           <Button
@@ -156,15 +166,6 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
           <span className="text-truncate">Profile</span>
         </Button>
       )}
-      <Link to="/Games" className="d-flex align-items-center mb-3">
-        <Button
-          variant="link"
-          className="d-flex align-items-center overflow-x-hidden"
-        >
-          <i className="bi bi-controller me-2"></i>{" "}
-          <span className="text-truncate">Games</span>
-        </Button>
-      </Link>
 
       <Button
         variant="link"
