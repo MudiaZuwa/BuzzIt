@@ -191,31 +191,23 @@ const PostCard = ({ post, currentUserID }) => {
       {/* Post Footer with action buttons */}
       <Card.Footer className="d-flex justify-content-between">
         <Button variant="outline-primary" onClick={handleLike}>
-          <i className={`bi bi-heart${hasLiked ? "-fill" : ""}`}></i>{" "}
           {likes ? likes.length : 0}{" "}
-          <span className="d-none d-sm-inline">Like</span>
+          <i className={`bi bi-heart${hasLiked ? "-fill" : ""}`}></i>
         </Button>
 
         <Button variant="outline-secondary" onClick={handleRepost}>
+          {reposts ? reposts.length : 0}{" "}
           <i className={`bi bi-repeat${hasReposted ? "-1" : ""}`}></i>
-          {reposts ? reposts.length : 0}
-          <span className="d-none d-sm-inline">Repost</span>
         </Button>
 
         <Link to={`/${uid}/${post.id}`} style={{ textDecoration: "none" }}>
           <Button variant="outline-info">
-            <i className="bi bi-chat"></i> {comments ? comments.length : 0}{" "}
-            <span className="d-none d-sm-inline">Comment</span>
+            {comments ? comments.length : 0} <i className="bi bi-chat"></i>
           </Button>
         </Link>
 
-        <Button
-          variant="outline-success"
-          // className="ms-auto"
-          onClick={handleShare}
-        >
-          <i className="bi bi-share"></i>{" "}
-          <span className="d-none d-sm-inline">Share</span>
+        <Button variant="outline-success" onClick={handleShare}>
+          <i className="bi bi-share"></i>
         </Button>
       </Card.Footer>
     </Card>

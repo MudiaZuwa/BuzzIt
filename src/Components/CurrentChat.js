@@ -328,6 +328,18 @@ const CurrentChat = ({
                   placeholder="Type a message..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
+                  onPaste={(e) => {
+                    const items = e.clipboardData.items;
+                    for (let i = 0; i < items.length; i++) {
+                      if (
+                        items[i].type.indexOf("image") !== -1 ||
+                        items[i].type.indexOf("video") !== -1
+                      ) {
+                        const file = items[i].getAsFile();
+                        setSelectedFiles([file]);
+                      }
+                    }
+                  }}
                   className="message-input"
                   disabled={sendingMessage}
                 />

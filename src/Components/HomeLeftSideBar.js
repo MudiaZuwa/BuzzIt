@@ -176,15 +176,15 @@ const HomeLeftSideBar = ({ loggedIn, uid }) => {
 
       <Button
         variant="primary"
-        className="d-flex align-items-center mb-3"
+        className="d-flex align-items-center mb-3 w-100  justify-content-center"
         onClick={handlePostModalOpen}
       >
-        <i className="bi bi-plus-lg me-2"></i> Post
+        Post
       </Button>
 
       <Button
         variant="link"
-        className="d-flex align-items-center mb-3"
+        className="d-flex align-items-center mt-5"
         onClick={handleLoginToggle}
       >
         <i className="bi bi-box-arrow-in-right me-2"></i>{" "}

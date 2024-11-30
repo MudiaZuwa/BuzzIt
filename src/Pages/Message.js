@@ -93,6 +93,7 @@ const Message = () => {
 
   useEffect(() => {
     setCurrentChatId(null);
+    setCurrentMessages([]);
     if (!uid) return;
     const loadFriends = async () => setFriendsList(await fetchFriendsList(uid));
     if (uid) loadFriends();
