@@ -5,8 +5,10 @@ export default class Ball {
     this.image = ballImage;
     this.gameWidth = game.gameWidth;
     this.gameHeight = game.gameHeight;
-    this.height = this.gameHeight * 0.03;
-    this.width = this.gameWidth * 0.03;
+    this.size =
+      this.gameHeight * 0.03 < this.gameWidth * 0.03
+        ? this.gameHeight * 0.03
+        : this.gameWidth * 0.03;
     this.game = game;
     this.maxSpeed = 10;
     this.reset();
@@ -14,8 +16,8 @@ export default class Ball {
 
   reset() {
     this.position = {
-      x: this.gameWidth / 2 - this.width / 2,
-      y: this.gameHeight / 2 - this.height / 2,
+      x: this.gameWidth / 2 - this.size / 2,
+      y: this.gameHeight / 2 - this.size / 2,
     };
     this.speed = { x: 0, y: 0 };
   }
@@ -25,8 +27,8 @@ export default class Ball {
       this.image,
       this.position.x,
       this.position.y,
-      this.width,
-      this.height
+      this.size,
+      this.size
     );
   }
 
@@ -53,7 +55,7 @@ export default class Ball {
       this.game.gamestate = 5;
     }
     //wall on bottom{
-    if (this.position.y + this.height > this.gameHeight) {
+    if (this.position.y + this.size > this.gameHeight) {
       this.game.lives -= 1;
       document.getElementById("lives").innerText = this.game.lives;
       this.reset();
@@ -61,7 +63,7 @@ export default class Ball {
     }
     if (this.position.x < 0) this.position.x = 0;
 
-    if (this.position.x + this.width > this.gameWidth)
-      this.position.x = this.gameWidth - this.width;
+    if (this.position.x + this.size > this.gameWidth)
+      this.position.x = this.gameWidth - this.size;
   }
 }

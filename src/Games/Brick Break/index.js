@@ -18,8 +18,43 @@ const BrickBreak = () => {
   const { uid, loggedIn } = UseVerifyUser();
   const [fullscreen, setFullscrren] = useState(false);
 
+  const handleResize = () => {
+    const newWidth = window.innerWidth;
+    const newHeight = window.innerHeight;
+
+    setGameWidth(newWidth);
+    setGameHeight(newHeight);
+
+    if (gameRef.current) {
+      if (isMobile && gameHeight > gameWidth) {
+        gameRef.current.gameWidth = newHeight;
+        gameRef.current.gameHeight = newWidth;
+      } else {
+        gameRef.current.gameWidth = newWidth;
+        gameRef.current.gameHeight = newHeight;
+      }
+    }
+
+    if (canvasRef.current) {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+
+      if (isMobile && gameHeight > gameWidth) {
+        ctx.save();
+        ctx.translate(newWidth, 0);
+        ctx.rotate(Math.PI / 2);
+      } else {
+        ctx.restore();
+      }
+    }
+  };
+
   const handleFullscreenToggle = () => {
     setFullscrren((fullscreen) => !fullscreen);
+    handleResize();
   };
 
   useEffect(() => {
@@ -28,40 +63,6 @@ const BrickBreak = () => {
 
   // Resize canvas dynamically
   useEffect(() => {
-    const handleResize = () => {
-      const newWidth = window.innerWidth;
-      const newHeight = window.innerHeight;
-
-      setGameWidth(newWidth);
-      setGameHeight(newHeight);
-
-      if (gameRef.current) {
-        if (isMobile && gameHeight > gameWidth) {
-          gameRef.current.gameWidth = newHeight;
-          gameRef.current.gameHeight = newWidth;
-        } else {
-          gameRef.current.gameWidth = newWidth;
-          gameRef.current.gameHeight = newHeight;
-        }
-      }
-
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-
-        if (isMobile && gameHeight > gameWidth) {
-          ctx.save();
-          ctx.translate(newWidth, 0);
-          ctx.rotate(Math.PI / 2);
-        } else {
-          ctx.restore();
-        }
-      }
-    };
-
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => {
