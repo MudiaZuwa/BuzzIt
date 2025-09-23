@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Image, Form, InputGroup } from "react-bootstrap";
-import HandleFileUpload from "../Functions/HandleFileUpload";
-import { handleSaveGroup } from "../Functions/HandleSaveGroup"; 
+import HandleFileUpload from "../Functions/HandleFileUpload.js";
+import { handleSaveGroup } from "../Functions/HandleSaveGroup.js"; 
 
 const GroupChatModal = ({ uid, show, onClose, friendsList, groupDetails }) => {
   if (groupDetails) if (!groupDetails.isGroupChat) groupDetails = null;

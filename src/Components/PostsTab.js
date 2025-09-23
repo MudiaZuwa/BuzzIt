@@ -1,5 +1,5 @@
 import React from "react";
-import PostCard from "./Postcard";
+import PostCard from "./Postcard.js";
 import { Tab } from "react-bootstrap";
 
 const PostsTab = ({ posts, currentUserID }) => (

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import AuthModal from "../Auth/AuthModal";
-import CreatePostModal from "./CreatPostModal";
-import ProfileEditModal from "./ProfileEditModal";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import signOutUser from "../Functions/SignOutUser";
-import { GetUserNotifications } from "../Functions/GetUserNotifications";
-import { off, getDatabase, ref, onChildAdded } from "../Components/firebase";
-import VideoCallModal from "./VideoCallModal";
-import AudioCallModal from "./AudioCallModal";
+import AuthModal from "../Auth/AuthModal.js";
+import CreatePostModal from "./CreatPostModal.js";
+import ProfileEditModal from "./ProfileEditModal.js";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import signOutUser from "../Functions/SignOutUser.js";
+import { GetUserNotifications } from "../Functions/GetUserNotifications.js";
+import { off, getDatabase, ref, onChildAdded } from "../Components/firebase.js";
+import VideoCallModal from "./VideoCallModal.js";
+import AudioCallModal from "./AudioCallModal.js";
 
 const HomeLeftSideBar = ({ loggedIn, uid }) => {
   const [showPostModal, setShowPostModal] = useState(false);

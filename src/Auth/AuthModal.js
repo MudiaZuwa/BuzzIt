@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Nav } from "react-bootstrap";
-import RegisterForm from "./RegisterForm";
-import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm.js";
+import LoginForm from "./LoginForm.js";
 import { useNavigate } from "react-router-dom";
 
 const AuthModal = ({ show, handleClose, handleProfileEdit, returnOnClose }) => {

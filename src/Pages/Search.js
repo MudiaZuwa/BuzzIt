@@ -11,13 +11,13 @@ import {
   Tabs,
   Nav,
 } from "react-bootstrap";
-import MobileBottomNavbar from "../Components/MobileBottomNavbar";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
-import HomeLeftSideBar from "../Components/HomeLeftSideBar";
+import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
+import HomeLeftSideBar from "../Components/HomeLeftSideBar.js";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
-import PostCard from "../Components/Postcard";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
+import PostCard from "../Components/Postcard.js";
 
 const Search = () => {
   const location = useLocation();

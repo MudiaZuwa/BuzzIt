@@ -1,5 +1,5 @@
-import HandleFileUpload from "./HandleFileUpload";
-import updateDataInNode from "./UpdateDataInNode";
+import HandleFileUpload from "./HandleFileUpload.js";
+import updateDataInNode from "./UpdateDataInNode.js";
 import { getDatabase, push, ref } from "firebase/database";
 
 export const handleSaveGroup = async ({

@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import Game from "./game";
+import Game from "./game.js";
 import "./GameCanvas.module.css";
-import HomeLeftSideBar from "../../Components/HomeLeftSideBar";
-import MobileBottomNavbar from "../../Components/MobileBottomNavbar";
+import HomeLeftSideBar from "../../Components/HomeLeftSideBar.js";
+import MobileBottomNavbar from "../../Components/MobileBottomNavbar.js";
 import { Container, Row, Col } from "react-bootstrap";
-import HomeRightSideBar from "../../Components/HomeRightSideBar";
-import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
-import styles from "./Styles";
+import HomeRightSideBar from "../../Components/HomeRightSideBar.js";
+import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser.js";
+import styles from "./Styles.js";
 
 const BallFall = () => {
   const { uid, loggedIn } = UseVerifyUser();

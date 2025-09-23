@@ -1,6 +1,6 @@
-import updateDataInNode from "../../Functions/UpdateDataInNode";
-import { GAMESTATE } from "./gameControls";
-import { pieceImages } from "./piecesData";
+import updateDataInNode from "../../Functions/UpdateDataInNode.js";
+import { GAMESTATE } from "./gameControls.js";
+import { pieceImages } from "./piecesData.js";
 
 export default class Pieces {
   constructor(gameManager, setWinnerName) {

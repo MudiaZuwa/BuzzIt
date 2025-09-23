@@ -1,4 +1,4 @@
-import updateDataInNode from "../../Functions/UpdateDataInNode";
+import updateDataInNode from "../../Functions/UpdateDataInNode.js";
 
 const HandleHintClick = (
   setDisplayHint,

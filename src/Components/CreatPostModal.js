@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import CreatePostform from "./CreatePostform";
+import CreatePostform from "./CreatePostform.js";
 
 const CreatePostModal = ({ show, handleClose }) => {
   return (

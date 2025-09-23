@@ -1,4 +1,4 @@
-import { database, ref, set, push } from "../Components/firebase";
+import { database, ref, set, push } from "../Components/firebase.js";
 
 const CreateGameRoom = async (game, playersIDs, uid) => {
   let players = {};

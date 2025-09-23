@@ -1,5 +1,5 @@
-import HandleFileUpload from "./HandleFileUpload";
-import updateDataInNode from "./UpdateDataInNode";
+import HandleFileUpload from "./HandleFileUpload.js";
+import updateDataInNode from "./UpdateDataInNode.js";
 
 const HandleProfileEdit = (userDetails, setStates) => {
   const uid = userDetails.uid;

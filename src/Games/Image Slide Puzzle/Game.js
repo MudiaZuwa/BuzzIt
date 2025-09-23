@@ -1,6 +1,6 @@
-import GameBody from "./GameBody";
-import MouseListener from "./MouseListener";
-import TouchListener from "./TouchListener";
+import GameBody from "./GameBody.js";
+import MouseListener from "./MouseListener.js";
+import TouchListener from "./TouchListener.js";
 
 export default class GameManager {
   constructor({ ctx, canvas, gameImage, gameWidth, gameHeight }) {

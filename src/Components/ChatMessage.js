@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Modal, Button } from "react-bootstrap";
-import HandleGameRequest from "../Functions/HandleGameRequest";
+import HandleGameRequest from "../Functions/HandleGameRequest.js";
 import { Link, useNavigate } from "react-router-dom";
 
 const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Image, Form, InputGroup } from "react-bootstrap";
-import CreateGameRoom from "../Functions/CreateGameRoom";
-import sendGameRequest from "../Functions/SendGameRequest";
+import CreateGameRoom from "../Functions/CreateGameRoom.js";
+import sendGameRequest from "../Functions/SendGameRequest.js";
 import { useNavigate } from "react-router-dom";
 
 const SelectPlayersModal = ({ friendsList, show, handleClose, Game, UID }) => {

@@ -1,7 +1,7 @@
-import updateDataInNode from "../../Functions/UpdateDataInNode";
-import ListenDataFromNode from "../../Functions/ListenDataFromNode";
-import FetchDataFromNode from "../../Functions/FetchDataFromNode";
-import { database, ref, onDisconnect } from "../../Components/firebase";
+import updateDataInNode from "../../Functions/UpdateDataInNode.js";
+import ListenDataFromNode from "../../Functions/ListenDataFromNode.js";
+import FetchDataFromNode from "../../Functions/FetchDataFromNode.js";
+import { database, ref, onDisconnect } from "../../Components/firebase.js";
 
 const JoinGameRoom = async (
   uid,

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import HomeLeftSideBar from "../Components/HomeLeftSideBar";
-import MobileBottomNavbar from "../Components/MobileBottomNavbar";
+import HomeLeftSideBar from "../Components/HomeLeftSideBar.js";
+import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
 import { Container, Row, Col, Tab, Tabs, Card, Nav } from "react-bootstrap";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
-import HomeRightSideBar from "../Components/HomeRightSideBar";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
+import HomeRightSideBar from "../Components/HomeRightSideBar.js";
 import { Link } from "react-router-dom";
-import { gameData } from "../Games/GameData";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import SelectPlayersModal from "../Components/SelectPlayersModal";
-import AuthModal from "../Auth/AuthModal";
-import ProfileEditModal from "../Components/ProfileEditModal";
+import { gameData } from "../Games/GameData.js";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import SelectPlayersModal from "../Components/SelectPlayersModal.js";
+import AuthModal from "../Auth/AuthModal.js";
+import ProfileEditModal from "../Components/ProfileEditModal.js";
 
 const Game = () => {
   const { uid, loggedIn, isPending } = UseVerifyUser();

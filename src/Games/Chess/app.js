@@ -1,5 +1,5 @@
-import { GAMESTATE } from "./gameControls";
-import ListenDataFromNode from "../../Functions/ListenDataFromNode";
+import { GAMESTATE } from "./gameControls.js";
+import ListenDataFromNode from "../../Functions/ListenDataFromNode.js";
 
 const initGame = (gameManager, playerId) => {
   const Room = gameManager?.gameControl?.room;

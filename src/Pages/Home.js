@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import PostCard from "../Components/Postcard";
-import HomeLeftSideBar from "../Components/HomeLeftSideBar";
-import HomeRightSideBar from "../Components/HomeRightSideBar";
-import CreatePostform from "../Components/CreatePostform";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import MobileBottomNavbar from "../Components/MobileBottomNavbar";
+import PostCard from "../Components/Postcard.js";
+import HomeLeftSideBar from "../Components/HomeLeftSideBar.js";
+import HomeRightSideBar from "../Components/HomeRightSideBar.js";
+import CreatePostform from "../Components/CreatePostform.js";
+import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);

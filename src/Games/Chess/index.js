@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import GameManager from "./Game";
+import GameManager from "./Game.js";
 import { useParams } from "react-router-dom";
-import HomeLeftSideBar from "../../Components/HomeLeftSideBar";
-import MobileBottomNavbar from "../../Components/MobileBottomNavbar";
+import HomeLeftSideBar from "../../Components/HomeLeftSideBar.js";
+import MobileBottomNavbar from "../../Components/MobileBottomNavbar.js";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import HomeRightSideBar from "../../Components/HomeRightSideBar";
-import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
-import JoinGameRoom from "./JoinGameRoom";
-import updateDataInNode from "../../Functions/UpdateDataInNode";
-import styles from "./Styles";
-import WaitingModal from "../../Components/WaitingModal";
-import PlayerWinModal from "../../Components/PlayerWinModal";
+import HomeRightSideBar from "../../Components/HomeRightSideBar.js";
+import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser.js";
+import JoinGameRoom from "./JoinGameRoom.js";
+import updateDataInNode from "../../Functions/UpdateDataInNode.js";
+import styles from "./Styles.js";
+import WaitingModal from "../../Components/WaitingModal.js";
+import PlayerWinModal from "../../Components/PlayerWinModal.js";
 
 const ChessGame = () => {
   const canvasRef = useRef(null);

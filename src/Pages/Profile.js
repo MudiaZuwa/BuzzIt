@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Image, Button, Nav, Tab } from "react-bootstrap";
-import ProfileHeader from "../Components/ProfileHeader";
-import FriendButton from "../Components/FriendButton";
-import PostsTab from "../Components/PostsTab";
-import FriendsTab from "../Components/FriendsTab";
-import MediaTab from "../Components/MediaTab";
-import HomeLeftSideBar from "../Components/HomeLeftSideBar";
-import HomeRightSideBar from "../Components/HomeRightSideBar";
+import ProfileHeader from "../Components/ProfileHeader.js";
+import FriendButton from "../Components/FriendButton.js";
+import PostsTab from "../Components/PostsTab.js";
+import FriendsTab from "../Components/FriendsTab.js";
+import MediaTab from "../Components/MediaTab.js";
+import HomeLeftSideBar from "../Components/HomeLeftSideBar.js";
+import HomeRightSideBar from "../Components/HomeRightSideBar.js";
 import { useParams } from "react-router-dom";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
-import UpdateDataInNode from "../Functions/UpdateDataInNode";
-import DeleteDataInNode from "../Functions/DeleteDataInNode";
-import MobileBottomNavbar from "../Components/MobileBottomNavbar";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
+import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
+import UpdateDataInNode from "../Functions/UpdateDataInNode.js";
+import DeleteDataInNode from "../Functions/DeleteDataInNode.js";
+import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
 
 const ProfilePage = () => {
   const [isFriend, setIsFriend] = useState(false);

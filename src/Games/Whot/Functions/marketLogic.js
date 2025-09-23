@@ -1,4 +1,4 @@
-import { shuffleArray } from "./utils";
+import { shuffleArray } from "./utils.js";
 
 export const reshuffleMarketIfEmpty = (stacks) => {
   if (stacks.market.cards.length < 3) {

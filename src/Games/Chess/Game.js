@@ -1,9 +1,9 @@
-import initApp from "./app";
-import GameBody from "./GameBody";
-import gameControl, { GAMESTATE } from "./gameControls";
-import getPieceMovementHint from "./getPieceMovementHint";
-import MouseListener from "./MouseListener";
-import Pieces from "./Pieces";
+import initApp from "./app.js";
+import GameBody from "./GameBody.js";
+import gameControl, { GAMESTATE } from "./gameControls.js";
+import getPieceMovementHint from "./getPieceMovementHint.js";
+import MouseListener from "./MouseListener.js";
+import Pieces from "./Pieces.js";
 
 export default class GameManager {
   constructor(ctx, gameCanvas, gameDimensions, setWinnerName) {

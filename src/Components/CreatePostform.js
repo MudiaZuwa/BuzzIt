@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Carousel, Alert } from "react-bootstrap";
-import HandleCreatePost from "../Functions/HandleCreatePost";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
+import HandleCreatePost from "../Functions/HandleCreatePost.js";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
 
 const CreatePostform = ({ handleClose, commentDetails }) => {
   const [postText, setPostText] = useState("");

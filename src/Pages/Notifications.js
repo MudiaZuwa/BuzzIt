@@ -11,15 +11,15 @@ import {
   Nav,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import { GetUserNotifications } from "../Functions/GetUserNotifications";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
-import HomeLeftSideBar from "../Components/HomeLeftSideBar";
-import MobileBottomNavbar from "../Components/MobileBottomNavbar";
-import HomeRightSideBar from "../Components/HomeRightSideBar";
-import FriendRequestCard from "../Components/FriendRequestCard";
-import AuthModal from "../Auth/AuthModal";
-import ProfileEditModal from "../Components/ProfileEditModal";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import { GetUserNotifications } from "../Functions/GetUserNotifications.js";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
+import HomeLeftSideBar from "../Components/HomeLeftSideBar.js";
+import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
+import HomeRightSideBar from "../Components/HomeRightSideBar.js";
+import FriendRequestCard from "../Components/FriendRequestCard.js";
+import AuthModal from "../Auth/AuthModal.js";
+import ProfileEditModal from "../Components/ProfileEditModal.js";
 
 const Notifications = ({}) => {
   const [key, setKey] = useState("Activities");

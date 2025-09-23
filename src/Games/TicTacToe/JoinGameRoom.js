@@ -1,7 +1,7 @@
-import DeleteDateInNode from "../../Functions/DeleteDataInNode";
-import updateDataInNode from "../../Functions/UpdateDataInNode";
-import ListenDataFromNode from "../../Functions/ListenDataFromNode";
-import FetchDataFromNode from "../../Functions/FetchDataFromNode";
+import DeleteDateInNode from "../../Functions/DeleteDataInNode.js";
+import updateDataInNode from "../../Functions/UpdateDataInNode.js";
+import ListenDataFromNode from "../../Functions/ListenDataFromNode.js";
+import FetchDataFromNode from "../../Functions/FetchDataFromNode.js";
 import {
   database,
   ref,
@@ -9,7 +9,7 @@ import {
   push,
   onDisconnect,
 } from "../../Components/firebase";
-import sendGameRequest from "../../Functions/SendGameRequest";
+import sendGameRequest from "../../Functions/SendGameRequest.js";
 
 const JoinGameRoom = async (
   uid,

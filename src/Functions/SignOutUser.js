@@ -1,4 +1,4 @@
-import { signOut, getAuth } from "../Components/firebase";
+import { signOut, getAuth } from "../Components/firebase.js";
 
 const signOutUser = async () => {
   const auth = getAuth();

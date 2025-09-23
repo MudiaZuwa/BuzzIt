@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import Game from "./game";
+import Game from "./game.js";
 import { Container, Row, Col } from "react-bootstrap";
 import "./GameCanvas.module.css";
-import styles from "./Style";
-import HomeLeftSideBar from "../../Components/HomeLeftSideBar";
-import HomeRightSideBar from "../../Components/HomeRightSideBar";
-import MobileBottomNavbar from "../../Components/MobileBottomNavbar";
-import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
+import styles from "./Style.js";
+import HomeLeftSideBar from "../../Components/HomeLeftSideBar.js";
+import HomeRightSideBar from "../../Components/HomeRightSideBar.js";
+import MobileBottomNavbar from "../../Components/MobileBottomNavbar.js";
+import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser.js";
 
 const BrickBreak = () => {
   const canvasRef = useRef(null);

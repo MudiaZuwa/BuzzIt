@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Container, Row, Col, Card } from "react-bootstrap";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import PostCard from "../Components/Postcard";
-import CreatePostForm from "../Components/CreatePostform";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
-import HomeLeftSideBar from "../Components/HomeLeftSideBar";
-import HomeRightSideBar from "../Components/HomeRightSideBar";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import CommentCard from "../Components/CommentCard";
-import MobileBottomNavbar from "../Components/MobileBottomNavbar";
+import PostCard from "../Components/Postcard.js";
+import CreatePostForm from "../Components/CreatePostform.js";
+import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
+import HomeLeftSideBar from "../Components/HomeLeftSideBar.js";
+import HomeRightSideBar from "../Components/HomeRightSideBar.js";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import CommentCard from "../Components/CommentCard.js";
+import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
 
 const PostDetails = () => {
   const { userId, postId } = useParams();

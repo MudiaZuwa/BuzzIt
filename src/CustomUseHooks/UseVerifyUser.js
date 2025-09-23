@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged } from "../Components/firebase";
+import { getAuth, onAuthStateChanged } from "../Components/firebase.js";
 
 const UseVerifyUser = () => {
   const [loggedIn, setLoggedIn] = useState(false);

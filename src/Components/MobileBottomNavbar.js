@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import AuthModal from "../Auth/AuthModal";
-import signOutUser from "../Functions/SignOutUser";
+import AuthModal from "../Auth/AuthModal.js";
+import signOutUser from "../Functions/SignOutUser.js";
 
 const MobileBottomNavbar = ({ uid }) => {
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);

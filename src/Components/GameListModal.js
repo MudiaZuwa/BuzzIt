@@ -1,8 +1,8 @@
 import React from "react";
 import { Modal, Card } from "react-bootstrap";
-import { gameData } from "../Games/GameData";
-import CreateGameRoom from "../Functions/CreateGameRoom";
-import sendGameRequest from "../Functions/SendGameRequest";
+import { gameData } from "../Games/GameData.js";
+import CreateGameRoom from "../Functions/CreateGameRoom.js";
+import sendGameRequest from "../Functions/SendGameRequest.js";
 import { useNavigate } from "react-router-dom";
 
 const GameListModal = ({ show, handleClose, uid, friendId }) => {

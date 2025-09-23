@@ -1,11 +1,11 @@
-import { shuffleArray, getNextPlayerTurn } from "./Functions/utils";
-import { moveCardTowardsTarget } from "./Functions/cardAnimations";
+import { shuffleArray, getNextPlayerTurn } from "./Functions/utils.js";
+import { moveCardTowardsTarget } from "./Functions/cardAnimations.js";
 import {
   setupMultiplayerListeners,
   updateNodeStacks,
 } from "./Functions/multiplayerListeners";
-import { reshuffleMarketIfEmpty } from "./Functions/marketLogic";
-import { cardData, cardImages } from "./Functions/cardsData";
+import { reshuffleMarketIfEmpty } from "./Functions/marketLogic.js";
+import { cardData, cardImages } from "./Functions/cardsData.js";
 
 export default class Cards {
   constructor(gameManager) {

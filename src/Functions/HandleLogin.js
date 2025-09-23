@@ -1,4 +1,4 @@
-import { getAuth, signInWithEmailAndPassword } from "../Components/firebase";
+import { getAuth, signInWithEmailAndPassword } from "../Components/firebase.js";
 
 const HandleLogin = ({ e, setStates, inputRefs }) => {
   e.preventDefault();

@@ -1,5 +1,5 @@
-import { updateNodeStacks } from "./Functions/multiplayerListeners";
-import { getNextPlayerTurn } from "./Functions/utils";
+import { updateNodeStacks } from "./Functions/multiplayerListeners.js";
+import { getNextPlayerTurn } from "./Functions/utils.js";
 
 export default class MouseListener {
   constructor(gameManager) {

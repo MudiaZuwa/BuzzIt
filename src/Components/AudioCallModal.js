@@ -10,9 +10,9 @@ import {
 } from "../Components/firebase";
 import Draggable from "react-draggable";
 import "../CSS/AudioCallModal.css";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import DeleteDateInNode from "../Functions/DeleteDataInNode";
+import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import DeleteDateInNode from "../Functions/DeleteDataInNode.js";
 
 const AudioCallModal = ({
   show,

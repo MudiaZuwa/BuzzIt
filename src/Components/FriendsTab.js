@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Tab, Row, Col, Nav } from "react-bootstrap";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import { removeFriend } from "../Functions/FriendActions";
-import FriendCard from "./FriendCard";
-import FriendRequestCard from "./FriendRequestCard";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import { removeFriend } from "../Functions/FriendActions.js";
+import FriendCard from "./FriendCard.js";
+import FriendRequestCard from "./FriendRequestCard.js";
 
 const FriendsTab = ({
   friendsList,

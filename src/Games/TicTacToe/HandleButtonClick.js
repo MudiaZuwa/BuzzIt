@@ -1,5 +1,5 @@
-import updateDataInNode from "../../Functions/UpdateDataInNode";
-import CheckWinCondition from "./CheckWinCondition";
+import updateDataInNode from "../../Functions/UpdateDataInNode.js";
+import CheckWinCondition from "./CheckWinCondition.js";
 
 const HandleButtonClick = (
   setTileValue,

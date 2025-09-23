@@ -1,4 +1,4 @@
-import DeleteDataInNode from "./DeleteDataInNode";
+import DeleteDataInNode from "./DeleteDataInNode.js";
 import { getDatabase, ref, set } from "firebase/database";
 
 // Function to remove a friend from both user's friend lists

@@ -9,18 +9,18 @@ import {
   Button,
 } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import CurrentChat from "../Components/CurrentChat";
-import HomeLeftSideBar from "../Components/HomeLeftSideBar";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import MessageList from "../Components/MessageList";
-import MobileBottomNavbar from "../Components/MobileBottomNavbar";
-import GroupChatModal from "../Components/GroupChatModal";
-import NewChatModal from "../Components/NewChatModal";
-import ProfileEditModal from "../Components/ProfileEditModal";
-import AuthModal from "../Auth/AuthModal";
-import { getDatabase, push, set, ref } from "../Components/firebase";
+import CurrentChat from "../Components/CurrentChat.js";
+import HomeLeftSideBar from "../Components/HomeLeftSideBar.js";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
+import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import MessageList from "../Components/MessageList.js";
+import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
+import GroupChatModal from "../Components/GroupChatModal.js";
+import NewChatModal from "../Components/NewChatModal.js";
+import ProfileEditModal from "../Components/ProfileEditModal.js";
+import AuthModal from "../Auth/AuthModal.js";
+import { getDatabase, push, set, ref } from "../Components/firebase.js";
 
 const Message = () => {
   const { userId } = useParams();

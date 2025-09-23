@@ -1,5 +1,5 @@
-import FetchDataFromNode from "./FetchDataFromNode";
-import sendMessage from "./SendMessage";
+import FetchDataFromNode from "./FetchDataFromNode.js";
+import sendMessage from "./SendMessage.js";
 
 const sendGameRequest = async (userId, recipientId, game, room) => {
   const userChatPath = `UserChats/${userId}`;

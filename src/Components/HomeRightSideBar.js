@@ -8,9 +8,9 @@ import {
   FormControl,
   Row,
 } from "react-bootstrap";
-import Search from "../Pages/Search";
+import Search from "../Pages/Search.js";
 import { Link, useNavigate } from "react-router-dom";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
+import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
 
 const HomeRightSideBar = () => {
   const [searchQuery, setSearchQuery] = useState("");

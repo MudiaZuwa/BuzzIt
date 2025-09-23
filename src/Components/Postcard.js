@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Button, Image, Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import updateDataInNode from "../Functions/UpdateDataInNode";
+import updateDataInNode from "../Functions/UpdateDataInNode.js";
 
 const isVideo = (url) => {
   const videoExtensions = ["mp4", "webm", "ogg"];

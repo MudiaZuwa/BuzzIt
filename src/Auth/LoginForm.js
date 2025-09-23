@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import HandleLogin from "../Functions/HandleLogin";
-import GoogleSignIn from "./GoogleSignIn";
-import { getDatabase, ref, set } from "../Components/firebase";
+import HandleLogin from "../Functions/HandleLogin.js";
+import GoogleSignIn from "./GoogleSignIn.js";
+import { getDatabase, ref, set } from "../Components/firebase.js";
 
 const LoginForm = ({ setSuccess }) => {
   const [validated, setValidated] = useState(false);

@@ -1,5 +1,5 @@
-import ListenDataFromNode from "../../../Functions/ListenDataFromNode";
-import updateDataInNode from "../../../Functions/UpdateDataInNode";
+import ListenDataFromNode from "../../../Functions/ListenDataFromNode.js";
+import updateDataInNode from "../../../Functions/UpdateDataInNode.js";
 
 export const setupMultiplayerListeners = async (
   gameManager,

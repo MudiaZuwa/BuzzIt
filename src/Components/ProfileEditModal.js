@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Image, Alert } from "react-bootstrap";
-import HandleProfileEdit from "../Functions/HandleProfileEdit";
-import UseVerifyUser from "../CustomUseHooks/UseVerifyUser";
+import HandleProfileEdit from "../Functions/HandleProfileEdit.js";
+import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
 
 const ProfileEditModal = ({ show, handleClose, currentUserDetails }) => {
   const [coverPhoto, setCoverPhoto] = useState("");

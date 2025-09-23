@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Form, Button, Card } from "react-bootstrap";
-import HandleFileUpload from "../Functions/HandleFileUpload";
-import sendMessage from "../Functions/SendMessage";
-import ChatMessage from "./ChatMessage";
-import GameListModal from "./GameListModal";
+import HandleFileUpload from "../Functions/HandleFileUpload.js";
+import sendMessage from "../Functions/SendMessage.js";
+import ChatMessage from "./ChatMessage.js";
+import GameListModal from "./GameListModal.js";
 import { Link, useNavigate } from "react-router-dom";
-import VideoCallModal from "./VideoCallModal";
-import AudioCallModal from "./AudioCallModal";
+import VideoCallModal from "./VideoCallModal.js";
+import AudioCallModal from "./AudioCallModal.js";
 
 const CurrentChat = ({
   chatId,

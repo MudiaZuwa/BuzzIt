@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import HandleButtonClick from "./HandleButtonClick";
+import HandleButtonClick from "./HandleButtonClick.js";
 import "./index.css";
-import ComputerMove from "./ComputerMove";
-import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
+import ComputerMove from "./ComputerMove.js";
+import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser.js";
 import { useParams } from "react-router-dom";
-import HomeLeftSideBar from "../../Components/HomeLeftSideBar";
-import MobileBottomNavbar from "../../Components/MobileBottomNavbar";
+import HomeLeftSideBar from "../../Components/HomeLeftSideBar.js";
+import MobileBottomNavbar from "../../Components/MobileBottomNavbar.js";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import HomeRightSideBar from "../../Components/HomeRightSideBar";
-import JoinGameRoom from "./JoinGameRoom";
-import initGame from "./app";
-import updateDataInNode from "../../Functions/UpdateDataInNode";
-import PlayerWinModal from "../../Components/PlayerWinModal";
-import WaitingModal from "../../Components/WaitingModal";
+import HomeRightSideBar from "../../Components/HomeRightSideBar.js";
+import JoinGameRoom from "./JoinGameRoom.js";
+import initGame from "./app.js";
+import updateDataInNode from "../../Functions/UpdateDataInNode.js";
+import PlayerWinModal from "../../Components/PlayerWinModal.js";
+import WaitingModal from "../../Components/WaitingModal.js";
 
 const TicTacToe = () => {
   const { uid, loggedIn } = UseVerifyUser();

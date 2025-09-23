@@ -1,4 +1,4 @@
-import { GAMESTATE } from "./gameControls";
+import { GAMESTATE } from "./gameControls.js";
 
 let timerId;
 

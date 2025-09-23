@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
-import HandleRegister from "../Functions/HandleRegister";
-import GoogleSignIn from "./GoogleSignIn";
-import { getDatabase, ref, set } from "../Components/firebase";
+import HandleRegister from "../Functions/HandleRegister.js";
+import GoogleSignIn from "./GoogleSignIn.js";
+import { getDatabase, ref, set } from "../Components/firebase.js";
 
 const RegisterForm = ({ setSuccess }) => {
   const [validated, setValidated] = useState(false);

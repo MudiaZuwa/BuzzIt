@@ -1,6 +1,6 @@
-import HandleFileUpload from "./HandleFileUpload";
-import { getDatabase, ref, set, push } from "../Components/firebase";
-import updateDataInNode from "./UpdateDataInNode";
+import HandleFileUpload from "./HandleFileUpload.js";
+import { getDatabase, ref, set, push } from "../Components/firebase.js";
+import updateDataInNode from "./UpdateDataInNode.js";
 
 const HandleCreatePost = async (postDetails, setStates, commentDetails) => {
   const uid = postDetails.uid;

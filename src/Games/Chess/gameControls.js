@@ -1,5 +1,5 @@
-import { CountDown } from "./utils"; // Assuming it's an external utility
-import initGame from "./app";
+import { CountDown } from "./utils.js"; // Assuming it's an external utility
+import initGame from "./app.js";
 
 export const GAMESTATE = {
   RUNNING: 0,

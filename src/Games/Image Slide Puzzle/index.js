@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import GameManager from "./Game";
-import Tiles from "./Tiles";
+import GameManager from "./Game.js";
+import Tiles from "./Tiles.js";
 import { Container, Row, Col, Form, Card } from "react-bootstrap";
-import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
-import HomeLeftSideBar from "../../Components/HomeLeftSideBar";
-import MobileBottomNavbar from "../../Components/MobileBottomNavbar";
-import HomeRightSideBar from "../../Components/HomeRightSideBar";
+import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser.js";
+import HomeLeftSideBar from "../../Components/HomeLeftSideBar.js";
+import MobileBottomNavbar from "../../Components/MobileBottomNavbar.js";
+import HomeRightSideBar from "../../Components/HomeRightSideBar.js";
 
 const ImageSlidePuzzle = () => {
   const { uid, loggedIn } = UseVerifyUser();

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Col, Image, Row, Button } from "react-bootstrap";
-import ProfileEditModal from "./ProfileEditModal";
+import ProfileEditModal from "./ProfileEditModal.js";
 import { Link } from "react-router-dom";
 
 const ProfileHeader = ({

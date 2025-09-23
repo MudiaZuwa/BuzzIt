@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import GameManager from "./Game";
-import StartOptions from "./StartOptions";
-import { handleResize } from "./Functions/gameUtils";
+import GameManager from "./Game.js";
+import StartOptions from "./StartOptions.js";
+import { handleResize } from "./Functions/gameUtils.js";
 import { useParams } from "react-router-dom";
-import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser";
-import JoinGameRoom from "./Functions/JoinGameRoom";
-import HomeLeftSideBar from "../../Components/HomeLeftSideBar";
-import MobileBottomNavbar from "../../Components/MobileBottomNavbar";
+import UseVerifyUser from "../../CustomUseHooks/UseVerifyUser.js";
+import JoinGameRoom from "./Functions/JoinGameRoom.js";
+import HomeLeftSideBar from "../../Components/HomeLeftSideBar.js";
+import MobileBottomNavbar from "../../Components/MobileBottomNavbar.js";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import HomeRightSideBar from "../../Components/HomeRightSideBar";
-import updateDataInNode from "../../Functions/UpdateDataInNode";
-import PlayerWinModal from "../../Components/PlayerWinModal";
-import WaitingModal from "../../Components/WaitingModal";
+import HomeRightSideBar from "../../Components/HomeRightSideBar.js";
+import updateDataInNode from "../../Functions/UpdateDataInNode.js";
+import PlayerWinModal from "../../Components/PlayerWinModal.js";
+import WaitingModal from "../../Components/WaitingModal.js";
 
 const Whot = () => {
   const canvasRef = useRef(null);

@@ -11,9 +11,9 @@ import {
 import Draggable from "react-draggable";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../CSS/VideoCallModal.css";
-import ListenDataFromNode from "../Functions/ListenDataFromNode";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
-import DeleteDateInNode from "../Functions/DeleteDataInNode";
+import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
+import DeleteDateInNode from "../Functions/DeleteDataInNode.js";
 
 const VideoCallModal = ({
   show,

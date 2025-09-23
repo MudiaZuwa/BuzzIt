@@ -1,18 +1,18 @@
-import Home from "./Pages/Home";
+import Home from "./Pages/Home.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProfilePage from "./Pages/Profile";
-import PostDetails from "./Pages/PostDetails";
-import Message from "./Pages/Message";
-import Notifications from "./Pages/Notifications";
-import ChessGame from "./Games/Chess";
-import ImageSlidePuzzle from "./Games/Image Slide Puzzle";
-import BrickBreak from "./Games/Brick Break";
-import BallFall from "./Games/Ball Fall";
-import SuperTicTacToe from "./Games/SuperTicTacToe";
-import TicTacToe from "./Games/TicTacToe";
-import Game from "./Pages/Game";
-import Whot from "./Games/Whot";
-import Search from "./Pages/Search";
+import ProfilePage from "./Pages/Profile.js";
+import PostDetails from "./Pages/PostDetails.js";
+import Message from "./Pages/Message.js";
+import Notifications from "./Pages/Notifications.js";
+import ChessGame from "./Games/Chess.js";
+import ImageSlidePuzzle from "./Games/Image Slide Puzzle.js";
+import BrickBreak from "./Games/Brick Break.js";
+import BallFall from "./Games/Ball Fall.js";
+import SuperTicTacToe from "./Games/SuperTicTacToe.js";
+import TicTacToe from "./Games/TicTacToe.js";
+import Game from "./Pages/Game.js";
+import Whot from "./Games/Whot.js";
+import Search from "./Pages/Search.js";
 
 const App = () => {
   return (

@@ -1,4 +1,4 @@
-import updateDataInNode from "./UpdateDataInNode";
+import updateDataInNode from "./UpdateDataInNode.js";
 
 const HandleGameRequest = async (
   chatId,

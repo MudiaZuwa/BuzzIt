@@ -1,5 +1,5 @@
 import { getDatabase, ref, update, push } from "firebase/database";
-import updateDataInNode from "../Functions/UpdateDataInNode";
+import updateDataInNode from "../Functions/UpdateDataInNode.js";
 
 const sendMessage = async ({
   currentUserId,

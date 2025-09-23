@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Card, Button, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import updateDataInNode from "../Functions/UpdateDataInNode";
-import FetchDataFromNode from "../Functions/FetchDataFromNode";
+import updateDataInNode from "../Functions/UpdateDataInNode.js";
+import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
 
 const isVideo = (url) => {
   const videoExtensions = ["mp4", "webm", "ogg"];

@@ -1,4 +1,4 @@
-import ListenDataFromNode from "../../Functions/ListenDataFromNode";
+import ListenDataFromNode from "../../Functions/ListenDataFromNode.js";
 
 const initGame = (uid, room, playerTurnRef, tilesValue, HandlePVPUpdate) => {
   const allPlayersRef = `Games/TicTacToe/${room}/players/`;
