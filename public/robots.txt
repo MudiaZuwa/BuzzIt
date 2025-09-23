@@ -1,3 +1,7 @@
-# https://www.robotstxt.org/robotstxt.html
+# robots.txt for BuzzIt
+# Learn more: https://www.robotstxt.org/robotstxt.html
+
 User-agent: *
 Disallow:
+
+Sitemap: https://buzz-it-eight.vercel.app/sitemap.xml
