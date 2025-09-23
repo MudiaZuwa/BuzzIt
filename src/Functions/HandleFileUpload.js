@@ -3,7 +3,7 @@ import {
   storageRef,
   uploadBytesResumable,
   getDownloadURL,
-} from "../Components/firebase";
+} from "../Components/firebase.js";
 const HandleFileUpload = async (files, folder, UID) => {
   const storage = getStorage();
   try {

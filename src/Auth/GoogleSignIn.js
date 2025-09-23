@@ -2,7 +2,7 @@ import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
-} from "../Components/firebase";
+} from "../Components/firebase.js";
 import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
 
 const GoogleSignIn = async (createNewProfile, setSuccess) => {

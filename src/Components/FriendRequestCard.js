@@ -3,7 +3,7 @@ import { Button, Image } from "react-bootstrap";
 import {
   acceptFriendRequest,
   rejectFriendRequest,
-} from "../Functions/FriendActions";
+} from "../Functions/FriendActions.js";
 
 const FriendRequestCard = ({ user, currentUser }) => (
   <div className="friend-request-card p-3 mb-3 border rounded shadow-sm">

@@ -7,7 +7,7 @@ import {
   push,
   update,
   onDisconnect,
-} from "../Components/firebase";
+} from "../Components/firebase.js";
 import Draggable from "react-draggable";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../CSS/VideoCallModal.css";

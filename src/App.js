@@ -4,14 +4,14 @@ import ProfilePage from "./Pages/Profile.js";
 import PostDetails from "./Pages/PostDetails.js";
 import Message from "./Pages/Message.js";
 import Notifications from "./Pages/Notifications.js";
-import ChessGame from "./Games/Chess.js";
-import ImageSlidePuzzle from "./Games/Image Slide Puzzle.js";
-import BrickBreak from "./Games/Brick Break.js";
-import BallFall from "./Games/Ball Fall.js";
-import SuperTicTacToe from "./Games/SuperTicTacToe.js";
-import TicTacToe from "./Games/TicTacToe.js";
+import ChessGame from "./Games/Chess/index.js";
+import ImageSlidePuzzle from "./Games/Image Slide Puzzle/index.js";
+import BrickBreak from "./Games/Brick Break/index.js";
+import BallFall from "./Games/Ball Fall/index.js";
+import SuperTicTacToe from "./Games/SuperTicTacToe/index.js";
+import TicTacToe from "./Games/TicTacToe/index.js";
 import Game from "./Pages/Game.js";
-import Whot from "./Games/Whot.js";
+import Whot from "./Games/Whot/index.js";
 import Search from "./Pages/Search.js";
 
 const App = () => {

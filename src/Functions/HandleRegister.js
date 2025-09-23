@@ -1,7 +1,7 @@
 import {
   getAuth,
   createUserWithEmailAndPassword,
-} from "../Components/firebase";
+} from "../Components/firebase.js";
 
 const HandleRegister = ({ e, inputRefs, setStates, createNewProfile }) => {
   e.preventDefault();

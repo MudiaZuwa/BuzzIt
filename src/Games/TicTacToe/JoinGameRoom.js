@@ -8,7 +8,7 @@ import {
   set,
   push,
   onDisconnect,
-} from "../../Components/firebase";
+} from "../../Components/firebase.js";
 import sendGameRequest from "../../Functions/SendGameRequest.js";
 
 const JoinGameRoom = async (

@@ -7,7 +7,7 @@ import {
   push,
   update,
   onDisconnect,
-} from "../Components/firebase";
+} from "../Components/firebase.js";
 import Draggable from "react-draggable";
 import "../CSS/AudioCallModal.css";
 import ListenDataFromNode from "../Functions/ListenDataFromNode.js";

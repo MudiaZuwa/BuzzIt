@@ -3,7 +3,7 @@ import { moveCardTowardsTarget } from "./Functions/cardAnimations.js";
 import {
   setupMultiplayerListeners,
   updateNodeStacks,
-} from "./Functions/multiplayerListeners";
+} from "./Functions/multiplayerListeners.js";
 import { reshuffleMarketIfEmpty } from "./Functions/marketLogic.js";
 import { cardData, cardImages } from "./Functions/cardsData.js";
 
