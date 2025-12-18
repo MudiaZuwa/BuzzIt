@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "BuzzIt",
+    "slug": "buzzit-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0d7059"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.buzzit.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0d7059"
+      },
+      "package": "com.buzzit.mobile"
+    },
+    "plugins": ["expo-image-picker"]
+  }
+}

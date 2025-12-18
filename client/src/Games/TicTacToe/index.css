@@ -1,0 +1,41 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min-content;
+}
+.optionsBody {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.title {
+  background-color: #0d7059;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  background-color: #0d7059;
+}
+.tile {
+  background-color: #eee;
+  box-sizing: border-box;
+  margin: 2px;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.gamebody {
+  display: flex;
+  flex-direction: column;
+}
