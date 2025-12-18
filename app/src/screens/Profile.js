@@ -412,7 +412,15 @@ const Profile = ({ route: propRoute }) => {
                   color="gray.500"
                 />
                 <Text color="gray.500" fontSize="xs">
-                  Joined {new Date(userDetails.joinedDate).toLocaleDateString()}
+                  Joined{" "}
+                  {new Date(userDetails.joinedDate).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }
+                  )}
                 </Text>
               </HStack>
             )}

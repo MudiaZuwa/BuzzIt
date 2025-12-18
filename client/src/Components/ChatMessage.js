@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Modal, Button } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import HandleGameRequest from "../Functions/HandleGameRequest.js";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -53,7 +53,7 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
       return `<a href="${url}" target="_blank" rel="noopener noreferrer">${match}</a>`;
     });
 
-    return <Card.Text dangerouslySetInnerHTML={{ __html: processedText }} />;
+    return <span dangerouslySetInnerHTML={{ __html: processedText }} />;
   };
 
   const getVideoType = (url) => {
@@ -82,31 +82,33 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
         </Link>
       )}
 
-      <Card className={`message-bubble ${isSender ? "sender" : "receiver"}`}>
-        <Card.Body>
-          {!isSender && isGroupChat && (
-            <Link to={`/${message.sender}`} className="sender-name">
-              {message.senderName}
-            </Link>
-          )}
+      <div className="message-bubble-wrapper">
+        {!isSender && isGroupChat && (
+          <Link to={`/${message.sender}`} className="sender-name">
+            {message.senderName}
+          </Link>
+        )}
 
+        <div className="message-bubble">
           {isGameRequest ? (
-            <div>
-              <Card.Text>
+            <div className="game-request-container">
+              <div className="message-text">
                 {isSender ? "You" : "User"} sent a <b>{message.message}</b> game
                 request
-              </Card.Text>
+              </div>
 
               {message.requestStatus === undefined && !isSender && (
-                <div className="d-flex gap-2 mt-2">
+                <div className="game-request-actions">
                   <Button
                     variant="success"
+                    size="sm"
                     onClick={() => handleGameRequestMessage(true)}
                   >
                     Accept
                   </Button>
                   <Button
                     variant="danger"
+                    size="sm"
                     onClick={() => handleGameRequestMessage(false)}
                   >
                     Reject
@@ -122,11 +124,7 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
                     <div className="position-relative">
                       <video
                         src={message.media}
-                        className="w-100"
-                        style={{
-                          objectFit: "cover",
-                          height: "auto",
-                        }}
+                        className="message-image-thumbnail"
                         controls={false}
                         muted
                         preload="metadata"
@@ -135,7 +133,12 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
                       </video>
                       <div
                         className="position-absolute bottom-0 start-0 p-2 text-light bg-dark bg-opacity-50 rounded-circle d-flex align-items-center justify-content-center"
-                        style={{ width: "30px", height: "30px" }}
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          marginBottom: "4px",
+                          marginLeft: "4px",
+                        }}
                       >
                         <i className="bi bi-play-fill"></i>
                       </div>
@@ -149,32 +152,37 @@ const ChatMessage = ({ message, currentUser, isGroupChat, chatId }) => {
                   )}
                 </div>
               )}
-              <MessageText messageText={message.message} />
+              <div className="message-text">
+                <MessageText messageText={message.message} />
+              </div>
             </div>
           )}
 
-          <Card.Footer className="message-timestamp">
-            <small className="text-muted">
-              {new Date(message.timestamp).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-              })}
-            </small>
-          </Card.Footer>
-        </Card.Body>
-      </Card>
+          <div className="message-timestamp">
+            {new Date(message.timestamp).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })}
+          </div>
+        </div>
+      </div>
 
       {message.media && (
-        <Modal show={showImage} onHide={handleClose} centered>
-          <Modal.Body className="image-modal-body">
+        <Modal
+          show={showImage}
+          onHide={handleClose}
+          centered
+          size="lg"
+          contentClassName="bg-transparent border-0"
+        >
+          <Modal.Body className="image-modal-body rounded">
             {isVideo(message.media) ? (
               <video
                 controls
-                width="100%"
-                height="100%"
-                className="d-block w-100"
-                style={{ objectFit: "contain", margin: "auto" }}
+                className="full-image"
+                style={{ maxHeight: "80vh" }}
+                autoPlay
               >
                 <source
                   src={message.media}

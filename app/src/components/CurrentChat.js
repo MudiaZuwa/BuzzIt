@@ -21,6 +21,8 @@ import sendMessage from "../functions/sendMessage";
 import fetchDataFromNode from "../functions/fetchDataFromNode";
 import AudioCallModal from "./AudioCallModal";
 import VideoCallModal from "./VideoCallModal";
+import * as ImagePicker from "expo-image-picker";
+import handleFileUpload from "../functions/handleFileUpload";
 
 const CurrentChat = ({
   chatId,
@@ -33,6 +35,8 @@ const CurrentChat = ({
   const [sendingMessage, setSendingMessage] = useState(false);
   const [showAudioCallModal, setShowAudioCallModal] = useState(false);
   const [showVideoCallModal, setShowVideoCallModal] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const scrollViewRef = useRef(null);
   const navigation = useNavigation();
 
@@ -58,8 +62,30 @@ const CurrentChat = ({
     }
   }, [messages]);
 
+  const handlePickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setSelectedMedia(result.assets[0]);
+      }
+    } catch (error) {
+      console.error("Error picking image:", error);
+      Alert.alert("Error", "Failed to pick image");
+    }
+  };
+
+  const handleRemoveMedia = () => {
+    setSelectedMedia(null);
+  };
+
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || sendingMessage) return;
+    if ((!newMessage.trim() && !selectedMedia) || sendingMessage || isUploading)
+      return;
 
     // Guardrail: Check if recipient has a name
     if (
@@ -88,16 +114,46 @@ const CurrentChat = ({
         return;
       }
 
+      let mediaUrl = null;
+      let messageType = "text";
+
+      if (selectedMedia) {
+        setIsUploading(true);
+        try {
+          // Upload media
+          const uploadResult = await handleFileUpload(
+            [selectedMedia],
+            "chat_files",
+            uid
+          );
+
+          if (uploadResult && uploadResult.length > 0) {
+            mediaUrl = uploadResult[0];
+            messageType = "media"; // Or determine based on file type if needed
+          }
+        } catch (uploadError) {
+          console.error("Upload failed", uploadError);
+          Alert.alert("Upload Failed", "Failed to upload media");
+          setIsUploading(false);
+          setSendingMessage(false);
+          return;
+        } finally {
+          setIsUploading(false);
+        }
+      }
+
       await sendMessage({
         currentUserId: uid,
         recipientUserId: recipientDetails?.id,
         chatId,
         messageContent: newMessage.trim(),
-        messageType: "text",
+        messageType,
+        mediaUrl: mediaUrl,
         isGroupChat,
         groupParticipants: recipientDetails?.members || {},
       });
       setNewMessage("");
+      setSelectedMedia(null);
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
@@ -107,7 +163,7 @@ const CurrentChat = ({
 
   const groupMessagesByDate = (msgs) => {
     return msgs.reduce((acc, msg) => {
-      const date = new Date(msg.timestamp).toLocaleDateString();
+      const date = new Date(msg.timestamp).toDateString();
       if (!acc[date]) {
         acc[date] = [];
       }
@@ -246,7 +302,11 @@ const CurrentChat = ({
             <Text fontSize="sm" color="gray.500">
               {isGroupChat ? "Created: " : "Joined: "}
               {recipientDetails?.date
-                ? new Date(recipientDetails.date).toLocaleDateString()
+                ? new Date(recipientDetails.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
                 : "Unknown"}
             </Text>
           </VStack>
@@ -282,6 +342,41 @@ const CurrentChat = ({
           )}
         </ScrollView>
 
+        {/* Media Preview Area */}
+        {selectedMedia && (
+          <Box
+            px={4}
+            py={2}
+            bg="gray.100"
+            borderTopWidth={1}
+            borderColor="gray.200"
+          >
+            <Box position="relative" width={20} height={20}>
+              <Avatar
+                source={{ uri: selectedMedia.uri }}
+                width="100%"
+                height="100%"
+                rounded="md"
+              />
+              <IconButton
+                position="absolute"
+                top={-8}
+                right={-8}
+                size="sm"
+                variant="solid"
+                bg="red.500"
+                rounded="full"
+                _icon={{
+                  as: MaterialCommunityIcons,
+                  name: "close",
+                  size: "xs",
+                }}
+                onPress={handleRemoveMedia}
+              />
+            </Box>
+          </Box>
+        )}
+
         {/* Message Input */}
         <HStack
           bg="white"
@@ -292,6 +387,14 @@ const CurrentChat = ({
           borderTopColor="gray.100"
           safeAreaBottom
         >
+          <IconButton
+            icon={
+              <MaterialCommunityIcons name="paperclip" size={24} color="gray" />
+            }
+            onPress={handlePickImage}
+            variant="ghost"
+            mr={1}
+          />
           <Input
             flex={1}
             placeholder="Type a message..."
@@ -304,13 +407,13 @@ const CurrentChat = ({
             px={4}
             fontSize="sm"
             mr={2}
-            isDisabled={sendingMessage}
+            isDisabled={sendingMessage || isUploading}
             onSubmitEditing={handleSendMessage}
             returnKeyType="send"
           />
           <IconButton
             icon={
-              sendingMessage ? (
+              sendingMessage || isUploading ? (
                 <Spinner size="sm" color="white" />
               ) : (
                 <MaterialCommunityIcons name="send" size={20} color="white" />
@@ -320,7 +423,11 @@ const CurrentChat = ({
             borderRadius="full"
             size="md"
             onPress={handleSendMessage}
-            isDisabled={!newMessage.trim() || sendingMessage}
+            isDisabled={
+              (!newMessage.trim() && !selectedMedia) ||
+              sendingMessage ||
+              isUploading
+            }
             _pressed={{ bg: "primary.700" }}
           />
         </HStack>

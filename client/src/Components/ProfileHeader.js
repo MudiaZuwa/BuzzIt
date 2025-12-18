@@ -88,7 +88,12 @@ const ProfileHeader = ({
                 )}
               </div>
               <p className="mb-1">
-                Joined {new Date(userDetails.joinedDate).toLocaleDateString()}
+                Joined{" "}
+                {new Date(userDetails.joinedDate).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </p>
             </div>
           </div>

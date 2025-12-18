@@ -155,9 +155,27 @@ const CurrentChat = ({
     setSelectedFiles(validFiles);
   };
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return "Today";
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
+    }
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
   const groupMessagesByDate = (messages) => {
     return messages.reduce((acc, msg) => {
-      const date = new Date(msg.timestamp).toLocaleDateString();
+      const date = new Date(msg.timestamp).toDateString();
       if (!acc[date]) {
         acc[date] = [];
       }
@@ -254,7 +272,11 @@ const CurrentChat = ({
               </h5>
               <p className="recipient-joined-date">
                 {recipientDetails.isGroupChat ? "Created:" : "Joined:"}{" "}
-                {new Date(recipientDetails.date).toLocaleDateString()}
+                {new Date(recipientDetails.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </p>
             </div>
 
@@ -266,7 +288,7 @@ const CurrentChat = ({
                     className="date-label"
                     style={{ textAlign: "center", margin: "10px 0" }}
                   >
-                    <strong>{date}</strong>
+                    <strong>{formatDate(date)}</strong>
                   </div>
                   {msgs.map((msg) => (
                     <ChatMessage
