@@ -1,0 +1,81 @@
+/* Skeleton Loader Styles with Shimmer Animation */
+
+.skeleton-base {
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text-container {
+  width: 100%;
+}
+
+/* Card-specific skeleton styles */
+.skeleton-post {
+  border: 1px solid #e9ecef;
+  background-color: #fff;
+}
+
+.skeleton-chat-item {
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.skeleton-friend-card {
+  border: 1px solid #e9ecef;
+}
+
+.skeleton-notification {
+  background-color: #fff;
+}
+
+.skeleton-game-card {
+  border: 1px solid #e9ecef;
+  background-color: #fff;
+}
+
+.skeleton-profile {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .skeleton-base {
+    background: linear-gradient(90deg, #2d2d2d 25%, #3d3d3d 50%, #2d2d2d 75%);
+    background-size: 200% 100%;
+  }
+
+  .skeleton-post,
+  .skeleton-chat-item,
+  .skeleton-notification,
+  .skeleton-game-card,
+  .skeleton-profile {
+    background-color: #1a1a1a;
+    border-color: #333;
+  }
+
+  .skeleton-friend-card {
+    background-color: #2d2d2d !important;
+    border-color: #333;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-base {
+    animation: none;
+    background: #e0e0e0;
+  }
+}

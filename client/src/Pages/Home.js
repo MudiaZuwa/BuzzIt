@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import PostCard from "../Components/Postcard.js";
 import HomeLeftSideBar from "../Components/HomeLeftSideBar.js";
 import HomeRightSideBar from "../Components/HomeRightSideBar.js";
@@ -8,6 +8,7 @@ import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
 import UseVerifyUser from "../CustomUseHooks/UseVerifyUser.js";
 import FetchDataFromNode from "../Functions/FetchDataFromNode.js";
 import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
+import { PostSkeletonList } from "../Components/SkeletonLoader.js";
 
 const Home = () => {
   const [posts, setPosts] = useState(null);
@@ -74,17 +75,19 @@ const Home = () => {
                 </Card.Body>
               </Card>
               {!posts ? (
-                <div className="text-center py-5">
-                  <Spinner animation="border" role="status" variant="primary">
-                    <span className="visually-hidden">Loading...</span>
-                  </Spinner>
-                </div>
+                <PostSkeletonList count={3} />
               ) : posts.length > 0 ? (
                 posts.map((post, index) => (
-                  <PostCard key={index} post={post} currentUserID={uid} />
+                  <PostCard
+                    key={post.postId || index}
+                    post={post}
+                    currentUserID={uid}
+                  />
                 ))
               ) : (
-                <p className="text-center text-muted">No posts yet.</p>
+                <p className="text-center text-muted">
+                  No posts yet. Be the first to share!
+                </p>
               )}
             </div>
           </Col>

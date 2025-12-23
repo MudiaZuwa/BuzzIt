@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo, memo } from "react";
 import {
   Box,
   HStack,
@@ -45,7 +45,7 @@ const MessageListItem = ({ chat, openProfileModal, isProfileComplete }) => {
     });
   };
 
-  const getLastMessagePreview = () => {
+  const getLastMessagePreview = useMemo(() => {
     if (chat.lastMessageType === "image") {
       return "🖼️ Image";
     } else if (chat.lastMessageType === "video") {
@@ -54,9 +54,9 @@ const MessageListItem = ({ chat, openProfileModal, isProfileComplete }) => {
       return "📎 Media";
     }
     return chat.lastMessage || "No messages yet";
-  };
+  }, [chat.lastMessageType, chat.lastMessage]);
 
-  const handlePress = () => {
+  const handlePress = useCallback(() => {
     // 1. Check Recipient Name
     if (!chat.name) {
       alert("This user has an incomplete profile. You cannot chat with them.");
@@ -79,7 +79,15 @@ const MessageListItem = ({ chat, openProfileModal, isProfileComplete }) => {
       userId: chatLink,
       isGroupChat: chat.isGroupChat,
     });
-  };
+  }, [
+    chat.name,
+    chat.id,
+    chatLink,
+    chat.isGroupChat,
+    isProfileComplete,
+    openProfileModal,
+    navigation,
+  ]);
 
   return (
     <Pressable onPress={handlePress}>
@@ -113,7 +121,7 @@ const MessageListItem = ({ chat, openProfileModal, isProfileComplete }) => {
               </HStack>
 
               <Text fontSize="sm" color="gray.500" numberOfLines={1} mt={0.5}>
-                {getLastMessagePreview()}
+                {getLastMessagePreview}
               </Text>
             </VStack>
           </HStack>
@@ -123,4 +131,14 @@ const MessageListItem = ({ chat, openProfileModal, isProfileComplete }) => {
   );
 };
 
-export default MessageListItem;
+// Memoize component to prevent unnecessary re-renders
+export default memo(MessageListItem, (prevProps, nextProps) => {
+  return (
+    prevProps.chat.id === nextProps.chat.id &&
+    prevProps.chat.lastMessage === nextProps.chat.lastMessage &&
+    prevProps.chat.lastMessageTimestamp ===
+      nextProps.chat.lastMessageTimestamp &&
+    prevProps.chat.name === nextProps.chat.name &&
+    prevProps.isProfileComplete === nextProps.isProfileComplete
+  );
+});

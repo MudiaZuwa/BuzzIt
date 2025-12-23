@@ -22,6 +22,7 @@ import fetchDataFromNode from "../functions/fetchDataFromNode";
 import MessageListItem from "../components/MessageListItem";
 import AuthModal from "../components/AuthModal";
 import ProfileEditModal from "../components/ProfileEditModal";
+import { ChatListSkeletonList } from "../components/SkeletonLoaders";
 import { useProfile } from "../context/ProfileContext";
 
 const Messages = () => {
@@ -292,9 +293,7 @@ const Messages = () => {
 
           {/* Chat List */}
           {isLoading ? (
-            <Center flex={1}>
-              <Spinner size="lg" color="primary.600" />
-            </Center>
+            <ChatListSkeletonList count={6} />
           ) : (
             <FlatList
               data={filteredChats}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   Box,
   VStack,
@@ -21,6 +21,8 @@ import sendMessage from "../functions/sendMessage";
 import fetchDataFromNode from "../functions/fetchDataFromNode";
 import AudioCallModal from "./AudioCallModal";
 import VideoCallModal from "./VideoCallModal";
+import GameListModal from "./GameListModal";
+import GroupChatModal from "./GroupChatModal";
 import * as ImagePicker from "expo-image-picker";
 import handleFileUpload from "../functions/handleFileUpload";
 
@@ -30,11 +32,14 @@ const CurrentChat = ({
   messages,
   recipientDetails,
   isLoading,
+  friendsList = [],
 }) => {
   const [newMessage, setNewMessage] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
   const [showAudioCallModal, setShowAudioCallModal] = useState(false);
   const [showVideoCallModal, setShowVideoCallModal] = useState(false);
+  const [showGameListModal, setShowGameListModal] = useState(false);
+  const [showGroupModal, setShowGroupModal] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const scrollViewRef = useRef(null);
@@ -251,6 +256,20 @@ const CurrentChat = ({
           {/* Call Buttons (only for 1:1 chats) */}
           {!isGroupChat && (
             <HStack space={2}>
+              {/* Game invite button */}
+              <IconButton
+                icon={
+                  <Icon
+                    as={MaterialCommunityIcons}
+                    name="gamepad-variant"
+                    size="sm"
+                    color="gray.600"
+                  />
+                }
+                variant="ghost"
+                borderRadius="full"
+                onPress={() => setShowGameListModal(true)}
+              />
               <IconButton
                 icon={
                   <Icon
@@ -278,6 +297,22 @@ const CurrentChat = ({
                 onPress={() => setShowVideoCallModal(true)}
               />
             </HStack>
+          )}
+          {/* Group info button (only for group chats) */}
+          {isGroupChat && (
+            <IconButton
+              icon={
+                <Icon
+                  as={MaterialCommunityIcons}
+                  name="information"
+                  size="sm"
+                  color="gray.600"
+                />
+              }
+              variant="ghost"
+              borderRadius="full"
+              onPress={() => setShowGroupModal(true)}
+            />
           )}
         </HStack>
 
@@ -449,6 +484,23 @@ const CurrentChat = ({
         recipientId={recipientDetails?.id}
         caller="user"
         recipientDetails={recipientDetails}
+      />
+
+      {/* Game List Modal (for 1:1 chats) */}
+      <GameListModal
+        isOpen={showGameListModal}
+        onClose={() => setShowGameListModal(false)}
+        uid={uid}
+        friendId={recipientDetails?.id}
+      />
+
+      {/* Group Chat Modal (for group chats) */}
+      <GroupChatModal
+        isOpen={showGroupModal}
+        onClose={() => setShowGroupModal(false)}
+        uid={uid}
+        friendsList={friendsList}
+        groupDetails={recipientDetails}
       />
     </KeyboardAvoidingView>
   );

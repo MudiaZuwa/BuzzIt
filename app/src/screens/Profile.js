@@ -15,12 +15,18 @@ import {
   Icon,
   IconButton,
   Divider,
+  useColorMode,
 } from "native-base";
 import { RefreshControl, Dimensions } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import PostCard from "../components/PostCard";
 import FriendCard from "../components/FriendCard";
+import {
+  ProfileHeaderSkeleton,
+  PostSkeletonList,
+  FriendCardSkeletonList,
+} from "../components/SkeletonLoaders";
 import listenDataFromNode from "../functions/listenDataFromNode";
 import fetchDataFromNode from "../functions/fetchDataFromNode";
 import updateDataInNode from "../functions/updateDataInNode";
@@ -56,8 +62,11 @@ const Profile = ({ route: propRoute }) => {
   const [friendRequestSent, setFriendRequestSent] = useState(false);
   const [friendRequestReceived, setFriendRequestReceived] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [postsLoading, setPostsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
 
   // Fetch user details
   useEffect(() => {
@@ -95,8 +104,10 @@ const Profile = ({ route: propRoute }) => {
           }))
           .sort((a, b) => b.date - a.date);
         setPosts(userPosts);
+        setPostsLoading(false);
       } else {
         setPosts([]);
+        setPostsLoading(false);
       }
     });
 
@@ -261,18 +272,15 @@ const Profile = ({ route: propRoute }) => {
 
   if (loading) {
     return (
-      <Box flex={1} bg="background.light" safeArea>
-        <Center flex={1}>
-          <Spinner size="lg" />
-          <Text mt={2}>Loading profile...</Text>
-        </Center>
+      <Box flex={1} bg={isDark ? "dark.900" : "background.light"} safeArea>
+        <ProfileHeaderSkeleton />
       </Box>
     );
   }
 
   if (!userDetails) {
     return (
-      <Box flex={1} bg="background.light" safeArea>
+      <Box flex={1} bg={isDark ? "dark.900" : "background.light"} safeArea>
         <Center flex={1}>
           <Text color="gray.500">User not found</Text>
         </Center>
@@ -281,14 +289,14 @@ const Profile = ({ route: propRoute }) => {
   }
 
   return (
-    <Box flex={1} bg="background.light" safeArea>
+    <Box flex={1} bg={isDark ? "dark.900" : "background.light"} safeArea>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
         {/* Cover Photo */}
-        <Box height={150} bg="gray.300">
+        <Box height={150} bg={isDark ? "dark.700" : "gray.300"}>
           {userDetails.coverPhoto ? (
             <Image
               source={{ uri: userDetails.coverPhoto }}

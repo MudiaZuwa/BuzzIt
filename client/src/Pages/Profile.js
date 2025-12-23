@@ -13,6 +13,7 @@ import ListenDataFromNode from "../Functions/ListenDataFromNode.js";
 import UpdateDataInNode from "../Functions/UpdateDataInNode.js";
 import DeleteDataInNode from "../Functions/DeleteDataInNode.js";
 import MobileBottomNavbar from "../Components/MobileBottomNavbar.js";
+import { ProfileHeaderSkeleton } from "../Components/SkeletonLoader.js";
 
 const ProfilePage = () => {
   const [isFriend, setIsFriend] = useState(false);
@@ -179,7 +180,7 @@ const ProfilePage = () => {
             className="vh-100 pb-5 pb-md-0"
             style={{ overflowY: "auto" }}
           >
-            {userDetails && (
+            {userDetails ? (
               <div>
                 <Row>
                   <Col>
@@ -187,7 +188,11 @@ const ProfilePage = () => {
                       src={userDetails.coverPhoto || "/images/defaultCover.png"}
                       fluid
                       className="mb-3"
-                      style={{ height: "150px" }}
+                      style={{
+                        height: "150px",
+                        objectFit: "cover",
+                        width: "100%",
+                      }}
                       alt="Cover"
                     />
                   </Col>
@@ -252,6 +257,8 @@ const ProfilePage = () => {
                   </Col>
                 </Row>
               </div>
+            ) : (
+              <ProfileHeaderSkeleton />
             )}
           </Col>
 

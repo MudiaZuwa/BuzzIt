@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useCallback, memo } from "react";
 import {
   Box,
   VStack,
@@ -50,7 +50,7 @@ const PostCard = ({ post, currentUserID }) => {
 
   const [currentMedia, setCurrentMedia] = useState(0);
 
-  const handleLike = async () => {
+  const handleLike = useCallback(async () => {
     const postRef = `Posts/${post.id}`;
     const notificationsRef = `notifications/${uid}/Activities/${post.id}`;
 
@@ -70,9 +70,9 @@ const PostCard = ({ post, currentUserID }) => {
         })),
       });
     }
-  };
+  }, [post.id, uid, hasLiked, likes, currentUserID, post.userId]);
 
-  const handleRepost = async () => {
+  const handleRepost = useCallback(async () => {
     const postRef = `Posts/${post.id}`;
     const notificationsRef = `notifications/${uid}/Activities/${post.id}`;
 
@@ -90,9 +90,9 @@ const PostCard = ({ post, currentUserID }) => {
     if (currentUserID !== uid) {
       await updateDataInNode(notificationsRef, updatedReposts);
     }
-  };
+  }, [post.id, uid, hasReposted, reposts, currentUserID]);
 
-  const handleShare = async () => {
+  const handleShare = useCallback(async () => {
     const postUrl = `https://buzzit.com/${uid}/${post.id}`;
 
     try {
@@ -104,15 +104,15 @@ const PostCard = ({ post, currentUserID }) => {
     } catch (error) {
       console.error("Error sharing post", error);
     }
-  };
+  }, [uid, post.id, username, text]);
 
-  const navigateToPost = () => {
+  const navigateToPost = useCallback(() => {
     navigation.navigate("PostDetails", { userId: uid, postId: post.id });
-  };
+  }, [navigation, uid, post.id]);
 
-  const navigateToProfile = () => {
+  const navigateToProfile = useCallback(() => {
     navigation.navigate("UserProfile", { userId: uid });
-  };
+  }, [navigation, uid]);
 
   return (
     <Box bg="white" rounded="lg" shadow={2} mb={4}>
@@ -265,4 +265,14 @@ const PostCard = ({ post, currentUserID }) => {
   );
 };
 
-export default PostCard;
+// Memoize component to prevent unnecessary re-renders
+export default memo(PostCard, (prevProps, nextProps) => {
+  // Only re-render if these props change
+  return (
+    prevProps.post.id === nextProps.post.id &&
+    prevProps.post.likes?.length === nextProps.post.likes?.length &&
+    prevProps.post.reposts?.length === nextProps.post.reposts?.length &&
+    prevProps.post.comments?.length === nextProps.post.comments?.length &&
+    prevProps.currentUserID === nextProps.currentUserID
+  );
+});

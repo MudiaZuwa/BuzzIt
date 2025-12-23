@@ -11,6 +11,8 @@ import {
   Button,
   Heading,
   Divider,
+  Switch,
+  useColorMode,
 } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +22,8 @@ const APP_VERSION = "1.0.0";
 
 const Settings = () => {
   const navigation = useNavigation();
+  const { colorMode, toggleColorMode } = useColorMode();
+  const isDark = colorMode === "dark";
   const [showAbout, setShowAbout] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
@@ -31,11 +35,20 @@ const Settings = () => {
     value,
     onPress,
     showChevron = true,
+    rightElement,
   }) => (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={onPress} disabled={!onPress}>
       {({ isPressed }) => (
         <HStack
-          bg={isPressed ? "gray.50" : "white"}
+          bg={
+            isPressed
+              ? isDark
+                ? "dark.700"
+                : "gray.50"
+              : isDark
+              ? "dark.800"
+              : "white"
+          }
           px={4}
           py={4}
           alignItems="center"
@@ -46,22 +59,25 @@ const Settings = () => {
               as={MaterialCommunityIcons}
               name={icon}
               size="md"
-              color="gray.600"
+              color={isDark ? "gray.400" : "gray.600"}
             />
-            <Text fontSize="md">{label}</Text>
+            <Text fontSize="md" color={isDark ? "white" : "gray.800"}>
+              {label}
+            </Text>
           </HStack>
           <HStack alignItems="center" space={2}>
             {value && (
-              <Text color="gray.500" fontSize="sm">
+              <Text color={isDark ? "gray.400" : "gray.500"} fontSize="sm">
                 {value}
               </Text>
             )}
-            {showChevron && (
+            {rightElement}
+            {showChevron && !rightElement && (
               <Icon
                 as={MaterialCommunityIcons}
                 name="chevron-right"
                 size="md"
-                color="gray.400"
+                color={isDark ? "gray.500" : "gray.400"}
               />
             )}
           </HStack>
@@ -71,11 +87,11 @@ const Settings = () => {
   );
 
   const SectionHeader = ({ title }) => (
-    <Box px={4} py={2} bg="gray.100">
+    <Box px={4} py={2} bg={isDark ? "dark.900" : "gray.100"}>
       <Text
         fontSize="sm"
         fontWeight="600"
-        color="gray.600"
+        color={isDark ? "gray.400" : "gray.600"}
         textTransform="uppercase"
       >
         {title}
@@ -84,31 +100,56 @@ const Settings = () => {
   );
 
   return (
-    <Box flex={1} bg="gray.50" safeArea>
+    <Box flex={1} bg={isDark ? "dark.900" : "gray.50"} safeArea>
       {/* Header */}
       <HStack
-        bg="white"
+        bg={isDark ? "dark.800" : "white"}
         px={4}
         py={3}
         alignItems="center"
         borderBottomWidth={1}
-        borderBottomColor="gray.100"
+        borderBottomColor={isDark ? "dark.700" : "gray.100"}
       >
         <Pressable onPress={() => navigation.goBack()} mr={3}>
           <Icon
             as={MaterialCommunityIcons}
             name="arrow-left"
             size="md"
-            color="gray.700"
+            color={isDark ? "white" : "gray.700"}
           />
         </Pressable>
-        <Heading size="md">Settings</Heading>
+        <Heading size="md" color={isDark ? "white" : "gray.800"}>
+          Settings
+        </Heading>
       </HStack>
 
       <ScrollView>
+        {/* Appearance */}
+        <SectionHeader title="Appearance" />
+        <VStack
+          bg={isDark ? "dark.800" : "white"}
+          divider={<Divider bg={isDark ? "dark.700" : "gray.100"} />}
+        >
+          <SettingsItem
+            icon={isDark ? "weather-night" : "white-balance-sunny"}
+            label="Dark Mode"
+            showChevron={false}
+            rightElement={
+              <Switch
+                isChecked={isDark}
+                onToggle={toggleColorMode}
+                colorScheme="primary"
+              />
+            }
+          />
+        </VStack>
+
         {/* App Information */}
         <SectionHeader title="App Information" />
-        <VStack bg="white" divider={<Divider />}>
+        <VStack
+          bg={isDark ? "dark.800" : "white"}
+          divider={<Divider bg={isDark ? "dark.700" : "gray.100"} />}
+        >
           <SettingsItem
             icon="information-outline"
             label="Version"
@@ -124,7 +165,10 @@ const Settings = () => {
 
         {/* Legal */}
         <SectionHeader title="Legal" />
-        <VStack bg="white" divider={<Divider />}>
+        <VStack
+          bg={isDark ? "dark.800" : "white"}
+          divider={<Divider bg={isDark ? "dark.700" : "gray.100"} />}
+        >
           <SettingsItem
             icon="file-document-outline"
             label="Terms of Service"
@@ -139,7 +183,10 @@ const Settings = () => {
 
         {/* Help */}
         <SectionHeader title="Help" />
-        <VStack bg="white" divider={<Divider />}>
+        <VStack
+          bg={isDark ? "dark.800" : "white"}
+          divider={<Divider bg={isDark ? "dark.700" : "gray.100"} />}
+        >
           <SettingsItem
             icon="headset"
             label="Contact Support"

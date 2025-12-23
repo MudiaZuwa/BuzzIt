@@ -15,6 +15,7 @@ import {
   IconButton,
   Pressable,
   Text,
+  useColorMode,
 } from "native-base";
 import { RefreshControl } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -23,6 +24,7 @@ import PostCard from "../components/PostCard";
 import CreatePostModal from "../components/CreatePostModal";
 import CreatePostForm from "../components/CreatePostForm";
 import AuthModal from "../components/AuthModal";
+import { PostSkeletonList } from "../components/SkeletonLoaders";
 import listenDataFromNode from "../functions/listenDataFromNode";
 import fetchDataFromNode from "../functions/fetchDataFromNode";
 import useVerifyUser from "../hooks/useVerifyUser";
@@ -30,12 +32,15 @@ import useVerifyUser from "../hooks/useVerifyUser";
 const Home = () => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [userProfilePic, setUserProfilePic] = useState(null);
   const { uid, loggedIn } = useVerifyUser();
   const toast = useToast();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
 
   const updatePosts = (postsData) => {
     if (postsData) {
@@ -50,9 +55,11 @@ const Home = () => {
         // Sort by date descending
         const sortedPosts = fetchedPosts.sort((a, b) => b.date - a.date);
         setPosts(sortedPosts);
+        setIsLoading(false);
       });
     } else {
       setPosts([]);
+      setIsLoading(false);
     }
   };
 
@@ -117,10 +124,10 @@ const Home = () => {
   };
 
   return (
-    <Box flex={1} bg="background.light" safeArea>
+    <Box flex={1} bg={isDark ? "dark.900" : "background.light"} safeArea>
       {/* Custom Header */}
       <HStack
-        bg="white"
+        bg={isDark ? "dark.800" : "white"}
         px={4}
         py={3}
         justifyContent="space-between"
@@ -136,7 +143,7 @@ const Home = () => {
               as={MaterialCommunityIcons}
               name="cog"
               size="md"
-              color="gray.600"
+              color={isDark ? "gray.400" : "gray.600"}
             />
           </Pressable>
           <Pressable onPress={handleProfilePress}>
@@ -200,13 +207,19 @@ const Home = () => {
             )}
           </Box>
 
-          {posts.length > 0 ? (
+          {isLoading ? (
+            <PostSkeletonList count={3} />
+          ) : posts.length > 0 ? (
             posts.map((post, index) => (
-              <PostCard key={index} post={post} currentUserID={uid} />
+              <PostCard
+                key={post.id || index}
+                post={post}
+                currentUserID={uid}
+              />
             ))
           ) : (
             <Center py={10}>
-              <Spinner size="lg" />
+              <Text color="gray.500">No posts yet. Be the first to share!</Text>
             </Center>
           )}
         </VStack>

@@ -20,12 +20,14 @@ import GroupChatModal from "../Components/GroupChatModal.js";
 import NewChatModal from "../Components/NewChatModal.js";
 import ProfileEditModal from "../Components/ProfileEditModal.js";
 import AuthModal from "../Auth/AuthModal.js";
+import { ChatListSkeletonList } from "../Components/SkeletonLoader.js";
 import { getDatabase, push, set, ref } from "../Components/firebase.js";
 
 const Message = () => {
   const { userId } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [previousChats, setPreviousChats] = useState([]);
+  const [isLoadingChats, setIsLoadingChats] = useState(true);
   const [currentChatId, setCurrentChatId] = useState(null);
   const [currentMessages, setCurrentMessages] = useState([]);
   const { uid, loggedIn, isPending } = UseVerifyUser();
@@ -94,7 +96,11 @@ const Message = () => {
   useEffect(() => {
     setCurrentChatId(null);
     setCurrentMessages([]);
-    if (!uid) return;
+    if (!uid) {
+      setIsLoadingChats(false);
+      return;
+    }
+    setIsLoadingChats(true);
     const loadFriends = async () => setFriendsList(await fetchFriendsList(uid));
     if (uid) loadFriends();
     const userChatsPath = `UserChats/${uid}`;
@@ -124,6 +130,7 @@ const Message = () => {
           (a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp
         );
         setPreviousChats(sortedChats);
+        setIsLoadingChats(false);
         if (userId) {
           const currentChatId = Object.keys(chatsData).find(
             (chat) =>
@@ -331,19 +338,23 @@ const Message = () => {
                   className="overflow-auto"
                   style={{ maxHeight: "calc(100vh - 120px)" }}
                 >
-                  {previousChats
-                    .filter((chat) =>
-                      chat.name
-                        ?.toLowerCase()
-                        .includes(searchTerm.toLowerCase())
-                    )
-                    .map((chat, index) => (
-                      <MessageList
-                        chat={chat}
-                        key={index}
-                        onClick={() => handleChatSelect(chat)}
-                      />
-                    ))}
+                  {isLoadingChats ? (
+                    <ChatListSkeletonList count={6} />
+                  ) : (
+                    previousChats
+                      .filter((chat) =>
+                        chat.name
+                          ?.toLowerCase()
+                          .includes(searchTerm.toLowerCase())
+                      )
+                      .map((chat, index) => (
+                        <MessageList
+                          chat={chat}
+                          key={chat.id || index}
+                          onClick={() => handleChatSelect(chat)}
+                        />
+                      ))
+                  )}
                 </div>
               </Col>
 
