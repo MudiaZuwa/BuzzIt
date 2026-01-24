@@ -18,8 +18,16 @@
       "adaptiveIcon": {
         "backgroundColor": "#0d7059"
       },
-      "package": "com.buzzit.mobile"
+      "package": "com.buzzit.mobile",
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "enableProguardInReleaseBuilds": true,
+      "enableShrinkResources": true
     },
-    "plugins": ["expo-image-picker"]
+    "plugins": ["expo-image-picker"],
+    "extra": {
+      "eas": {
+        "projectId": "84f7e2b4-fb25-409e-9f4c-deefbc4a4b8d"
+      }
+    }
   }
 }
